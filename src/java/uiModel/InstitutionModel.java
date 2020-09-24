@@ -50,12 +50,14 @@ public class InstitutionModel {
     private Project registeredProject = new Project();
     private Target target = new Target();
     private List<Accomplishment> divisionAccomplishments = new AccomplishmentDao().findAll(Accomplishment.class);
-
+    private Indicator chosenIndicator = new Indicator();
+    
     @PostConstruct
     public void init() {
         divisions = new DivisionDao().findByInstitution(loggedInUser.getInstitution());
         users = new UserDao().findByInstitution(loggedInUser.getInstitution());
         divisionAccomplishments = new AccomplishmentDao().findAll(Accomplishment.class);
+        projects = new ProjectDao().findAll(Project.class);
     }
 
     public void registerDivisionManager() throws Exception {
@@ -81,16 +83,17 @@ public class InstitutionModel {
     }
 
     public String navigateDivision(Division div) {
-        System.out.println("Hello");
         chosenDivision = div;
         return "project.xhtml?faces-redirect=true";
     }
 
     public void registerProject() {
-        project.setDivision(chosenDivision);
+        Division d = new DivisionDao().findOne(Division.class, divisionId);
+        project.setDivision(d);
         new ProjectDao().register(project);
         registeredProject = project;
         project = new Project();
+        projects = new ProjectDao().findAll(Project.class);
 
         FacesContext fc = FacesContext.getCurrentInstance();
         fc.addMessage(null, new FacesMessage("Project Registered"));
@@ -125,7 +128,7 @@ public class InstitutionModel {
     }
     
     public void registerTarget() {
-        target.setProject(registeredProject);
+        target.setIndicator(chosenIndicator);
         switch (quarter) {
             case "QUARTER_ONE":
                 target.setQuarter(EQuarter.QUARTER_ONE);
@@ -146,12 +149,24 @@ public class InstitutionModel {
         
         new TargetDao().register(target);
         target = new Target();
-        targets = new TargetDao().findByProject(registeredProject);
+        targets = new TargetDao().findByIndicator(chosenIndicator);
         
         FacesContext fc = FacesContext.getCurrentInstance();
         fc.addMessage(null, new FacesMessage("Target Added"));
     }
 
+    public String navigateProject(Project p){
+        registeredProject = p;
+        indicators = new IndicatorDao().findByProject(registeredProject);
+        return "target.xhtml?faces-redirect=true";
+    } 
+    
+    public String navigateIndicator(Indicator ind){
+        chosenIndicator = ind;
+        targets = new TargetDao().findByIndicator(ind);
+        return "indicator.xhtml?faces-redirect=true";        
+    }
+    
     public Account getLoggedInUser() {
         return loggedInUser;
     }
@@ -294,6 +309,14 @@ public class InstitutionModel {
 
     public void setDivisionAccomplishments(List<Accomplishment> divisionAccomplishments) {
         this.divisionAccomplishments = divisionAccomplishments;
+    }
+
+    public Indicator getChosenIndicator() {
+        return chosenIndicator;
+    }
+
+    public void setChosenIndicator(Indicator chosenIndicator) {
+        this.chosenIndicator = chosenIndicator;
     }
 
 }

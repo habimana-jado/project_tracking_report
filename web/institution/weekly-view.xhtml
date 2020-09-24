@@ -85,7 +85,7 @@
                     <nav class="sidebar-nav left-sidebar-menu-pro">
                         <ul class="metismenu" id="menu1">
                             <li>
-                                <a class="has-arrow" href="project-details.xhtml" aria-expanded="false"><span class="educate-icon educate-charts icon-wrap"></span> <span class="mini-click-non">Projects</span></a>
+                                <a href="project-details.xhtml" aria-expanded="false"><span class="educate-icon educate-charts icon-wrap"></span> <span class="mini-click-non">Projects</span></a>
                             </li>
                         </ul>
                     </nav>
@@ -124,20 +124,20 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
-                                            <div class="header-right-info">
+                                            <div class="header-right-info" style="padding-right: 130px;">
                                                 <ul class="nav navbar-nav mai-top-nav header-right-menu">
 
                                                     <li class="nav-item">
                                                         <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle">
-                                                            <img src="img/product/pro4.jpg" alt="" />
-                                                            <span class="admin-name">Prof.Anderson</span>
+                                                            <!--<img src="img/product/pro4.jpg" alt="" />-->
+                                                            <span class="admin-name">#{divisionModel.loggedInUser.firstName}</span>
                                                             <i class="fa fa-angle-down edu-icon edu-down-arrow"></i>
                                                         </a>
                                                         <ul role="menu" class="dropdown-header-top author-log dropdown-menu animated zoomIn">
 
-                                                            <li><a><h:form><h:commandButton class="btn btn-primary" value="Profile" action="#{adminModel.navigateProfile()}" /> </h:form></a>
+                                                            <li><a><h:form><h:commandButton class="btn btn-primary btn-block" value="Profile"/> </h:form></a>
                                                             </li>
-                                                            <li><a><h:form><h:commandButton class="btn btn-danger" value="Log Out" action="#{accountModel.logout()}" /> </h:form></a>
+                                                            <li><a><h:form><h:commandButton class="btn btn-danger btn-block" value="Log Out" action="#{accountModel.logout()}" /> </h:form></a>
                                                             </li>
                                                         </ul>
                                                     </li>
@@ -464,7 +464,13 @@
                             </div>
                             <div class="hpanel">
                                 <div class="panel-body">
-                                    <h4>Report List</h4>
+                                    <div class="alert-icon shadow-inner wrap-alert-b">
+                                        <div class="alert-title">
+                                            <div class="alert alert-info alert-st-two alert-st-bg1" role="alert">
+                                                <p class="message-mg-rt">Report List On Target:<strong>#{divisionModel.chosenTarget.targetTitle}</strong></p>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="table-responsive ib-tb">
                                         <h:form>
                                             <table class="table table-hover table-mailbox">

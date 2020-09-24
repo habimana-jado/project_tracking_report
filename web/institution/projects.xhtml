@@ -365,7 +365,7 @@
                                             <ul class="breadcome-menu">
                                                 <li><a href="#">Home</a> <span class="bread-slash">/</span>
                                                 </li>
-                                                <li><span class="bread-blod">Division Configuration</span>
+                                                <li><span class="bread-blod">Projects Configuration</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -378,21 +378,131 @@
             </div>
 
             <div class="product-status mg-b-15">
-                <div class="container-fluid">  
-                    <div class="row">
-                        <h:form>
-                            <c:forEach items="#{institutionModel.divisions}" var="elements">
-                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">                  
-                                    <div class="modal-bootstrap shadow-inner mg-tb-30 responsive-mg-b-0">
-                                        <h2>#{elements.divisionName}</h2>
-                                        <p>#{elements.divisionDescription}</p>
-                                        <div class="modal-area-button">
-                                            <h:commandButton class="btn btn-primary waves-effect waves-light" value="Continue" action="#{institutionModel.navigateDivision(elements)}"></h:commandButton>                                    
+                <div class="container-fluid">
+                    <div id="PrimaryModalalert" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <h:form>
+                                <p:growl />
+                                <div class="modal-content">
+                                    <div class="modal-close-area modal-close-df">
+                                        <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
+                                    </div>
+                                    <div class="modal-header">New Project</div>
+                                    <div class="modal-body">
+                                        <p:growl />
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Project Title: </label>  
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <h:inputText class="form-control" value="#{institutionModel.project.projectTitle}" required="true" requiredMessage="Title is Required"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Description: </label> 
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <h:inputTextarea rows="6" class="form-control" value="#{institutionModel.project.projectDescription}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Project Budget: </label>  
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <h:inputText class="form-control" value="#{institutionModel.project.projectBudget}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Start Date: </label>  
+                                                </div>
+                                                <div class="col-sm-9"> 
+                                                    <h:inputText class="form-control" value="#{institutionModel.project.startDate}" required="true" requiredMessage="Start Date is Required">
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                                                    </h:inputText>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">End Date: </label>  
+                                                </div>
+                                                <div class="col-sm-9"> 
+                                                    <h:inputText class="form-control" value="#{institutionModel.project.endDate}" required="true" requiredMessage="End Date is Required">
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                                                    </h:inputText>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Division: </label>  
+                                                </div>
+                                                <div class="col-sm-9"> 
+                                                    <h:selectOneMenu class="form-control" value="#{institutionModel.divisionId}">
+                                                        <f:selectItems value="#{institutionModel.divisions}" var="d" itemValue="#{d.divisionId}" itemLabel="#{d.divisionName}" />
+                                                    </h:selectOneMenu>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
+                                    <div class="modal-footer">
+                                        <h:commandButton class="btn btn-primary" value="Register" action="#{institutionModel.registerProject()}" />
+                                    </div>
                                 </div>
-                            </c:forEach>
-                        </h:form>
+                            </h:form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="product-status-wrap">
+                                <h4>Project List</h4>   
+                                <div class="add-product">
+                                    <a href="#" data-toggle="modal" data-target="#PrimaryModalalert">Add Project</a>
+                                </div>                             
+                                <div class="asset-inner">
+                                    <table>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Title</th>
+                                            <th>Description</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Budget</th>
+                                            <th>Division</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        <h:form>
+                                            <c:forEach items="#{institutionModel.projects}" var="elements" varStatus="status">
+                                                <tr>
+                                                    <td>${status.index + 1}</td>
+                                                    <td>#{elements.projectTitle}</td>
+                                                    <td>#{elements.projectDescription}</td>
+                                                    <td>#{elements.startDate}</td>
+                                                    <td>#{elements.endDate}</td>
+                                                    <td>#{elements.projectBudget}</td>
+                                                    <td>#{elements.division.divisionName}</td>
+                                                    <td>
+                                                        <h:commandLink action="#{institutionModel.navigateProject(elements)}" title="More" class="pd-setting-ed"><i class="fa fa-angle-double-right" aria-hidden="true"></i></h:commandLink>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </h:form>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

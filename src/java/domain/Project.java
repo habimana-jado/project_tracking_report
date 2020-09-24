@@ -37,10 +37,6 @@ public class Project implements Serializable {
     
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
-    private List<Target> target;
-
-    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
-    @Fetch(FetchMode.SUBSELECT)
     private List<Indicator> indicator;
     
     public String getProjectId() {
@@ -97,14 +93,6 @@ public class Project implements Serializable {
 
     public void setDivision(Division division) {
         this.division = division;
-    }
-
-    public List<Target> getTarget() {
-        return target;
-    }
-
-    public void setTarget(List<Target> target) {
-        this.target = target;
     }
 
     public List<Indicator> getIndicator() {

@@ -2,12 +2,18 @@
 package domain;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  *
@@ -22,6 +28,11 @@ public class Indicator implements Serializable{
     private String remarks;
     @Enumerated(EnumType.STRING)
     private EQuarter quarter;
+    private String baseline;
+    
+    @OneToMany(mappedBy = "indicator", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Target> target;
     
     @ManyToOne
     private Project project;
@@ -72,6 +83,22 @@ public class Indicator implements Serializable{
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public List<Target> getTarget() {
+        return target;
+    }
+
+    public void setTarget(List<Target> target) {
+        this.target = target;
+    }
+
+    public String getBaseline() {
+        return baseline;
+    }
+
+    public void setBaseline(String baseline) {
+        this.baseline = baseline;
     }
     
     

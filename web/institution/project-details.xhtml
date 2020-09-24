@@ -124,21 +124,20 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
-                                            <div class="header-right-info">
+                                            <div class="header-right-info" style="padding-right: 130px;">
                                                 <ul class="nav navbar-nav mai-top-nav header-right-menu">
 
                                                     <li class="nav-item">
                                                         <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle">
-                                                            <img src="img/product/pro4.jpg" alt="" />
-                                                            <span class="admin-name">Prof.Anderson</span>
+                                                            <!--<img src="img/product/pro4.jpg" alt="" />-->
+                                                            <span class="admin-name">#{divisionModel.loggedInUser.firstName}</span>
                                                             <i class="fa fa-angle-down edu-icon edu-down-arrow"></i>
                                                         </a>
-
                                                         <ul role="menu" class="dropdown-header-top author-log dropdown-menu animated zoomIn">
 
-                                                            <li><a><h:form><h:commandButton class="btn btn-primary" value="Profile" action="#{adminModel.navigateProfile()}" /> </h:form></a>
+                                                            <li><a><h:form><h:commandButton class="btn btn-primary btn-block" value="Profile"/> </h:form></a>
                                                             </li>
-                                                            <li><a><h:form><h:commandButton class="btn btn-danger" value="Log Out" action="#{accountModel.logout()}" /> </h:form></a>
+                                                            <li><a><h:form><h:commandButton class="btn btn-danger btn-block" value="Log Out" action="#{accountModel.logout()}" /> </h:form></a>
                                                             </li>
                                                         </ul>
                                                     </li>
@@ -352,7 +351,7 @@
                                             <ul class="breadcome-menu">
                                                 <li><a href="#">Home</a> <span class="bread-slash">/</span>
                                                 </li>
-                                                <li><span class="bread-blod">Accounts Configuration</span>
+                                                <li><span class="bread-blod">Projects Configuration</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -367,10 +366,9 @@
             <div class="product-status mg-b-15">
                 <div class="container-fluid">  
                     <div class="row">
-                        <div class="col-lg-1 col-md-1 col-sm-1" />
                         <h:form>
                             <c:forEach items="#{divisionModel.projects}" var="elements">
-                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">                  
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">                      
                                     <div class="modal-bootstrap shadow-inner mg-tb-30 responsive-mg-b-0">
                                         <h2>#{elements.projectTitle}</h2>
                                         <p>#{elements.projectDescription}</p>

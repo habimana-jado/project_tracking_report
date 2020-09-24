@@ -92,10 +92,10 @@
 
                             </li>
                             <li>
-                                <a class="has-arrow" href="all-courses.html" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Projects</span></a>
+                                <a class="has-arrow" href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Projects</span></a>
                                 <ul class="submenu-angle" aria-expanded="false">
-                                    <li><a title="Projects List" href="departments.html"><span class="mini-sub-pro">Project List</span></a></li>
-                                    <li><a title="Add Project" href="project.xhtml"><span class="mini-sub-pro">Add Project</span></a></li>
+                                    <li><a title="Project List" href="projects.xhtml"><span class="mini-sub-pro">Project List</span></a></li>
+                                    <li><a title="Add Project" href="division-details.xhtml"><span class="mini-sub-pro">Add Project</span></a></li>
                                 </ul>
                             </li>
                             <li>
@@ -138,20 +138,20 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
-                                            <div class="header-right-info">
+                                            <div class="header-right-info" style="padding-right: 130px;">
                                                 <ul class="nav navbar-nav mai-top-nav header-right-menu">
 
                                                     <li class="nav-item">
                                                         <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle">
-                                                            <img src="img/product/pro4.jpg" alt="" />
-                                                            <span class="admin-name">Prof.Anderson</span>
+                                                            <!--<img src="img/product/pro4.jpg" alt="" />-->
+                                                            <span class="admin-name">#{institutionModel.loggedInUser.firstName}</span>
                                                             <i class="fa fa-angle-down edu-icon edu-down-arrow"></i>
-                                                        </a>                                                        
+                                                        </a>
                                                         <ul role="menu" class="dropdown-header-top author-log dropdown-menu animated zoomIn">
-                                                            
-                                                            <li><a><h:form><h:commandButton class="btn btn-primary" value="Profile" action="#{adminModel.navigateProfile()}" /> </h:form></a>
+
+                                                            <li><a><h:form><h:commandButton class="btn btn-primary btn-block" value="Profile"/> </h:form></a>
                                                             </li>
-                                                            <li><a><h:form><h:commandButton class="btn btn-danger" value="Log Out" action="#{accountModel.logout()}" /> </h:form></a>
+                                                            <li><a><h:form><h:commandButton class="btn btn-danger btn-block" value="Log Out" action="#{accountModel.logout()}" /> </h:form></a>
                                                             </li>
                                                         </ul>
                                                     </li>
@@ -517,15 +517,6 @@
                                             </c:forEach>
                                         </h:form>
                                     </table>
-                                </div>
-                                <div class="custom-pagination">
-                                    <ul class="pagination">
-                                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                                    </ul>
                                 </div>
                             </div>
                         </div>

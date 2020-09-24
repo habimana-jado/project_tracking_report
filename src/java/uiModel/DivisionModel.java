@@ -100,7 +100,7 @@ public class DivisionModel {
     }
     
     public String navigateProject(Project p){
-        targets = new TargetDao().findByProject(p);
+//        targets = new TargetDao().findByIndicator(p);
         return "weekly-view?faces-redirect=true";
     }
 

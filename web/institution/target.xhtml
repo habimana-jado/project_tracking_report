@@ -94,8 +94,8 @@
                             <li>
                                 <a class="has-arrow" href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Projects</span></a>
                                 <ul class="submenu-angle" aria-expanded="false">
-                                    <li><a title="Project List" href="projects.xhtml"><span class="mini-sub-pro">Project List</span></a></li>
-                                    <li><a title="Add Project" href="division-details.xhtml"><span class="mini-sub-pro">Add Project</span></a></li>
+                                    <li><a title="Projects List" href="projects.xhtml"><span class="mini-sub-pro">Project List</span></a></li>
+                                    <li><a title="Add Project" href="project.xhtml"><span class="mini-sub-pro">Add Project</span></a></li>
                                 </ul>
                             </li>
                             <li>
@@ -365,7 +365,7 @@
                                             <ul class="breadcome-menu">
                                                 <li><a href="#">Home</a> <span class="bread-slash">/</span>
                                                 </li>
-                                                <li><span class="bread-blod">Division Configuration</span>
+                                                <li><span class="bread-blod">Indicator/Target Configuration</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -378,21 +378,132 @@
             </div>
 
             <div class="product-status mg-b-15">
-                <div class="container-fluid">  
-                    <div class="row">
-                        <h:form>
-                            <c:forEach items="#{institutionModel.divisions}" var="elements">
-                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">                  
-                                    <div class="modal-bootstrap shadow-inner mg-tb-30 responsive-mg-b-0">
-                                        <h2>#{elements.divisionName}</h2>
-                                        <p>#{elements.divisionDescription}</p>
-                                        <div class="modal-area-button">
-                                            <h:commandButton class="btn btn-primary waves-effect waves-light" value="Continue" action="#{institutionModel.navigateDivision(elements)}"></h:commandButton>                                    
+                <div class="container-fluid">
+                    <div id="PrimaryModalalert" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <h:form>
+                                <p:growl />
+                                <div class="modal-content">
+                                    <div class="modal-close-area modal-close-df">
+                                        <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
+                                    </div>
+                                    <div class="modal-header">New Project</div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Indicator: </label>  
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <h:inputText class="form-control" value="#{institutionModel.indicator.indicatorName}" required="true" requiredMessage="Title is Required"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Description: </label> 
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <h:inputTextarea rows="6" class="form-control" value="#{institutionModel.indicator.description}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Remarks: </label>  
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <h:inputText class="form-control" value="#{institutionModel.indicator.remarks}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Quarter: </label>  
+                                                </div>
+                                                <div class="col-sm-9"> 
+                                                    <h:selectOneMenu class="form-control" value="#{institutionModel.quarter}" >
+                                                        <f:selectItem itemLabel="Quarter 1" itemValue="QUARTER_ONE" /> 
+                                                        <f:selectItem itemLabel="Quarter 2" itemValue="QUARTER_TWO" /> 
+                                                        <f:selectItem itemLabel="Quarter 3" itemValue="QUARTER_THREE" /> 
+                                                        <f:selectItem itemLabel="Quarter 4" itemValue="QUARTER_FOUR" /> 
+                                                    </h:selectOneMenu>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="payment-adress" style="padding-top: 5px;">
+                                                <h:commandButton action="#{institutionModel.registerIndicator()}" value="Register" class="btn btn-primary waves-effect waves-light"></h:commandButton>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </c:forEach>
-                        </h:form>
+                            </h:form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="product-payment-inner-st">
+                                <ul id="myTabedu1" class="tab-review-design">
+                                    <li class="active"><a href="#description">Indicator Information</a></li>
+                                    <!--<li><a href="#reviews"> Targets Information</a></li>-->
+                                    <!--<li><a href="#INFORMATION">Targets Information</a></li>-->
+                                </ul>
+                                <div id="myTabContent" class="tab-content custom-product-edit">
+                                    <div class="product-tab-list tab-pane fade active in" id="description">
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <h3 class="text-primary">Project Title: #{institutionModel.registeredProject.projectTitle}</h3>  
+                                                <div class="add-product" style="padding-top: 18px;">
+                                                    <a href="#" data-toggle="modal" data-target="#PrimaryModalalert">Add Indicator</a>
+                                                </div>                 
+                                                <div class="row">
+                                                    <h:form>
+                                                        <p:growl />
+                                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                            <div class="product-status-wrap">
+                                                                <div class="asset-inner">
+                                                                    <table class="table table-bordered">
+                                                                        <tr>
+                                                                            <th>No.</th>
+                                                                            <th>Indicator</th>
+                                                                            <th>Description</th>
+                                                                            <th>Remarks</th>
+                                                                            <th>Quarter</th>
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                        <c:forEach items="#{institutionModel.indicators}" var="inst" varStatus="status">
+                                                                            <tr>
+                                                                                <td>${status.index + 1}</td>
+                                                                                <td>#{inst.indicatorName}</td>
+                                                                                <td>#{inst.description}</td>
+                                                                                <td>#{inst.remarks}</td>
+                                                                                <td>
+                                                                                    #{inst.quarter}
+                                                                                </td>
+                                                                                <td>
+                                                                                    <h:commandLink action="#{institutionModel.navigateIndicator(inst)}" title="More" class="pd-setting-ed"><i class="fa fa-angle-double-right" aria-hidden="true"></i></h:commandLink>
+                                                                                    <!--<h:commandLink title="Remove" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></h:commandLink>-->
+                                                                                </td>
+                                                                            </tr>
+                                                                        </c:forEach>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </h:form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

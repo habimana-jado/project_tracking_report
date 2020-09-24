@@ -92,10 +92,10 @@
 
                             </li>
                             <li>
-                                <a class="has-arrow" href="all-courses.html" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Projects</span></a>
+                                <a class="has-arrow" href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Projects</span></a>
                                 <ul class="submenu-angle" aria-expanded="false">
-                                    <li><a title="Projects List" href="departments.html"><span class="mini-sub-pro">Project List</span></a></li>
-                                    <li><a title="Add Project" href="project.xhtml"><span class="mini-sub-pro">Add Project</span></a></li>
+                                    <li><a title="Project List" href="projects.xhtml"><span class="mini-sub-pro">Project List</span></a></li>
+                                    <li><a title="Add Project" href="division-details.xhtml"><span class="mini-sub-pro">Add Project</span></a></li>
                                 </ul>
                             </li>
                             <li>
@@ -138,20 +138,20 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
-                                            <div class="header-right-info">
+                                            <div class="header-right-info" style="padding-right: 130px;">
                                                 <ul class="nav navbar-nav mai-top-nav header-right-menu">
 
                                                     <li class="nav-item">
                                                         <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle">
-                                                            <img src="img/product/pro4.jpg" alt="" />
-                                                            <span class="admin-name">Prof.Anderson</span>
+                                                            <!--<img src="img/product/pro4.jpg" alt="" />-->
+                                                            <span class="admin-name">#{institutionModel.loggedInUser.firstName}</span>
                                                             <i class="fa fa-angle-down edu-icon edu-down-arrow"></i>
                                                         </a>
                                                         <ul role="menu" class="dropdown-header-top author-log dropdown-menu animated zoomIn">
 
-                                                            <li><a><h:form><h:commandButton class="btn btn-primary" value="Profile" action="#{adminModel.navigateProfile()}" /> </h:form></a>
+                                                            <li><a><h:form><h:commandButton class="btn btn-primary btn-block" value="Profile"/> </h:form></a>
                                                             </li>
-                                                            <li><a><h:form><h:commandButton class="btn btn-danger" value="Log Out" action="#{accountModel.logout()}" /> </h:form></a>
+                                                            <li><a><h:form><h:commandButton class="btn btn-danger btn-block" value="Log Out" action="#{accountModel.logout()}" /> </h:form></a>
                                                             </li>
                                                         </ul>
                                                     </li>
@@ -365,7 +365,7 @@
                                             <ul class="breadcome-menu">
                                                 <li><a href="#">Home</a> <span class="bread-slash">/</span>
                                                 </li>
-                                                <li><span class="bread-blod">Accounts Configuration</span>
+                                                <li><span class="bread-blod">Report Configuration</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -425,28 +425,40 @@
                                 <h4>Weekly Report</h4>
                                 <div class="asset-inner">
                                     <h:form>
-                                        <p:dataTable var="acc" value="#{institutionModel.divisionAccomplishments}" sortBy="#{acc.target.project.division.divisionName}">
+                                        <p:dataTable widgetVar="reportTable" var="acc" value="#{institutionModel.divisionAccomplishments}" sortBy="#{acc.target.project.division.divisionName}">
                                             <p:column headerText="Division" groupRow="true">
                                                 <h:outputText value="#{acc.target.project.division.divisionName}" />
                                             </p:column>
                                             <p:column headerText="Project" groupRow="true">
                                                 <h:outputText value="#{acc.target.project.projectTitle}" />
                                             </p:column>
-                                            <p:column headerText="Quarter" groupRow="true">
+                                            <p:column filterBy="#{acc.target.quarter}" headerText="Quarter" groupRow="true" filterMatchMode="contains">
+<!--                                                <f:facet name="filter">
+                                                    <p:selectOneButton onchange="PF('reportTable').filter()" styleClass="custom-filter">
+                                                        <f:selectItem itemLabel="ALL" itemValue="" />
+                                                        <f:selectItem itemLabel="QUARTER 1" itemValue="QUARTER_ONE" />
+                                                        <f:selectItem itemLabel="QUARTER 2" itemValue="false" />
+                                                        <f:selectItem itemLabel="QUARTER 1" itemValue="QUARTER_ONE" />
+                                                        <f:selectItem itemLabel="QUARTER 1" itemValue="QUARTER_ONE" />
+                                                    </p:selectOneButton>
+                                                </f:facet>-->
                                                 <h:outputText value="#{acc.target.quarter}" />
                                             </p:column>
                                             <p:column headerText="Target" groupRow="true">
                                                 <h:outputText value="#{acc.target.targetTitle}" />
                                             </p:column>
-                                            <p:column headerText="Week" groupRow="true">
+                                            <p:column filterBy="#{acc.period}" headerText="Week" groupRow="true">
                                                 <h:outputText value="#{acc.period}" />
                                             </p:column>
                                             <p:column headerText="Accomplishment" groupRow="true">
                                                 <h:outputText value="#{acc.accomplishment}" />
                                             </p:column>
+                                            <p:column headerText="Challenge" groupRow="true">
+                                                <h:outputText value="#{acc.challenge}" />
+                                            </p:column>
                                         </p:dataTable>
                                     </h:form>
-                                    
+
                                 </div>
                             </div>
                         </div>

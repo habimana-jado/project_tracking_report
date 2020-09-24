@@ -29,7 +29,7 @@ public class Target implements Serializable {
     private EQuarter quarter;
         
     @ManyToOne
-    private Project project;
+    private Indicator indicator;
     
     @OneToMany(mappedBy = "target", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
@@ -51,13 +51,14 @@ public class Target implements Serializable {
         this.targetDescription = targetDescription;
     }
 
-    public Project getProject() {
-        return project;
+    public Indicator getIndicator() {
+        return indicator;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setIndicator(Indicator indicator) {
+        this.indicator = indicator;
     }
+
 
     public List<Accomplishment> getAccomplishment() {
         return accomplishment;

@@ -76,7 +76,7 @@ public class AccountModel {
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         user = null;
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-        ec.redirect(ec.getRequestContextPath() + "/index.xhtml");
+        ec.redirect(ec.getRequestContextPath() + "/faces/index.xhtml");
     }
 
     public Account getAccount() {
