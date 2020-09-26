@@ -14,6 +14,7 @@ import domain.EStatus;
 import domain.Project;
 import domain.Target;
 import domain.Account;
+import domain.EPeriod;
 import domain.EQuarter;
 import domain.Indicator;
 import java.util.ArrayList;
@@ -51,13 +52,100 @@ public class InstitutionModel {
     private Target target = new Target();
     private List<Accomplishment> divisionAccomplishments = new AccomplishmentDao().findAll(Accomplishment.class);
     private Indicator chosenIndicator = new Indicator();
-    
+    private String period = new String();
+    private EPeriod ePeriod;
+    private EQuarter eQuarter;
+
     @PostConstruct
     public void init() {
         divisions = new DivisionDao().findByInstitution(loggedInUser.getInstitution());
         users = new UserDao().findByInstitution(loggedInUser.getInstitution());
-        divisionAccomplishments = new AccomplishmentDao().findAll(Accomplishment.class);
         projects = new ProjectDao().findAll(Project.class);
+        loadReport();
+    }
+
+    public void loadReport() {
+        if (period.isEmpty() || period == null || period.equals("")) {
+            period = "Week1";
+
+        } else if (quarter.isEmpty() || quarter == null || quarter.equals("")) {
+            quarter = "Quarter1";
+
+        }
+        switch (period) {
+            case "Week1":
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+            case "Week2":
+                ePeriod = EPeriod.WEEK_TWO;
+                break;
+            case "Week3":
+                ePeriod = EPeriod.WEEK_THREE;
+                break;
+            case "Week4":
+                ePeriod = EPeriod.WEEK_FOUR;
+                break;
+            case "Week5":
+                ePeriod = EPeriod.WEEK_FIVE;
+                break;
+            case "Week6":
+                ePeriod = EPeriod.WEEK_SIX;
+                break;
+            case "Week7":
+                ePeriod = EPeriod.WEEK_SEVEN;
+                break;
+            case "Week8":
+                ePeriod = EPeriod.WEEK_EIGHT;
+                break;
+            case "Week9":
+                ePeriod = EPeriod.WEEK_NINE;
+                break;
+            case "Week10":
+                ePeriod = EPeriod.WEEK_TEN;
+                break;
+            case "Week11":
+                ePeriod = EPeriod.WEEK_ELEVEN;
+                break;
+            case "Week12":
+                ePeriod = EPeriod.WEEK_TWELVE;
+                break;
+            case "Week13":
+                ePeriod = EPeriod.WEEK_THIRTEEN;
+                break;
+            case "Week14":
+                ePeriod = EPeriod.WEEK_FOURTEEN;
+                break;
+
+            default:
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+
+        }
+
+        switch (quarter) {
+            case "Quarter1":
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+            case "Quarter2":
+                eQuarter = EQuarter.QUARTER_TWO;
+                break;
+
+            case "Quarter3":
+                eQuarter = EQuarter.QUARTER_THREE;
+                break;
+
+            case "Quarter4":
+                eQuarter = EQuarter.QUARTER_FOUR;
+                break;
+
+            default:
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+        }
+        divisionAccomplishments = new AccomplishmentDao().findByQuarterAndPeriod(eQuarter, ePeriod);
+
     }
 
     public void registerDivisionManager() throws Exception {
@@ -101,32 +189,15 @@ public class InstitutionModel {
 
     public void registerIndicator() {
         indicator.setProject(registeredProject);
-        switch (quarter) {
-            case "QUARTER_ONE":
-                indicator.setQuarter(EQuarter.QUARTER_ONE);
-                break;
-
-            case "QUARTER_TWO":
-                indicator.setQuarter(EQuarter.QUARTER_TWO);
-                break;
-
-            case "QUARTER_THREE":
-                indicator.setQuarter(EQuarter.QUARTER_THREE);
-                break;
-
-            case "QUARTER_FOUR":
-                indicator.setQuarter(EQuarter.QUARTER_FOUR);
-                break;
-        }
         
         new IndicatorDao().register(indicator);
         indicator = new Indicator();
         indicators = new IndicatorDao().findByProject(registeredProject);
-        
+
         FacesContext fc = FacesContext.getCurrentInstance();
         fc.addMessage(null, new FacesMessage("Indicator Added"));
     }
-    
+
     public void registerTarget() {
         target.setIndicator(chosenIndicator);
         switch (quarter) {
@@ -146,27 +217,27 @@ public class InstitutionModel {
                 target.setQuarter(EQuarter.QUARTER_FOUR);
                 break;
         }
-        
+
         new TargetDao().register(target);
         target = new Target();
         targets = new TargetDao().findByIndicator(chosenIndicator);
-        
+
         FacesContext fc = FacesContext.getCurrentInstance();
         fc.addMessage(null, new FacesMessage("Target Added"));
     }
 
-    public String navigateProject(Project p){
+    public String navigateProject(Project p) {
         registeredProject = p;
         indicators = new IndicatorDao().findByProject(registeredProject);
         return "target.xhtml?faces-redirect=true";
-    } 
-    
-    public String navigateIndicator(Indicator ind){
+    }
+
+    public String navigateIndicator(Indicator ind) {
         chosenIndicator = ind;
         targets = new TargetDao().findByIndicator(ind);
-        return "indicator.xhtml?faces-redirect=true";        
+        return "indicator.xhtml?faces-redirect=true";
     }
-    
+
     public Account getLoggedInUser() {
         return loggedInUser;
     }
@@ -317,6 +388,14 @@ public class InstitutionModel {
 
     public void setChosenIndicator(Indicator chosenIndicator) {
         this.chosenIndicator = chosenIndicator;
+    }
+
+    public String getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(String period) {
+        this.period = period;
     }
 
 }

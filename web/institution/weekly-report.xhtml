@@ -71,6 +71,12 @@
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
     </h:head>
     <h:body>
+        <style>
+            .fixed-size {
+                table-layout: fixed;
+                word-wrap: break-word;
+            }
+        </style>
         <!--[if lt IE 8]>
                  <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
          <![endif]-->
@@ -85,18 +91,7 @@
                     <nav class="sidebar-nav left-sidebar-menu-pro">
                         <ul class="metismenu" id="menu1">
                             <li>
-                                <a href="users.xhtml" aria-expanded="false"><span class="educate-icon educate-professor icon-wrap"></span> <span class="mini-click-non">Division Managers</span></a>
-                            </li>
-                            <li>
-                                <a href="divisions.xhtml" aria-expanded="false"><span class="educate-icon educate-course icon-wrap"></span> <span class="mini-click-non">Divisions</span></a>
-
-                            </li>
-                            <li>
-                                <a href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Projects</span></a>
-                                
-                            </li>
-                            <li>
-                                <a href="report.xhtml" aria-expanded="false"><span class="educate-icon educate-form icon-wrap"></span> <span class="mini-click-non">Report</span></a>
+                                <a href="project-details.xhtml" aria-expanded="false"><span class="educate-icon educate-charts icon-wrap"></span> <span class="mini-click-non">Projects</span></a>
                             </li>
                         </ul>
                     </nav>
@@ -141,7 +136,7 @@
                                                     <li class="nav-item">
                                                         <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle">
                                                             <!--<img src="img/product/pro4.jpg" alt="" />-->
-                                                            <span class="admin-name">#{institutionModel.loggedInUser.firstName}</span>
+                                                            <span class="admin-name">#{divisionModel.loggedInUser.firstName}</span>
                                                             <i class="fa fa-angle-down edu-icon edu-down-arrow"></i>
                                                         </a>
                                                         <ul role="menu" class="dropdown-header-top author-log dropdown-menu animated zoomIn">
@@ -362,7 +357,7 @@
                                             <ul class="breadcome-menu">
                                                 <li><a href="#">Home</a> <span class="bread-slash">/</span>
                                                 </li>
-                                                <li><span class="bread-blod">Accounts Configuration</span>
+                                                <li><span class="bread-blod">Reports Configuration</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -384,57 +379,19 @@
                                     <div class="modal-close-area modal-close-df">
                                         <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
                                     </div>
-                                    <div class="modal-header">Add Division Manager</div>
+                                    <div class="modal-header">Add Weekly Report</div>
                                     <div class="modal-body">
                                         <div class="row">
-                                            <div class="row">
-                                                <div class="form-group">
-                                                    <div class="col-sm-3">
-                                                        <label class="col-form-label">First Name: </label>  
-                                                    </div>
-                                                    <div class="col-sm-9">
-                                                        <h:inputText class="form-control" value="#{institutionModel.user.firstName}" required="true" requiredMessage="First Name is Required"/>
-                                                    </div>
-                                                </div>
-                                            </div>
+
                                             <div class="row" style="padding-top: 5px;">
                                                 <div class="form-group">
                                                     <div class="col-sm-3">
-                                                        <label class="col-form-label">Last Name: </label> 
-                                                    </div>
-                                                    <div class="col-sm-9">
-                                                        <h:inputText class="form-control" value="#{institutionModel.user.lastName}" required="true" requiredMessage="Last Name is Required"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row" style="padding-top: 5px;">
-                                                <div class="form-group">
-                                                    <div class="col-sm-3">
-                                                        <label class="col-form-label">Phone: </label>  
-                                                    </div>
-                                                    <div class="col-sm-9">
-                                                        <h:inputText class="form-control" value="#{institutionModel.user.phone}"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row" style="padding-top: 5px;">
-                                                <div class="form-group">
-                                                    <div class="col-sm-3">
-                                                        <label class="col-form-label">Email: </label>  
+                                                        <label class="col-form-label">Target: </label>  
                                                     </div>
                                                     <div class="col-sm-9"> 
-                                                        <h:inputText class="form-control" value="#{institutionModel.user.email}" required="true" requiredMessage="Email is Required"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row" style="padding-top: 5px;">
-                                                <div class="form-group">
-                                                    <div class="col-sm-3">
-                                                        <label class="col-form-label">Division: </label>  
-                                                    </div>
-                                                    <div class="col-sm-9"> 
-                                                        <h:selectOneMenu class="form-control" value="#{institutionModel.divisionId}">
-                                                            <f:selectItems value="#{institutionModel.divisions}" var="d" itemValue="#{d.divisionId}" itemLabel="#{d.divisionName}" />
+                                                        <h:selectOneMenu class="form-control" value="#{divisionModel.targetId}">
+                                                            <f:selectItems value="#{divisionModel.targets}" var="tar" itemLabel="#{tar.targetTitle}" itemValue="#{tar.targetId}" />
+                                                            <f:ajax render="quarter" listener="#{divisionModel.findQuarter()}" />
                                                         </h:selectOneMenu>
                                                     </div>
                                                 </div>
@@ -442,27 +399,63 @@
                                             <div class="row" style="padding-top: 5px;">
                                                 <div class="form-group">
                                                     <div class="col-sm-3">
-                                                        <label class="col-form-label">Username: </label>  
+                                                        <label class="col-form-label">Quarter: </label>  
                                                     </div>
                                                     <div class="col-sm-9"> 
-                                                        <h:inputText class="form-control" value="#{institutionModel.user.username}" required="true" requiredMessage="Username is Required"/>
+                                                        <h:inputText disabled="true" id="quarter" class="form-control" value="#{divisionModel.quarter}" />
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row" style="padding-top: 5px;">
                                                 <div class="form-group">
                                                     <div class="col-sm-3">
-                                                        <label class="col-form-label">Password: </label>  
+                                                        <label class="col-form-label">Week: </label>  
                                                     </div>
                                                     <div class="col-sm-9"> 
-                                                        <h:inputText class="form-control" value="#{institutionModel.password}" required="true" requiredMessage="Password is Required"/>
+                                                        <h:selectOneMenu class="form-control" value="#{divisionModel.week}">
+                                                            <f:selectItem itemLabel="Week 1" itemValue="Week1" />
+                                                            <f:selectItem itemLabel="Week 2" itemValue="Week2" />
+                                                            <f:selectItem itemLabel="Week 3" itemValue="Week3" />
+                                                            <f:selectItem itemLabel="Week 4" itemValue="Week4" />
+                                                            <f:selectItem itemLabel="Week 5" itemValue="Week5" />
+                                                            <f:selectItem itemLabel="Week 6" itemValue="Week6" />
+                                                            <f:selectItem itemLabel="Week 7" itemValue="Week7" />
+                                                            <f:selectItem itemLabel="Week 8" itemValue="Week8" />
+                                                            <f:selectItem itemLabel="Week 9" itemValue="Week9" />
+                                                            <f:selectItem itemLabel="Week 10" itemValue="Week10" />
+                                                            <f:selectItem itemLabel="Week 11" itemValue="Week11" />
+                                                            <f:selectItem itemLabel="Week 12" itemValue="Week12" />
+                                                            <f:selectItem itemLabel="Week 13" itemValue="Week13" />
+                                                            <f:selectItem itemLabel="Week 14" itemValue="Week14" />
+                                                        </h:selectOneMenu>
                                                     </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row" style="padding-top: 5px;">
+                                                <div class="form-group">
+                                                    <!--<div class="col-sm-3">-->
+                                                    <label class="col-form-label">Achievement: </label>  
+                                                    <!--</div>-->
+                                                    <!--<div class="col-sm-9">-->
+                                                    <h:inputTextarea rows="5" class="form-control" value="#{divisionModel.accomplishment.accomplishment}" />
+                                                    <!--</div>-->
+                                                </div>
+                                            </div>
+                                            <div class="row" style="padding-top: 5px;">
+                                                <div class="form-group">
+                                                    <!--<div class="col-sm-3">-->
+                                                    <label class="col-form-label">Comment: </label> 
+                                                    <!--</div>-->
+                                                    <!--<div class="col-sm-9">-->
+                                                    <h:inputTextarea rows="5" class="form-control" value="#{divisionModel.accomplishment.challenge}" />
+                                                    <!--</div>-->
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <h:commandButton class="btn btn-primary" value="Register" action="#{institutionModel.registerDivisionManager()}" />
+                                        <h:commandButton class="btn btn-primary" value="Register" action="#{divisionModel.registerAccomplishment()}" />
                                     </div>
                                 </div>
                             </h:form>
@@ -470,54 +463,83 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="product-status-wrap">
-                                <h4>Division Manager List</h4>
-                                <div class="add-product">
-                                    <a href="#" data-toggle="modal" data-target="#PrimaryModalalert">Add Division Manager</a>
-                                </div>
-                                <div class="asset-inner">
-                                    <table>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Phone</th>
-                                            <th>Email</th>
-                                            <th>Division</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                        <h:form>
-                                            <c:forEach items="#{institutionModel.users}" var="elements" varStatus="status">
-                                                <tr>
-                                                    <td>${status.index + 1}</td>
-                                                    <td>#{elements.firstName}</td>
-                                                    <td>#{elements.lastName}</td>
-                                                    <td>#{elements.phone}</td>
-                                                    <td>#{elements.email}</td>
-                                                    <td>#{elements.division.divisionName}</td>
-                                                    <td>
-                                                        <c:choose>
-                                                            <c:when test="#{elements.status eq 'ACTIVE'}">
-                                                                <button class="pd-setting">Active</button>
-                                                            </c:when>
-                                                            <c:when test="#{elements.status eq 'INACTIVE'}">
-                                                                <button class="ds-setting">Inactive</button>
-                                                            </c:when>
-                                                        </c:choose>
-                                                    </td>
-                                                    <td>
-                                                        <button data-toggle="tooltip" title="Block" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-                                                        <button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                                    </td>
-                                                </tr>
-                                            </c:forEach>
-                                        </h:form>
-                                    </table>
+                            <div>
+                                <a class="btn btn-primary waves-effect waves-light" href="#" data-toggle="modal" data-target="#PrimaryModalalert">Add Report</a>
+                            </div>
+
+                            <div class="hpanel">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <div class="product-status-wrap">
+                                                <h4>Weekly Report</h4>
+                                                <div class="asset-inner">
+                                                    <h:form>
+                                                        <p:growl />
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <h:selectOneMenu class="form-control" value="#{divisionModel.quarter}">
+                                                                    <f:selectItem itemLabel="Quarter 1" itemValue="Quarter1" />
+                                                                    <f:selectItem itemLabel="Quarter 2" itemValue="Quarter2" />
+                                                                    <f:selectItem itemLabel="Quarter 3" itemValue="Quarter3" />
+                                                                    <f:selectItem itemLabel="Quarter 4" itemValue="Quarter4" />
+                                                                    <f:ajax render="tbl" listener="#{divisionModel.loadReport()}" />
+                                                                </h:selectOneMenu>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <h:selectOneMenu class="form-control" value="#{divisionModel.period}">
+                                                                    <f:selectItem itemLabel="Week 1" itemValue="Week1" />
+                                                                    <f:selectItem itemLabel="Week 2" itemValue="Week2" />
+                                                                    <f:selectItem itemLabel="Week 3" itemValue="Week3" />
+                                                                    <f:selectItem itemLabel="Week 4" itemValue="Week4" />
+                                                                    <f:selectItem itemLabel="Week 5" itemValue="Week5" />
+                                                                    <f:selectItem itemLabel="Week 6" itemValue="Week6" />
+                                                                    <f:selectItem itemLabel="Week 7" itemValue="Week7" />
+                                                                    <f:selectItem itemLabel="Week 8" itemValue="Week8" />
+                                                                    <f:selectItem itemLabel="Week 9" itemValue="Week9" />
+                                                                    <f:selectItem itemLabel="Week 10" itemValue="Week10" />
+                                                                    <f:selectItem itemLabel="Week 11" itemValue="Week11" />
+                                                                    <f:selectItem itemLabel="Week 12" itemValue="Week12" />
+                                                                    <f:selectItem itemLabel="Week 13" itemValue="Week13" />
+                                                                    <f:selectItem itemLabel="Week 14" itemValue="Week14" />
+                                                                    <f:ajax render="tbl" listener="#{divisionModel.loadReport()}" />
+                                                                </h:selectOneMenu>
+                                                            </div>
+                                                        </div>
+
+                                                        <p:dataTable tableStyle="width:auto" resizableColumns="true"  style="padding-top: 10px;" id="tbl" widgetVar="reportTable" var="acc" value="#{divisionModel.accomplishments}" sortBy="#{acc.target.indicator.project.division.divisionName}">
+
+
+                                                            <p:column headerText="Project" groupRow="true">
+                                                                <div>#{acc.target.indicator.project.projectTitle}</div>
+                                                            </p:column>
+
+                                                            <p:column headerText="Indicator" groupRow="true">
+                                                                <h:outputText value="#{acc.target.indicator.indicatorName}" />
+                                                            </p:column>
+                                                            <p:column headerText="Target (#{divisionModel.quarter})" groupRow="true">
+                                                                <h:outputText value="#{acc.target.targetTitle}" />
+                                                            </p:column>
+                                                            <p:column headerText="Achievement (#{divisionModel.period})" groupRow="true">
+                                                                <h:outputText value="#{acc.accomplishment}" />
+                                                            </p:column>
+                                                            <p:column headerText="Comment/Challenge" groupRow="true">
+                                                                <h:outputText value="#{acc.challenge}" />
+                                                            </p:column>
+                                                            <p:column headerText="Action" groupRow="true">
+                                                                <h:commandButton class="btn btn-custon-rounded-three btn-danger" value="Remove" action="#{divisionModel.deleteReport(acc)}" />
+                                                            </p:column>
+                                                        </p:dataTable>
+                                                    </h:form>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>                    
                 </div>
             </div>
             <div class="footer-copyright-area">

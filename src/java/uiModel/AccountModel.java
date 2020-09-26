@@ -1,8 +1,13 @@
 package uiModel;
 
+import common.PassCode;
+import dao.HibernateUtil;
+import dao.InstitutionDao;
 import dao.UserDao;
 import domain.Account;
+import domain.EAccessLevel;
 import domain.EStatus;
+import domain.Institution;
 import java.io.IOException;
 import java.util.List;
 import javax.faces.application.FacesMessage;
@@ -25,7 +30,6 @@ public class AccountModel {
 
     private Account u = new Account();
 
-
     public String login() throws IOException, Exception {
         findAccount();
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
@@ -47,17 +51,38 @@ public class AccountModel {
                 default:
                     user = null;
 
-                    ec.redirect(ec.getRequestContextPath() + "/index.xhtml");
+                    ec.redirect(ec.getRequestContextPath() + "/faces/index.xhtml");
 
-                    return "/QuarterlyTarget/index.xhtml";
+                    return "/QuarterlyTarget/faces/index.xhtml";
             }
 
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Wrong Password Or Accountname"));
-            ec.redirect(ec.getRequestContextPath() + "/index.xhtml");
-            return "index.xhtml";
+            ec.redirect(ec.getRequestContextPath() + "/faces/index.xhtml");
+            return "faces/index.xhtml";
         }
 
+    }
+
+    public void createUser() throws Exception {
+        Institution institution = new Institution();
+        institution.setEmail("risa@gov.rw");
+        institution.setInstitutionName("Risa");
+        institution.setLocation("Kacyiru");
+        institution.setPhone("078898970");
+        new InstitutionDao().register(institution);
+        
+        Account u = new Account();
+        u.setAccessLevel(EAccessLevel.INSTITUTION_MANAGER);
+        u.setEmail("risa@gov.rw");
+        u.setFirstName("Risa");
+        u.setLastName("admin");
+        u.setPassword(new PassCode().encrypt("admin"));
+        u.setStatus(EStatus.ACTIVE);
+        u.setUsername("risa");
+        u.setInstitution(institution);
+        new UserDao().register(u);
+        
     }
 
     public void findAccount() throws Exception {
@@ -110,7 +135,6 @@ public class AccountModel {
     public void setPassword(String password) {
         this.password = password;
     }
-
 
     public Account getU() {
         return u;
