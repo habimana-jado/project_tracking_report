@@ -27,6 +27,11 @@ public class Target implements Serializable {
     private String targetDescription;
     @Enumerated(EnumType.STRING)
     private EQuarter quarter;
+    @Enumerated(EnumType.STRING)
+    private EMonth month;
+    
+    @ManyToOne
+    private Target target;
         
     @ManyToOne
     private Indicator indicator;
@@ -82,6 +87,22 @@ public class Target implements Serializable {
 
     public void setTargetTitle(String targetTitle) {
         this.targetTitle = targetTitle;
+    }
+
+    public Target getTarget() {
+        return target;
+    }
+
+    public void setTarget(Target target) {
+        this.target = target;
+    }
+
+    public EMonth getMonth() {
+        return month;
+    }
+
+    public void setMonth(EMonth month) {
+        this.month = month;
     }
     
     

@@ -93,7 +93,7 @@
                             </li>
                             <li>
                                 <a href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Projects</span></a>
-                                
+
                             </li>
                             <li>
                                 <a href="report.xhtml" aria-expanded="false"><span class="educate-icon educate-form icon-wrap"></span> <span class="mini-click-non">Report</span></a>
@@ -313,7 +313,7 @@
                                                                                 <td>#{inst.targetDescription}</td>
                                                                                 <td>#{inst.quarter}</td>
                                                                                 <td>
-                                                                                    <h:commandLink title="Remove" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></h:commandLink>
+                                                                                    <h:commandLink action="#{institutionModel.navigateMonthlyTarget(inst)}" title="More" class="pd-setting-ed"><i class="fa fa-angle-double-right" aria-hidden="true"></i></h:commandLink>
                                                                                 </td>
                                                                             </tr>
                                                                         </c:forEach>
@@ -326,8 +326,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    
+
+
                                 </div>
                             </div>
                         </div>

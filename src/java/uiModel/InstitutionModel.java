@@ -14,6 +14,7 @@ import domain.EStatus;
 import domain.Project;
 import domain.Target;
 import domain.Account;
+import domain.EMonth;
 import domain.EPeriod;
 import domain.EQuarter;
 import domain.Indicator;
@@ -52,9 +53,13 @@ public class InstitutionModel {
     private Target target = new Target();
     private List<Accomplishment> divisionAccomplishments = new AccomplishmentDao().findAll(Accomplishment.class);
     private Indicator chosenIndicator = new Indicator();
+    private Target chosenTarget = new Target();
     private String period = new String();
     private EPeriod ePeriod;
     private EQuarter eQuarter;
+    private EMonth eMonth;
+    private List<Target> monthlyTargets = new ArrayList<>();
+    private String month = new String();
 
     @PostConstruct
     public void init() {
@@ -70,6 +75,9 @@ public class InstitutionModel {
 
         } else if (quarter.isEmpty() || quarter == null || quarter.equals("")) {
             quarter = "Quarter1";
+
+        }else if (month.isEmpty() || month == null || month.equals("")) {
+            month = "Month1";
 
         }
         switch (period) {
@@ -144,7 +152,26 @@ public class InstitutionModel {
                 break;
 
         }
-        divisionAccomplishments = new AccomplishmentDao().findByQuarterAndPeriod(eQuarter, ePeriod);
+        
+        switch (month) {
+            case "Month1":
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+            case "Month2":
+                eMonth = EMonth.MONTH_TWO;
+                break;
+
+            case "Month3":
+                eMonth = EMonth.MONTH_THREE;
+                break;
+
+            default:
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+        }
+        divisionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter,eMonth, ePeriod);
 
     }
 
@@ -226,6 +253,31 @@ public class InstitutionModel {
         fc.addMessage(null, new FacesMessage("Target Added"));
     }
 
+    public void registerMonthlyTarget() {
+        target.setTarget(chosenTarget);
+        switch (month) {
+            case "MONTH_ONE":
+                target.setMonth(EMonth.MONTH_ONE);
+                break;
+
+            case "MONTH_TWO":
+                target.setMonth(EMonth.MONTH_TWO);
+                break;
+
+            case "MONTH_THREE":
+                target.setMonth(EMonth.MONTH_THREE);
+                break;
+
+        }
+        target.setQuarter(chosenTarget.getQuarter());
+        new TargetDao().register(target);
+        target = new Target();
+        monthlyTargets = new TargetDao().findByTarget(chosenTarget);
+
+        FacesContext fc = FacesContext.getCurrentInstance();
+        fc.addMessage(null, new FacesMessage("Target Added"));
+    }
+
     public String navigateProject(Project p) {
         registeredProject = p;
         indicators = new IndicatorDao().findByProject(registeredProject);
@@ -236,6 +288,12 @@ public class InstitutionModel {
         chosenIndicator = ind;
         targets = new TargetDao().findByIndicator(ind);
         return "indicator.xhtml?faces-redirect=true";
+    }
+
+    public String navigateMonthlyTarget(Target ind) {
+        chosenTarget = ind;
+        monthlyTargets = new TargetDao().findByTarget(ind);
+        return "monthly-target.xhtml?faces-redirect=true";
     }
 
     public Account getLoggedInUser() {
@@ -396,6 +454,54 @@ public class InstitutionModel {
 
     public void setPeriod(String period) {
         this.period = period;
+    }
+
+    public Target getChosenTarget() {
+        return chosenTarget;
+    }
+
+    public void setChosenTarget(Target chosenTarget) {
+        this.chosenTarget = chosenTarget;
+    }
+
+    public EPeriod getePeriod() {
+        return ePeriod;
+    }
+
+    public void setePeriod(EPeriod ePeriod) {
+        this.ePeriod = ePeriod;
+    }
+
+    public EQuarter geteQuarter() {
+        return eQuarter;
+    }
+
+    public void seteQuarter(EQuarter eQuarter) {
+        this.eQuarter = eQuarter;
+    }
+
+    public List<Target> getMonthlyTargets() {
+        return monthlyTargets;
+    }
+
+    public void setMonthlyTargets(List<Target> monthlyTargets) {
+        this.monthlyTargets = monthlyTargets;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
+    }
+
+    public EMonth geteMonth() {
+        return eMonth;
+    }
+
+    public void seteMonth(EMonth eMonth) {
+        this.eMonth = eMonth;
     }
 
 }

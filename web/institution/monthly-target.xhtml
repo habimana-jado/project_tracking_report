@@ -71,12 +71,6 @@
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
     </h:head>
     <h:body>
-        <style>
-            .preformatted {
-                white-space: pre-wrap;
-                word-break: break-all;
-            }
-        </style>
         <!--[if lt IE 8]>
                  <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
          <![endif]-->
@@ -99,7 +93,7 @@
                             </li>
                             <li>
                                 <a href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Projects</span></a>
-
+                                
                             </li>
                             <li>
                                 <a href="report.xhtml" aria-expanded="false"><span class="educate-icon educate-form icon-wrap"></span> <span class="mini-click-non">Report</span></a>
@@ -213,7 +207,7 @@
                                             <ul class="breadcome-menu">
                                                 <li><a href="#">Home</a> <span class="bread-slash">/</span>
                                                 </li>
-                                                <li><span class="bread-blod">Report Configuration</span>
+                                                <li><span class="bread-blod">Indicator/Target Configuration</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -235,33 +229,57 @@
                                     <div class="modal-close-area modal-close-df">
                                         <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
                                     </div>
-                                    <div class="modal-header">Add Division</div>
+                                    <div class="modal-header">New Monthly Target</div>
                                     <div class="modal-body">
                                         <div class="row">
-                                            <div class="row">
-                                                <div class="form-group">
-                                                    <div class="col-sm-3">
-                                                        <label class="col-form-label">Division Name: </label>  
-                                                    </div>
-                                                    <div class="col-sm-9">
-                                                        <h:inputText class="form-control" value="#{institutionModel.division.divisionName}" required="true" requiredMessage="Division Name is Required"/>
-                                                    </div>
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Target: </label>  
                                                 </div>
-                                            </div>
-                                            <div class="row" style="padding-top: 5px;">
-                                                <div class="form-group">
-                                                    <div class="col-sm-3">
-                                                        <label class="col-form-label">Division Description: </label> 
-                                                    </div>
-                                                    <div class="col-sm-9">
-                                                        <h:inputTextarea rows="4" class="form-control" value="#{institutionModel.division.divisionDescription}" />
-                                                    </div>
+                                                <div class="col-sm-9">
+                                                    <h:inputText class="form-control" value="#{institutionModel.target.targetTitle}" required="true" requiredMessage="Title is Required"/>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <h:commandButton class="btn btn-primary" value="Register" action="#{institutionModel.registerDivision()}" />
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Description: </label> 
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <h:inputTextarea rows="6" class="form-control" value="#{institutionModel.target.targetDescription}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Quarter: </label>  
+                                                </div>
+                                                <div class="col-sm-9"> 
+                                                    <h:inputText disabled="true" class="form-control" value="#{institutionModel.chosenTarget.quarter}" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Month: </label>  
+                                                </div>
+                                                <div class="col-sm-9"> 
+                                                    <h:selectOneMenu class="form-control" value="#{institutionModel.month}" >
+                                                        <f:selectItem itemLabel="Month 1" itemValue="MONTH_ONE" /> 
+                                                        <f:selectItem itemLabel="Month 2" itemValue="MONTH_TWO" /> 
+                                                        <f:selectItem itemLabel="Month 3" itemValue="MONTH_THREE" /> 
+                                                    </h:selectOneMenu>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="payment-adress" style="padding-top: 5px;">
+                                                <h:commandButton action="#{institutionModel.registerMonthlyTarget()}" value="Register" class="btn btn-primary waves-effect waves-light"></h:commandButton>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </h:form>
@@ -269,138 +287,54 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="product-status-wrap">
-                                <h4>Weekly Report</h4>
-                                <div class="asset-inner">
-                                    <h:form>
+                            <div class="product-payment-inner-st">
+                                <ul id="myTabedu1" class="tab-review-design">
+                                    <li class="active"><a href="#description">Monthly-Target Information</a></li>
+                                </ul>
+                                <div id="myTabContent" class="tab-content custom-product-edit">
+                                    <div class="product-tab-list tab-pane fade active in" id="description">
                                         <div class="row">
-                                            <div class="col-lg-4">
-                                                <h:selectOneMenu class="form-control" value="#{institutionModel.quarter}">
-                                                    <f:selectItem itemLabel="Quarter 1" itemValue="Quarter1" />
-                                                    <f:selectItem itemLabel="Quarter 2" itemValue="Quarter2" />
-                                                    <f:selectItem itemLabel="Quarter 3" itemValue="Quarter3" />
-                                                    <f:selectItem itemLabel="Quarter 4" itemValue="Quarter4" />
-                                                    <f:ajax render="tbl" listener="#{institutionModel.loadReport()}" />
-                                                </h:selectOneMenu>
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <h:selectOneMenu class="form-control" value="#{institutionModel.month}">
-                                                    <f:selectItem itemLabel="Month 1" itemValue="Month1" />
-                                                    <f:selectItem itemLabel="Month 2" itemValue="Month2" />
-                                                    <f:selectItem itemLabel="Month 3" itemValue="Month3" />
-                                                    <f:ajax render="tbl" listener="#{institutionModel.loadReport()}" />
-                                                </h:selectOneMenu>
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <h:selectOneMenu class="form-control" value="#{institutionModel.period}">
-                                                    <f:selectItem itemLabel="Week 1" itemValue="Week1" />
-                                                    <f:selectItem itemLabel="Week 2" itemValue="Week2" />
-                                                    <f:selectItem itemLabel="Week 3" itemValue="Week3" />
-                                                    <f:selectItem itemLabel="Week 4" itemValue="Week4" />
-                                                    <f:ajax render="tbl" listener="#{institutionModel.loadReport()}" />
-                                                </h:selectOneMenu>
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <h3 class="text-primary">Project Title: #{institutionModel.registeredProject.projectTitle}</h3>
+                                                <h3 class="text-primary">Quarterly Target: #{institutionModel.chosenTarget.targetTitle}</h3>
+                                                
+                                                <div class="add-product" style="padding-top: 18px;">
+                                                    <a href="#" data-toggle="modal" data-target="#PrimaryModalalert">Add Monthly Target</a>
+                                                </div>                 
+                                                <div class="row">
+                                                    <h:form>
+                                                        <p:growl />
+                                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                            <div class="product-status-wrap">
+                                                                <div class="asset-inner">
+                                                                    <table class="table table-bordered">
+                                                                        <tr>
+                                                                            <th>No.</th>
+                                                                            <th>Target</th>
+                                                                            <th>Description</th>
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                        <c:forEach items="#{institutionModel.monthlyTargets}" var="inst" varStatus="status">
+                                                                            <tr>
+                                                                                <td>${status.index + 1}</td>
+                                                                                <td>#{inst.targetTitle}</td>
+                                                                                <td>#{inst.targetDescription}</td>
+                                                                                <td>
+                                                                                    <h:commandLink title="Remove" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></h:commandLink>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </c:forEach>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </h:form>
+                                                </div>
                                             </div>
                                         </div>
-                                        <p:dataTable style="padding-top: 10px;" id="tbl" widgetVar="reportTable" var="acc" value="#{institutionModel.divisionAccomplishments}" sortBy="#{acc.target.indicator.project.division.divisionName}">
-                                            <p:column headerText="Division" groupRow="true">
-                                                <h:outputText  styleClass="preformatted" value="#{acc.target.target.indicator.project.division.divisionName}" />
-                                            </p:column>
-                                            <p:column headerText="Project" groupRow="true">
-                                                <h:outputText styleClass="preformatted" value="#{acc.target.target.indicator.project.projectTitle}" />
-                                            </p:column>
-
-                                            <c:choose>
-                                                <c:when test="#{institutionModel.quarter eq 'Quarter1'}">
-                                                    <p:column headerText="Target (Q1)" groupRow="true">
-                                                        <h:outputText styleClass="preformatted" value="#{acc.target.target.targetTitle}" />
-                                                    </p:column>                                       
-                                                </c:when>
-                                                <c:when test="#{institutionModel.quarter eq 'Quarter2'}">
-                                                    <p:column headerText="Target (Q2)" groupRow="true">
-                                                        <h:outputText styleClass="preformatted" value="#{acc.target.target.targetTitle}" />
-                                                    </p:column>                                       
-                                                </c:when>
-                                                <c:when test="#{institutionModel.quarter eq 'Quarter3'}">
-                                                    <p:column headerText="Target (Q3)" groupRow="true">
-                                                        <h:outputText styleClass="preformatted" value="#{acc.target.target.targetTitle}" />
-                                                    </p:column>                                       
-                                                </c:when>
-                                                <c:when test="#{institutionModel.quarter eq 'Quarter4'}">
-                                                    <p:column headerText="Target (Q4)" groupRow="true">
-                                                        <h:outputText styleClass="preformatted" value="#{acc.target.target.targetTitle}" />
-                                                    </p:column>                                       
-                                                </c:when>
-                                            </c:choose>
-                                            
-                                            <c:choose>
-                                                <c:when test="#{institutionModel.month eq 'Month1'}">
-                                                    <p:column headerText="Target (M1)" groupRow="true">
-                                                        <h:outputText styleClass="preformatted" value="#{acc.target.targetTitle}" />
-                                                    </p:column>                                                    
-                                                </c:when>
-                                                <c:when test="#{institutionModel.month eq 'Month2'}">
-                                                    <p:column headerText="Target (M2)" groupRow="true">
-                                                        <h:outputText styleClass="preformatted" value="#{acc.target.targetTitle}" />
-                                                    </p:column>                                                    
-                                                </c:when>
-                                                <c:when test="#{institutionModel.month eq 'Month3'}">
-                                                    <p:column headerText="Target (M3)" groupRow="true">
-                                                        <h:outputText styleClass="preformatted" value="#{acc.target.targetTitle}" />
-                                                    </p:column>                                                    
-                                                </c:when>
-                                            </c:choose>
-                                            
-                                            <c:choose>
-                                                <c:when test="#{institutionModel.period eq 'Week1'}">
-                                                    <p:column headerText="Update(W1)" groupRow="true">
-                                                        <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
-                                                    </p:column>
-                                                </c:when>
-                                                <c:when test="#{institutionModel.period eq 'Week2'}">
-                                                    <p:column headerText="Update(W2)" groupRow="true">
-                                                        <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
-                                                    </p:column>
-                                                </c:when>
-                                                <c:when test="#{institutionModel.period eq 'Week3'}">
-                                                    <p:column headerText="Update(W3)" groupRow="true">
-                                                        <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
-                                                    </p:column>
-                                                </c:when>
-                                                <c:when test="#{institutionModel.period eq 'Week4'}">
-                                                    <p:column headerText="Update(W4)" groupRow="true">
-                                                        <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
-                                                    </p:column>
-                                                </c:when>
-                                            </c:choose>
-
-                                            <c:choose>
-                                                <c:when test="#{institutionModel.period eq 'Week1'}">
-                                                    <p:column headerText="Comments(W1)" groupRow="true">
-                                                        <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
-                                                    </p:column>
-                                                </c:when>
-                                                <c:when test="#{institutionModel.period eq 'Week2'}">
-                                                    <p:column headerText="Comments(W2)" groupRow="true">
-                                                        <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
-                                                    </p:column>
-                                                </c:when>
-                                                <c:when test="#{institutionModel.period eq 'Week3'}">
-                                                    <p:column headerText="Comments(W3)" groupRow="true">
-                                                        <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
-                                                    </p:column>
-                                                </c:when>
-                                                <c:when test="#{institutionModel.period eq 'Week4'}">
-                                                    <p:column headerText="Comments(W4)" groupRow="true">
-                                                        <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
-                                                    </p:column>
-                                                </c:when>
-                                            </c:choose>
-                                            <p:column headerText="Next-Week Plan" groupRow="true">
-                                                <h:outputText styleClass="preformatted" value="#{acc.nextWeekPlan}" />
-                                            </p:column>
-                                        </p:dataTable>
-                                    </h:form>
-
+                                    </div>
+                                    
+                                    
                                 </div>
                             </div>
                         </div>

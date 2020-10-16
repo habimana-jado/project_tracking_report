@@ -7,6 +7,10 @@ import dao.TargetDao;
 import domain.Accomplishment;
 import domain.Project;
 import domain.Account;
+import domain.EMonth;
+import static domain.EMonth.MONTH_ONE;
+import static domain.EMonth.MONTH_THREE;
+import static domain.EMonth.MONTH_TWO;
 import domain.EPeriod;
 import domain.EQuarter;
 import domain.Indicator;
@@ -39,6 +43,7 @@ public class DivisionModel {
     private String period = new String();
     private EPeriod ePeriod;
     private EQuarter eQuarter;
+    private EMonth eMonth;
     private String targetId = new String();
     private Project chosenProject = new Project();
     private List<Indicator> indicators = new ArrayList<>();
@@ -46,6 +51,7 @@ public class DivisionModel {
     private String indicatorId = new String();   
     private Indicator chosenIndicator = new Indicator();
     private Target oneTarget = new Target();
+    private String month = new String();
     
     @PostConstruct
     public void init() {
@@ -117,10 +123,59 @@ public class DivisionModel {
     
     public String chooseIndicator(Indicator i){        
         chosenIndicator = i;
-        accomplishments = new AccomplishmentDao().findByIndicatorAndQuarterAndPeriod(i, EQuarter.QUARTER_ONE, EPeriod.WEEK_ONE);
+//        accomplishments = new AccomplishmentDao().findByIndicatorAndQuarterAndPeriod(i, EQuarter.QUARTER_ONE, EPeriod.WEEK_ONE);
+        accomplishments = new AccomplishmentDao().findByDivisionAndProjectAndQuarterAndPeriodAndMonth(eQuarter, ePeriod, chosenProject, eMonth);
         quarter = EQuarter.QUARTER_ONE+"";
+        month = EMonth.MONTH_ONE+"";
         targets = new TargetDao().findByIndicator(i);
+        oneTarget = new TargetDao().findByIndicatorAndQuarterAndMonth(i, EQuarter.QUARTER_ONE, EMonth.MONTH_ONE);
         return "weekly-report.xhtml?faces-redirect=true";
+    }
+    
+    public void findTarget(){
+        
+        switch (quarter) {
+            case "QUARTER_ONE":
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+            case "QUARTER_TWO":
+                eQuarter = EQuarter.QUARTER_TWO;
+                break;
+
+            case "QUARTER_THREE":
+                eQuarter = EQuarter.QUARTER_THREE;
+                break;
+
+            case "QUARTER_FOUR":
+                eQuarter = EQuarter.QUARTER_FOUR;
+                break;
+
+            default:
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+        }
+        
+        switch (month) {
+            case "MONTH_ONE":
+                eMonth = MONTH_ONE;
+                break;
+
+            case "MONTH_TWO":
+                eMonth = MONTH_TWO;
+                break;
+
+            case "MONTH_THREE":
+                eMonth = MONTH_THREE;
+                break;
+
+            default:
+                eMonth = MONTH_ONE;
+                break;
+
+        }
+        oneTarget = new TargetDao().findByIndicatorAndQuarterAndMonth(chosenIndicator, eQuarter, eMonth);
     }
 
     public void loadReport() {
@@ -203,7 +258,26 @@ public class DivisionModel {
                 break;
 
         }
-        accomplishments = new AccomplishmentDao().findByDivisionAndProjectAndQuarterAndPeriod(eQuarter, loggedInUser.getDivision(), ePeriod, chosenProject);
+        
+        switch (month) {
+            case "MONTH_ONE":
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+            case "MONTH_TWO":
+                eMonth = EMonth.MONTH_TWO;
+                break;
+
+            case "MONTH_THREE":
+                eMonth = EMonth.MONTH_THREE;
+                break;
+
+            default:
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+        }
+        accomplishments = new AccomplishmentDao().findByDivisionAndProjectAndQuarterAndPeriodAndMonth(eQuarter, ePeriod, chosenProject, eMonth);
 
     }
 
@@ -253,19 +327,19 @@ public class DivisionModel {
                 break;
         }
         switch (quarter) {
-            case "Quarter1":
+            case "QUARTER_ONE":
                 eQuarter = EQuarter.QUARTER_ONE;
                 break;
 
-            case "Quarter2":
+            case "QUARTER_TWO":
                 eQuarter = EQuarter.QUARTER_TWO;
                 break;
 
-            case "Quarter3":
+            case "QUARTER_THREE":
                 eQuarter = EQuarter.QUARTER_THREE;
                 break;
 
-            case "Quarter4":
+            case "QUARTER_FOUR":
                 eQuarter = EQuarter.QUARTER_FOUR;
                 break;
 
@@ -275,8 +349,7 @@ public class DivisionModel {
 
         }
         
-        Target tar = new TargetDao().findOne(Target.class, targetId);
-        accomplishment.setTarget(tar);
+        accomplishment.setTarget(oneTarget);
         new AccomplishmentDao().register(accomplishment);
         accomplishment = new Accomplishment();
         loadReport();
@@ -290,7 +363,7 @@ public class DivisionModel {
         chosenProject = p;
         indicators = new IndicatorDao().findByProject(p);
 //        targets = new TargetDao().findByProject(p);
-        accomplishments = new AccomplishmentDao().findByDivisionAndProjectAndQuarterAndPeriod(EQuarter.QUARTER_ONE, loggedInUser.getDivision(), EPeriod.WEEK_ONE, p);
+        accomplishments = new AccomplishmentDao().findByDivisionAndProjectAndQuarterAndPeriodAndMonth(EQuarter.QUARTER_ONE, EPeriod.WEEK_ONE, p, EMonth.MONTH_ONE);
         return "weekly-view?faces-redirect=true";
     }
 
@@ -444,6 +517,14 @@ public class DivisionModel {
 
     public void setOneTarget(Target oneTarget) {
         this.oneTarget = oneTarget;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
     }
 
 }

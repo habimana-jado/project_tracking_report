@@ -26,6 +26,7 @@ public class Accomplishment implements Serializable {
     private String remarks;
     @Enumerated(EnumType.STRING)
     private EPeriod period;
+    private String nextWeekPlan;
     
     @ManyToOne
     private Target target;
@@ -76,6 +77,14 @@ public class Accomplishment implements Serializable {
 
     public void setTarget(Target target) {
         this.target = target;
+    }
+
+    public String getNextWeekPlan() {
+        return nextWeekPlan;
+    }
+
+    public void setNextWeekPlan(String nextWeekPlan) {
+        this.nextWeekPlan = nextWeekPlan;
     }
     
     

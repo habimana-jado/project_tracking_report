@@ -219,12 +219,15 @@
                                             <div class="row" style="padding-top: 5px;">
                                                 <div class="form-group">
                                                     <div class="col-sm-3">
-                                                        <label class="col-form-label">Target: </label>  
+                                                        <label class="col-form-label">Quarter: </label>  
                                                     </div>
                                                     <div class="col-sm-9"> 
-                                                        <h:selectOneMenu class="form-control" value="#{divisionModel.targetId}">
-                                                            <f:selectItems value="#{divisionModel.targets}" var="tar" itemLabel="#{tar.targetTitle}" itemValue="#{tar.targetId}" />
-                                                            <f:ajax render="quarter" listener="#{divisionModel.findQuarter()}" />
+                                                        <h:selectOneMenu class="form-control" value="#{divisionModel.quarter}">
+                                                            <f:selectItem itemLabel="Quarter 1" itemValue="QUARTER_ONE" />
+                                                            <f:selectItem itemLabel="Quarter 2" itemValue="QUARTER_TWO" />
+                                                            <f:selectItem itemLabel="Quarter 3" itemValue="QUARTER_THREE" />
+                                                            <f:selectItem itemLabel="Quarter 4" itemValue="QUARTER_FOUR" />
+                                                            <f:ajax render="target" listener="#{divisionModel.findTarget}" />
                                                         </h:selectOneMenu>
                                                     </div>
                                                 </div>
@@ -232,10 +235,25 @@
                                             <div class="row" style="padding-top: 5px;">
                                                 <div class="form-group">
                                                     <div class="col-sm-3">
-                                                        <label class="col-form-label">Quarter: </label>  
+                                                        <label class="col-form-label">Month: </label>  
                                                     </div>
                                                     <div class="col-sm-9"> 
-                                                        <h:inputText disabled="true" id="quarter" class="form-control" value="#{divisionModel.quarter}" />
+                                                        <h:selectOneMenu class="form-control" value="#{divisionModel.month}">
+                                                            <f:selectItem itemLabel="Month 1" itemValue="MONTH_ONE" />
+                                                            <f:selectItem itemLabel="Month 2" itemValue="MONTH_TWO" />
+                                                            <f:selectItem itemLabel="Month 3" itemValue="MONTH_THREE" />
+                                                            <f:ajax render="target" listener="#{divisionModel.findTarget}" />
+                                                        </h:selectOneMenu>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="padding-top: 5px;">
+                                                <div class="form-group">
+                                                    <div class="col-sm-3">
+                                                        <label class="col-form-label">Target: </label>  
+                                                    </div>
+                                                    <div class="col-sm-9"> 
+                                                        <h:inputText disabled="true" id="target" class="form-control" value="#{divisionModel.oneTarget.targetTitle}" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -250,16 +268,6 @@
                                                             <f:selectItem itemLabel="Week 2" itemValue="Week2" />
                                                             <f:selectItem itemLabel="Week 3" itemValue="Week3" />
                                                             <f:selectItem itemLabel="Week 4" itemValue="Week4" />
-                                                            <f:selectItem itemLabel="Week 5" itemValue="Week5" />
-                                                            <f:selectItem itemLabel="Week 6" itemValue="Week6" />
-                                                            <f:selectItem itemLabel="Week 7" itemValue="Week7" />
-                                                            <f:selectItem itemLabel="Week 8" itemValue="Week8" />
-                                                            <f:selectItem itemLabel="Week 9" itemValue="Week9" />
-                                                            <f:selectItem itemLabel="Week 10" itemValue="Week10" />
-                                                            <f:selectItem itemLabel="Week 11" itemValue="Week11" />
-                                                            <f:selectItem itemLabel="Week 12" itemValue="Week12" />
-                                                            <f:selectItem itemLabel="Week 13" itemValue="Week13" />
-                                                            <f:selectItem itemLabel="Week 14" itemValue="Week14" />
                                                         </h:selectOneMenu>
                                                     </div>
                                                 </div>
@@ -282,6 +290,16 @@
                                                     <!--</div>-->
                                                     <!--<div class="col-sm-9">-->
                                                     <h:inputTextarea rows="5" class="form-control" value="#{divisionModel.accomplishment.challenge}" />
+                                                    <!--</div>-->
+                                                </div>
+                                            </div>
+                                            <div class="row" style="padding-top: 5px;">
+                                                <div class="form-group">
+                                                    <!--<div class="col-sm-3">-->
+                                                    <label class="col-form-label">Next Week Plan: </label> 
+                                                    <!--</div>-->
+                                                    <!--<div class="col-sm-9">-->
+                                                    <h:inputTextarea rows="5" class="form-control" value="#{divisionModel.accomplishment.nextWeekPlan}" />
                                                     <!--</div>-->
                                                 </div>
                                             </div>
@@ -310,7 +328,7 @@
                                                     <h:form>
                                                         <p:growl />
                                                         <div class="row">
-                                                            <div class="col-lg-6">
+                                                            <div class="col-lg-4">
                                                                 <h:selectOneMenu class="form-control" value="#{divisionModel.quarter}">
                                                                     <f:selectItem itemLabel="Quarter 1" itemValue="Quarter1" />
                                                                     <f:selectItem itemLabel="Quarter 2" itemValue="Quarter2" />
@@ -319,22 +337,20 @@
                                                                     <f:ajax render="tbl" listener="#{divisionModel.loadReport()}" />
                                                                 </h:selectOneMenu>
                                                             </div>
-                                                            <div class="col-lg-6">
+                                                            <div class="col-lg-4">
+                                                                <h:selectOneMenu class="form-control" value="#{divisionModel.month}">
+                                                                    <f:selectItem itemLabel="Month 1" itemValue="MONTH_ONE" />
+                                                                    <f:selectItem itemLabel="Month 2" itemValue="MONTH_TWO" />
+                                                                    <f:selectItem itemLabel="Month 3" itemValue="MONTH_THREE" />
+                                                                    <f:ajax render="tbl" listener="#{divisionModel.loadReport()}" />
+                                                                </h:selectOneMenu>
+                                                            </div>
+                                                            <div class="col-lg-4">
                                                                 <h:selectOneMenu class="form-control" value="#{divisionModel.period}">
                                                                     <f:selectItem itemLabel="Week 1" itemValue="Week1" />
                                                                     <f:selectItem itemLabel="Week 2" itemValue="Week2" />
                                                                     <f:selectItem itemLabel="Week 3" itemValue="Week3" />
                                                                     <f:selectItem itemLabel="Week 4" itemValue="Week4" />
-                                                                    <f:selectItem itemLabel="Week 5" itemValue="Week5" />
-                                                                    <f:selectItem itemLabel="Week 6" itemValue="Week6" />
-                                                                    <f:selectItem itemLabel="Week 7" itemValue="Week7" />
-                                                                    <f:selectItem itemLabel="Week 8" itemValue="Week8" />
-                                                                    <f:selectItem itemLabel="Week 9" itemValue="Week9" />
-                                                                    <f:selectItem itemLabel="Week 10" itemValue="Week10" />
-                                                                    <f:selectItem itemLabel="Week 11" itemValue="Week11" />
-                                                                    <f:selectItem itemLabel="Week 12" itemValue="Week12" />
-                                                                    <f:selectItem itemLabel="Week 13" itemValue="Week13" />
-                                                                    <f:selectItem itemLabel="Week 14" itemValue="Week14" />
                                                                     <f:ajax render="tbl" listener="#{divisionModel.loadReport()}" />
                                                                 </h:selectOneMenu>
                                                             </div>
@@ -344,20 +360,99 @@
 
 
                                                             <p:column headerText="Project" groupRow="true">
-                                                                <h:outputText styleClass="preformatted" value="#{acc.target.indicator.project.projectTitle}" />
+                                                                <h:outputText styleClass="preformatted" value="#{acc.target.target.indicator.project.projectTitle}" />
                                                             </p:column>
 
                                                             <p:column headerText="Indicator" groupRow="true">
-                                                                <h:outputText styleClass="preformatted" value="#{acc.target.indicator.indicatorName}" />
+                                                                <h:outputText styleClass="preformatted" value="#{acc.target.target.indicator.indicatorName}" />
                                                             </p:column>
-                                                            <p:column headerText="Target (#{divisionModel.quarter})" groupRow="true">
-                                                                <h:outputText styleClass="preformatted" value="#{acc.target.targetTitle}" />
-                                                            </p:column>
-                                                            <p:column headerText="Achievement (#{divisionModel.period})" groupRow="true">
-                                                                <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
-                                                            </p:column>
-                                                            <p:column headerText="Comment/Challenge" groupRow="true">
-                                                                <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
+                                                            <c:choose>
+                                                                <c:when test="#{divisionModel.quarter eq 'Quarter1'}">
+                                                                    <p:column headerText="Target (Q1)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.target.target.targetTitle}" />
+                                                                    </p:column>                                       
+                                                                </c:when>
+                                                                <c:when test="#{divisionModel.quarter eq 'Quarter2'}">
+                                                                    <p:column headerText="Target (Q2)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.target.target.targetTitle}" />
+                                                                    </p:column>                                       
+                                                                </c:when>
+                                                                <c:when test="#{divisionModel.quarter eq 'Quarter3'}">
+                                                                    <p:column headerText="Target (Q3)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.target.target.targetTitle}" />
+                                                                    </p:column>                                       
+                                                                </c:when>
+                                                                <c:when test="#{divisionModel.quarter eq 'Quarter4'}">
+                                                                    <p:column headerText="Target (Q4)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.target.target.targetTitle}" />
+                                                                    </p:column>                                       
+                                                                </c:when>
+                                                            </c:choose>
+
+                                                            <c:choose>
+                                                                <c:when test="#{divisionModel.month eq 'MONTH_ONE'}">
+                                                                    <p:column headerText="Target (M1)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.target.targetTitle}" />
+                                                                    </p:column>                                                    
+                                                                </c:when>
+                                                                <c:when test="#{divisionModel.month eq 'MONTH_TWO'}">
+                                                                    <p:column headerText="Target (M2)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.target.targetTitle}" />
+                                                                    </p:column>                                                    
+                                                                </c:when>
+                                                                <c:when test="#{divisionModel.month eq 'MONTH_THREE'}">
+                                                                    <p:column headerText="Target (M3)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.target.targetTitle}" />
+                                                                    </p:column>                                                    
+                                                                </c:when>
+                                                            </c:choose>
+
+                                                            <c:choose>
+                                                                <c:when test="#{divisionModel.period eq 'Week1'}">
+                                                                    <p:column headerText="Update(W1)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
+                                                                    </p:column>
+                                                                </c:when>
+                                                                <c:when test="#{divisionModel.period eq 'Week2'}">
+                                                                    <p:column headerText="Update(W2)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
+                                                                    </p:column>
+                                                                </c:when>
+                                                                <c:when test="#{divisionModel.period eq 'Week3'}">
+                                                                    <p:column headerText="Update(W3)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
+                                                                    </p:column>
+                                                                </c:when>
+                                                                <c:when test="#{divisionModel.period eq 'Week4'}">
+                                                                    <p:column headerText="Update(W4)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
+                                                                    </p:column>
+                                                                </c:when>
+                                                            </c:choose>
+                                                            <c:choose>
+                                                                <c:when test="#{divisionModel.period eq 'Week1'}">
+                                                                    <p:column headerText="Comments(W1)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
+                                                                    </p:column>
+                                                                </c:when>
+                                                                <c:when test="#{divisionModel.period eq 'Week2'}">
+                                                                    <p:column headerText="Comments(W2)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
+                                                                    </p:column>
+                                                                </c:when>
+                                                                <c:when test="#{divisionModel.period eq 'Week3'}">
+                                                                    <p:column headerText="Comments(W3)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
+                                                                    </p:column>
+                                                                </c:when>
+                                                                <c:when test="#{divisionModel.period eq 'Week4'}">
+                                                                    <p:column headerText="Comments(W4)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
+                                                                    </p:column>
+                                                                </c:when>
+                                                            </c:choose>
+                                                            <p:column headerText="Next-Week Plan" groupRow="true">
+                                                                <h:outputText styleClass="preformatted" value="#{acc.nextWeekPlan}" />
                                                             </p:column>
                                                             <p:column headerText="Action" groupRow="true">
                                                                 <h:commandButton class="btn btn-custon-rounded-three btn-danger" value="Remove" action="#{divisionModel.deleteReport(acc)}" />

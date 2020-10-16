@@ -299,7 +299,6 @@
                                                                             <th>Indicator</th>
                                                                             <th>Description</th>
                                                                             <th>Remarks</th>
-                                                                            <th>Quarter</th>
                                                                             <th>Action</th>
                                                                         </tr>
                                                                         <c:forEach items="#{institutionModel.indicators}" var="inst" varStatus="status">
@@ -308,9 +307,6 @@
                                                                                 <td>#{inst.indicatorName}</td>
                                                                                 <td>#{inst.description}</td>
                                                                                 <td>#{inst.remarks}</td>
-                                                                                <td>
-                                                                                    #{inst.quarter}
-                                                                                </td>
                                                                                 <td>
                                                                                     <h:commandLink action="#{institutionModel.navigateIndicator(inst)}" title="More" class="pd-setting-ed"><i class="fa fa-angle-double-right" aria-hidden="true"></i></h:commandLink>
                                                                                     <!--<h:commandLink title="Remove" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></h:commandLink>-->

@@ -1,6 +1,7 @@
 
 package dao;
 
+import domain.EMonth;
 import domain.EQuarter;
 import domain.Indicator;
 import domain.Project;
@@ -17,6 +18,15 @@ public class TargetDao extends GenericDao<Target>{
     public List<Target> findByIndicator(Indicator p){
         Session s = HibernateUtil.getSessionFactory().openSession();
         Query q = s.createQuery("SELECT a FROM Target a WHERE a.indicator = :x");
+        q.setParameter("x", p);
+        List<Target> list = q.list();
+        s.close();
+        return list;
+    }
+    
+    public List<Target> findByTarget(Target p){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM Target a WHERE a.target = :x");
         q.setParameter("x", p);
         List<Target> list = q.list();
         s.close();
@@ -48,6 +58,17 @@ public class TargetDao extends GenericDao<Target>{
         q.setParameter("x", p);
         q.setParameter("y", in);
         List<Target> list = q.list();
+        s.close();
+        return list;
+    }
+     
+    public Target findByIndicatorAndQuarterAndMonth(Indicator in, EQuarter qu, EMonth p){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM Target a WHERE a.target.indicator = :y AND a.quarter = :z AND a.month = :x");
+        q.setParameter("x", p);
+        q.setParameter("y", in);
+        q.setParameter("z", qu);
+        Target list = (Target) q.uniqueResult();
         s.close();
         return list;
     }

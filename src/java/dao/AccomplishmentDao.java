@@ -3,6 +3,7 @@ package dao;
 
 import domain.Accomplishment;
 import domain.Division;
+import domain.EMonth;
 import domain.EPeriod;
 import domain.EQuarter;
 import domain.Indicator;
@@ -46,11 +47,12 @@ public class AccomplishmentDao extends GenericDao<Accomplishment>{
         return list;
     }
     
-    public List<Accomplishment> findByQuarterAndPeriod(EQuarter q, EPeriod p){
+    public List<Accomplishment> findByQuarterAndMonthAndPeriod(EQuarter q,EMonth m, EPeriod p){
         Session s = HibernateUtil.getSessionFactory().openSession();
-        Query qu = s.createQuery("SELECT a FROM Accomplishment a WHERE a.period = :p AND a.target.quarter = :q");
+        Query qu = s.createQuery("SELECT a FROM Accomplishment a WHERE a.period = :p AND a.target.quarter = :q AND a.target.month = :m");
         qu.setParameter("p", p);
         qu.setParameter("q", q);
+        qu.setParameter("m", m);
         List<Accomplishment> list = qu.list();
         s.close();
         return list;
@@ -67,13 +69,13 @@ public class AccomplishmentDao extends GenericDao<Accomplishment>{
         return list;
     }
     
-    public List<Accomplishment> findByDivisionAndProjectAndQuarterAndPeriod(EQuarter q, Division d, EPeriod p, Project pr){
+    public List<Accomplishment> findByDivisionAndProjectAndQuarterAndPeriodAndMonth(EQuarter q, EPeriod p, Project pr, EMonth mo){
         Session s = HibernateUtil.getSessionFactory().openSession();
-        Query qu = s.createQuery("SELECT a FROM Accomplishment a WHERE a.period = :p AND a.target.quarter = :q AND a.target.indicator.project.division = :d AND a.target.indicator.project = :pr");
+        Query qu = s.createQuery("SELECT a FROM Accomplishment a WHERE a.period = :p AND a.target.quarter = :q AND a.target.target.indicator.project = :pr AND a.target.month = :mo");
         qu.setParameter("p", p);
         qu.setParameter("q", q);
-        qu.setParameter("d", d);
         qu.setParameter("pr", pr);
+        qu.setParameter("mo", mo);
         List<Accomplishment> list = qu.list();
         s.close();
         return list;
