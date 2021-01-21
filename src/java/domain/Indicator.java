@@ -30,7 +30,7 @@ public class Indicator implements Serializable{
     private EQuarter quarter;
     private String baseline;
     
-    @OneToMany(mappedBy = "indicator", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "indicator", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Fetch(FetchMode.SUBSELECT)
     private List<Target> target;
     

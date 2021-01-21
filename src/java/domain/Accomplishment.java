@@ -28,6 +28,7 @@ public class Accomplishment implements Serializable {
     private EPeriod period;
     private String nextWeekPlan;
     
+    
     @ManyToOne
     private Target target;
 

@@ -13,7 +13,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <!-- favicon
                     ============================================ -->
-        <link rel="shortcut icon" type="image/x-icon" href="img/favicon_1.ico"/>
+        <link rel="shortcut icon" type="image/x-icon" href="img/migeprof.ico"/>
         <!-- Google Fonts
                     ============================================ -->
         <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet"/>
@@ -79,21 +79,20 @@
         <div class="left-sidebar-pro">
             <nav id="sidebar" class="">
                 <div class="sidebar-header">
-                    <a href="#"><img style="padding-top: 5px;" width="120px;" height="80px;" class="main-logo" src="../Login_v1/images/risalogo.jpg" alt="" /></a>
-                    <strong><a href="#"><img style="padding-top: 5px;" width="60px;" height="40px;" src="../Login_v1/images/risalogo.jpg" alt="" /></a></strong>
+                    <a href="#"><img style="padding-top: 5px;" width="120px;" height="80px;" class="main-logo" src="../Login_v1/images/migeprof logo.png" alt="" /></a>
+                    <strong><a href="#"><img style="padding-top: 5px;" width="60px;" height="40px;" src="../Login_v1/images/migeprof logo.png" alt="" /></a></strong>
                 </div>
                 <div class="left-custom-menu-adp-wrap comment-scrollbar">
                     <nav class="sidebar-nav left-sidebar-menu-pro">
                         <ul class="metismenu" id="menu1">
                             <li>
-                                <a href="users.xhtml" aria-expanded="false"><span class="educate-icon educate-professor icon-wrap"></span> <span class="mini-click-non">Division Managers</span></a>
+                                <a href="divisions.xhtml" aria-expanded="false"><span class="educate-icon educate-course icon-wrap"></span> <span class="mini-click-non">Dpts/Dcts/Units</span></a>
                             </li>
                             <li>
-                                <a href="divisions.xhtml" aria-expanded="false"><span class="educate-icon educate-course icon-wrap"></span> <span class="mini-click-non">Divisions</span></a>
-
+                                <a href="users.xhtml" aria-expanded="false"><span class="educate-icon educate-professor icon-wrap"></span> <span class="mini-click-non">Dpts/Dcts/Units Users</span></a>
                             </li>
                             <li>
-                                <a href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Projects</span></a>
+                                <a href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Activity List</span></a>
                                 
                             </li>
                             <li>
@@ -111,7 +110,7 @@
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="logo-pro">
-                            <a href="#"><img style="padding-top: 5px;" width="60px;" height="40px;" class="main-logo" src="../Login_v1/images/risalogo.jpg" alt="" /></a>
+                            <a href="#"><img style="padding-top: 5px;" width="60px;" height="40px;" class="main-logo" src="../Login_v1/images/migeprof logo.png" alt="" /></a>
                         </div>
                     </div>
                 </div>
@@ -172,11 +171,11 @@
                                     <nav id="dropdown">
                                         <ul class="mobile-menu-nav">
                                             <li>
-                                                <a href="users.xhtml">Division Managers</a>
+                                                <a href="users.xhtml">Project Managers</a>
                                             </li>
 
                                             <li>
-                                                <a href="divisions.xhtml">Divisions</a>
+                                                <a href="divisions.xhtml">Departments</a>
 
                                             </li>
                                             <li>
@@ -208,7 +207,7 @@
                                             <ul class="breadcome-menu">
                                                 <li><a href="#">Home</a> <span class="bread-slash">/</span>
                                                 </li>
-                                                <li><span class="bread-blod">Project Configuration</span>
+                                                <li><span class="bread-blod">Activity Configuration</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -226,7 +225,7 @@
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="product-payment-inner-st">
                                 <ul id="myTabedu1" class="tab-review-design">
-                                    <li class="active"><a href="#description">Project Information</a></li>
+                                    <li class="active"><a href="#description">Activity Information</a></li>
                                     <li><a href="#reviews"> Indicators Information</a></li>
                                     <li><a href="#INFORMATION">Targets Information</a></li>
                                 </ul>
@@ -244,7 +243,7 @@
                                                                     <div class="row">
                                                                         <div class="form-group">
                                                                             <div class="col-sm-3">
-                                                                                <label class="col-form-label">Project Title: </label>  
+                                                                                <label class="col-form-label">Activity Title: </label>  
                                                                             </div>
                                                                             <div class="col-sm-9">
                                                                                 <h:inputText class="form-control" value="#{institutionModel.project.projectTitle}" required="true" requiredMessage="Title is Required"/>
@@ -264,7 +263,7 @@
                                                                     <div class="row" style="padding-top: 5px;">
                                                                         <div class="form-group">
                                                                             <div class="col-sm-3">
-                                                                                <label class="col-form-label">Project Budget: </label>  
+                                                                                <label class="col-form-label">Activity Budget: </label>  
                                                                             </div>
                                                                             <div class="col-sm-9">
                                                                                 <h:inputText class="form-control" value="#{institutionModel.project.projectBudget}"/>
@@ -312,7 +311,7 @@
                                     <div class="product-tab-list tab-pane fade" id="reviews">
                                         <div class="row">
                                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                <h3 class="text-primary">Project Title: #{institutionModel.registeredProject.projectTitle}</h3>
+                                                <h3 class="text-primary">Activity Title: #{institutionModel.registeredProject.projectTitle}</h3>
                                                 <div class="row">
                                                     <h:form>
                                                         <p:growl />
@@ -406,7 +405,7 @@
                                     <div class="product-tab-list tab-pane fade" id="INFORMATION">
                                         <div class="row">
                                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                <h3 class="text-primary">Project Title: #{institutionModel.registeredProject.projectTitle}</h3>
+                                                <h3 class="text-primary">Activity Title: #{institutionModel.registeredProject.projectTitle}</h3>
                                                 <div class="row">
                                                     <h:form>
                                                         <p:growl />

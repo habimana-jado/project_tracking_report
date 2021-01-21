@@ -4,6 +4,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <meta charset="utf-8"/>
@@ -13,7 +14,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <!-- favicon
                     ============================================ -->
-        <link rel="shortcut icon" type="image/x-icon" href="img/favicon_1.ico"/>
+        <link rel="shortcut icon" type="image/x-icon" href="img/migeprof.ico"/>
         <!-- Google Fonts
                     ============================================ -->
         <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet"/>
@@ -69,6 +70,9 @@
         <!-- modernizr JS
                     ============================================ -->
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+
+        <h:outputScript library="primefaces" name="jquery/jquery.js" />
+
     </h:head>
     <h:body>
         <!--[if lt IE 8]>
@@ -78,21 +82,20 @@
         <div class="left-sidebar-pro">
             <nav id="sidebar" class="">
                 <div class="sidebar-header">
-                    <a href="#"><img style="padding-top: 5px;" width="120px;" height="80px;" class="main-logo" src="../Login_v1/images/risalogo.jpg" alt="" /></a>
-                    <strong><a href="#"><img style="padding-top: 5px;" width="60px;" height="40px;" src="../Login_v1/images/risalogo.jpg" alt="" /></a></strong>
+                    <a href="#"><img style="padding-top: 5px;" width="120px;" height="80px;" class="main-logo" src="../Login_v1/images/migeprof logo.png" alt="" /></a>
+                    <strong><a href="#"><img style="padding-top: 5px;" width="60px;" height="40px;" src="../Login_v1/images/migeprof logo.png" alt="" /></a></strong>
                 </div>
                 <div class="left-custom-menu-adp-wrap comment-scrollbar">
                     <nav class="sidebar-nav left-sidebar-menu-pro">
                         <ul class="metismenu" id="menu1">
                             <li>
-                                <a href="users.xhtml" aria-expanded="false"><span class="educate-icon educate-professor icon-wrap"></span> <span class="mini-click-non">Division Managers</span></a>
+                                <a href="divisions.xhtml" aria-expanded="false"><span class="educate-icon educate-course icon-wrap"></span> <span class="mini-click-non">Dpts/Dcts/Units</span></a>
                             </li>
                             <li>
-                                <a href="divisions.xhtml" aria-expanded="false"><span class="educate-icon educate-course icon-wrap"></span> <span class="mini-click-non">Divisions</span></a>
-
+                                <a href="users.xhtml" aria-expanded="false"><span class="educate-icon educate-professor icon-wrap"></span> <span class="mini-click-non">Dpts/Dcts/Units Users</span></a>
                             </li>
                             <li>
-                                <a href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Projects</span></a>
+                                <a href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Activity List</span></a>
                                 
                             </li>
                             <li>
@@ -103,6 +106,7 @@
                 </div>
             </nav>
         </div>
+        
         <!-- End Left menu area -->
         <!-- Start Welcome area -->
         <div class="all-content-wrapper">
@@ -110,7 +114,7 @@
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="logo-pro">
-                            <a href="#"><img style="padding-top: 5px;" width="60px;" height="40px;" class="main-logo" src="../Login_v1/images/risalogo.jpg" alt="" /></a>
+                            <a href="#"><img style="padding-top: 5px;" width="60px;" height="40px;" class="main-logo" src="../Login_v1/images/migeprof logo.png" alt="" /></a>
                         </div>
                     </div>
                 </div>
@@ -171,11 +175,11 @@
                                     <nav id="dropdown">
                                         <ul class="mobile-menu-nav">
                                             <li>
-                                                <a href="users.xhtml">Division Managers</a>
+                                                <a href="users.xhtml">Project Managers</a>
                                             </li>
 
                                             <li>
-                                                <a href="divisions.xhtml">Divisions</a>
+                                                <a href="divisions.xhtml">Departments</a>
 
                                             </li>
                                             <li>
@@ -223,13 +227,13 @@
                 <div class="container-fluid">
                     <div id="PrimaryModalalert" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
                         <div class="modal-dialog">
-                            <h:form>
+                            <h:form id="userForm">
                                 <p:growl />
                                 <div class="modal-content">
                                     <div class="modal-close-area modal-close-df">
                                         <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
                                     </div>
-                                    <div class="modal-header">Add Division Manager</div>
+                                    <div class="modal-header">Add Activity Manager</div>
                                     <div class="modal-body">
                                         <div class="row">
                                             <div class="row">
@@ -275,11 +279,11 @@
                                             <div class="row" style="padding-top: 5px;">
                                                 <div class="form-group">
                                                     <div class="col-sm-3">
-                                                        <label class="col-form-label">Division: </label>  
+                                                        <label class="col-form-label">Dpts/Dcts/Units: </label>  
                                                     </div>
                                                     <div class="col-sm-9"> 
                                                         <h:selectOneMenu class="form-control" value="#{institutionModel.divisionId}">
-                                                            <f:selectItems value="#{institutionModel.divisions}" var="d" itemValue="#{d.divisionId}" itemLabel="#{d.divisionName}" />
+                                                            <f:selectItems value="#{institutionModel.activeDivisions}" var="d" itemValue="#{d.divisionId}" itemLabel="#{d.divisionName}" />
                                                         </h:selectOneMenu>
                                                     </div>
                                                 </div>
@@ -316,9 +320,13 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="product-status-wrap">
-                                <h4>Division Manager List</h4>
+                                <h4>User List</h4>
                                 <div class="add-product">
-                                    <a href="#" data-toggle="modal" data-target="#PrimaryModalalert">Add Division Manager</a>
+                                    <h:form>
+                                        <h:commandLink class="pd-setting" a:data-toggle="modal" value="Add User" a:data-target="#PrimaryModalalert">
+                                            <p:ajax listener="#{institutionModel.cleanUser()}" update="userForm" />
+                                        </h:commandLink>
+                                    </h:form>
                                 </div>
                                 <div class="asset-inner">
                                     <table>
@@ -328,7 +336,7 @@
                                             <th>Last Name</th>
                                             <th>Phone</th>
                                             <th>Email</th>
-                                            <th>Division</th>
+                                            <th>Dpts/Dcts/Units</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
@@ -352,8 +360,20 @@
                                                         </c:choose>
                                                     </td>
                                                     <td>
-                                                        <button data-toggle="tooltip" title="Block" class="pd-setting-ed"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-                                                        <button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                                        <h:commandLink class="pd-setting" a:data-toggle="modal" value="Edit" a:data-target="#PrimaryModalalert">
+                                                            <p:ajax listener="#{institutionModel.chooseUser(elements)}" update="userForm" />
+                                                        </h:commandLink>
+
+                                                        <c:choose>
+                                                            <c:when test="#{elements.status eq 'ACTIVE'}">
+                                                                <h:commandLink action="#{institutionModel.blockUser(elements)}" class="ds-setting" style="padding-left: 10px;" value="Block">
+                                                                </h:commandLink>
+                                                            </c:when>
+                                                            <c:when test="#{elements.status eq 'INACTIVE'}">
+                                                                <h:commandLink action="#{institutionModel.activateUser(elements)}" class="ds-setting" style="padding-left: 10px;" value="Activate">
+                                                                </h:commandLink>
+                                                            </c:when>
+                                                        </c:choose>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -380,7 +400,7 @@
 
         <!-- jquery
                     ============================================ -->
-        <script src="js/vendor/jquery-1.12.4.min.js"></script>
+        <!--<script src="js/vendor/jquery-1.12.4.min.js"></script>-->
         <!-- bootstrap JS
                     ============================================ -->
         <script src="js/bootstrap.min.js"></script>

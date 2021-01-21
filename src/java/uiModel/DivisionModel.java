@@ -39,7 +39,7 @@ public class DivisionModel {
     private List<Accomplishment> accomplishments = new ArrayList<>();
     private List<Target> targets = new ArrayList<>();
     private String week = new String();
-    private String quarter = new String();
+    private String quarter = "Quarter1";
     private String period = new String();
     private EPeriod ePeriod;
     private EQuarter eQuarter;
@@ -51,6 +51,7 @@ public class DivisionModel {
     private String indicatorId = new String();   
     private Indicator chosenIndicator = new Indicator();
     private Target oneTarget = new Target();
+    private Target quarterTarget = new Target();
     private String month = new String();
     
     @PostConstruct
@@ -128,6 +129,7 @@ public class DivisionModel {
         quarter = EQuarter.QUARTER_ONE+"";
         month = EMonth.MONTH_ONE+"";
         targets = new TargetDao().findByIndicator(i);
+        quarterTarget = new TargetDao().findByIndicatorAndQuarter(i, EQuarter.QUARTER_ONE);
         oneTarget = new TargetDao().findByIndicatorAndQuarterAndMonth(i, EQuarter.QUARTER_ONE, EMonth.MONTH_ONE);
         return "weekly-report.xhtml?faces-redirect=true";
     }
@@ -176,6 +178,7 @@ public class DivisionModel {
 
         }
         oneTarget = new TargetDao().findByIndicatorAndQuarterAndMonth(chosenIndicator, eQuarter, eMonth);
+        quarterTarget =  new TargetDao().findByIndicatorAndQuarter(chosenIndicator, eQuarter);
     }
 
     public void loadReport() {
@@ -525,6 +528,14 @@ public class DivisionModel {
 
     public void setMonth(String month) {
         this.month = month;
+    }
+
+    public Target getQuarterTarget() {
+        return quarterTarget;
+    }
+
+    public void setQuarterTarget(Target quarterTarget) {
+        this.quarterTarget = quarterTarget;
     }
 
 }

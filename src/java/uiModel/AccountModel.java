@@ -38,8 +38,8 @@ public class AccountModel {
             switch (user.getAccessLevel()) {
                 case GLOBAL:
                     FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("session", user);
-                    ec.redirect(ec.getRequestContextPath() + "/pages/admin/addfaculty.xhtml");
-                    return "pages/admin/addfaculty.xhtml?faces-redirect=true";
+                    ec.redirect(ec.getRequestContextPath() + "/faces/admin/institutions.xhtml");
+                    return "faces/admin/institutions.xhtml?faces-redirect=true";
                 case INSTITUTION_MANAGER:
                     FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("session", user);
                     ec.redirect(ec.getRequestContextPath() + "/faces/institution/users.xhtml");
@@ -66,20 +66,20 @@ public class AccountModel {
 
     public void createUser() throws Exception {
         Institution institution = new Institution();
-        institution.setEmail("risa@gov.rw");
-        institution.setInstitutionName("Risa");
+        institution.setEmail("info@ministry.gov.rw");
+        institution.setInstitutionName("Migeprof");
         institution.setLocation("Kacyiru");
         institution.setPhone("078898970");
         new InstitutionDao().register(institution);
         
         Account u = new Account();
-        u.setAccessLevel(EAccessLevel.INSTITUTION_MANAGER);
-        u.setEmail("risa@gov.rw");
-        u.setFirstName("Risa");
-        u.setLastName("admin");
-        u.setPassword(new PassCode().encrypt("admin"));
+        u.setAccessLevel(EAccessLevel.GLOBAL);
+        u.setEmail("info@migeprof.gov.rw");
+        u.setFirstName("Migeprof");
+        u.setLastName("Super-Admin");
+        u.setPassword(new PassCode().encrypt("secret"));
         u.setStatus(EStatus.ACTIVE);
-        u.setUsername("risa");
+        u.setUsername("admin");
         u.setInstitution(institution);
         new UserDao().register(u);
         

@@ -36,7 +36,7 @@ public class Target implements Serializable {
     @ManyToOne
     private Indicator indicator;
     
-    @OneToMany(mappedBy = "target", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "target", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
     private List<Accomplishment> accomplishment;
 

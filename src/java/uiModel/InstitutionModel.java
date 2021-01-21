@@ -4,6 +4,7 @@ import common.PassCode;
 import dao.AccomplishmentDao;
 import dao.DivisionDao;
 import dao.IndicatorDao;
+import dao.InstitutionDao;
 import dao.ProjectDao;
 import dao.TargetDao;
 import dao.UserDao;
@@ -18,6 +19,7 @@ import domain.EMonth;
 import domain.EPeriod;
 import domain.EQuarter;
 import domain.Indicator;
+import domain.Institution;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -37,6 +39,7 @@ public class InstitutionModel {
     private Account loggedInUser = (Account) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("session");
     private Division division = new Division();
     private List<Division> divisions = new ArrayList<>();
+    private List<Division> activeDivisions = new ArrayList<>();
     private Project project = new Project();
     private List<Project> projects = new ArrayList<>();
     private Account user = new Account();
@@ -48,7 +51,7 @@ public class InstitutionModel {
     private Division chosenDivision = new Division();
     private List<Indicator> indicators = new ArrayList<>();
     private Indicator indicator = new Indicator();
-    private String quarter = new String();
+    private String quarter = "Quarter1";
     private Project registeredProject = new Project();
     private Target target = new Target();
     private List<Accomplishment> divisionAccomplishments = new AccomplishmentDao().findAll(Accomplishment.class);
@@ -59,14 +62,57 @@ public class InstitutionModel {
     private EQuarter eQuarter;
     private EMonth eMonth;
     private List<Target> monthlyTargets = new ArrayList<>();
-    private String month = new String();
+    private String month = "Month1";
+    private Institution institution = new Institution();
+    private List<Account> institutionAccounts = new UserDao().findByAccessLevel(EAccessLevel.INSTITUTION_MANAGER);
+    private List<Institution> institutions = new InstitutionDao().findAll(Institution.class);
 
     @PostConstruct
     public void init() {
         divisions = new DivisionDao().findByInstitution(loggedInUser.getInstitution());
+        activeDivisions = new DivisionDao().findByInstitutionAndStatus(loggedInUser.getInstitution(), EStatus.ACTIVE);
         users = new UserDao().findByInstitution(loggedInUser.getInstitution());
-        projects = new ProjectDao().findAll(Project.class);
+        projects = new ProjectDao().findByInstitution(loggedInUser.getInstitution());
         loadReport();
+    }
+
+    public void registerInstitution() throws Exception {
+        if (new InstitutionDao().findOne(Institution.class, institution.getInstitutionId()) != null) {
+            new InstitutionDao().update(institution);
+//            String usern = user.getUsername();
+//            user = institution.
+//            user.setPassword(new PassCode().encrypt(password));
+//            user.setInstitution(institution);
+//            user.setEmail(institution.getEmail());
+//            user.setFirstName(institution.getInstitutionName());
+//            user.setLastName(institution.getInstitutionName());
+//            new UserDao().update(user);
+//            institutionAccounts = new UserDao().findByAccessLevel(EAccessLevel.INSTITUTION_MANAGER);
+//            user = new Account();
+            institution = new Institution();
+            institutions = new InstitutionDao().findAll(Institution.class);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Institution Updated"));
+        } else {
+            if (new UserDao().findByUsername(user.getUsername()) != null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Username already used"));
+            } else {
+                new InstitutionDao().register(institution);
+//                user.setAccessLevel(EAccessLevel.INSTITUTION_MANAGER);
+//                user.setPassword(new PassCode().encrypt(password));
+//                user.setInstitution(institution);
+//                user.setEmail(institution.getEmail());
+//                user.setFirstName(institution.getInstitutionName());
+//                user.setLastName(institution.getInstitutionName());
+//                user.setStatus(EStatus.ACTIVE);
+//                new UserDao().register(user);
+                institutions = new InstitutionDao().findAll(Institution.class);
+                institutionAccounts = new UserDao().findByAccessLevel(EAccessLevel.INSTITUTION_MANAGER);
+                user = new Account();
+                institution = new Institution();
+
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Institution Registered"));
+            }
+        }
     }
 
     public void loadReport() {
@@ -76,7 +122,7 @@ public class InstitutionModel {
         } else if (quarter.isEmpty() || quarter == null || quarter.equals("")) {
             quarter = "Quarter1";
 
-        }else if (month.isEmpty() || month == null || month.equals("")) {
+        } else if (month.isEmpty() || month == null || month.equals("")) {
             month = "Month1";
 
         }
@@ -152,7 +198,7 @@ public class InstitutionModel {
                 break;
 
         }
-        
+
         switch (month) {
             case "Month1":
                 eMonth = EMonth.MONTH_ONE;
@@ -171,35 +217,147 @@ public class InstitutionModel {
                 break;
 
         }
-        divisionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter,eMonth, ePeriod);
+        divisionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter, eMonth, ePeriod);
 
     }
 
     public void registerDivisionManager() throws Exception {
-        user.setAccessLevel(EAccessLevel.DIVISION_MANAGER);
-        user.setStatus(EStatus.ACTIVE);
-        user.setPassword(new PassCode().encrypt(password));
-        Division div = new DivisionDao().findOne(Division.class, divisionId);
-        user.setDivision(div);
-        new UserDao().register(user);
-        user = new Account();
-        users = new UserDao().findByInstitution(loggedInUser.getInstitution());
-        FacesContext fc = FacesContext.getCurrentInstance();
-        fc.addMessage(null, new FacesMessage("Division Manager Registered"));
+        if (new UserDao().findOne(Account.class, user.getUserId()) != null) {
+            user.setPassword(new PassCode().encrypt(password));
+            Division div = new DivisionDao().findOne(Division.class, divisionId);
+            user.setDivision(div);
+            new UserDao().update(user);
+            user = new Account();
+            users = new UserDao().findByInstitution(loggedInUser.getInstitution());
+            institutionAccounts = new UserDao().findByAccessLevel(EAccessLevel.INSTITUTION_MANAGER);
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("User Updated"));
+        } else {
+            if (new UserDao().findByUsername(user.getUsername()) != null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Username already used"));
+            } else {
+                user.setAccessLevel(EAccessLevel.DIVISION_MANAGER);
+                user.setStatus(EStatus.ACTIVE);
+                user.setPassword(new PassCode().encrypt(password));
+                Division div = new DivisionDao().findOne(Division.class, divisionId);
+                user.setDivision(div);
+                new UserDao().register(user);
+                user = new Account();
+                users = new UserDao().findByInstitution(loggedInUser.getInstitution());
+                institutionAccounts = new UserDao().findByAccessLevel(EAccessLevel.INSTITUTION_MANAGER);
+                FacesContext fc = FacesContext.getCurrentInstance();
+                fc.addMessage(null, new FacesMessage("User Registered"));
+            }
+        }
+    }
+
+    public void registerInstitutionManager() throws Exception {
+        if (new UserDao().findOne(Account.class, user.getUserId()) != null) {
+            user.setPassword(new PassCode().encrypt(password));
+            Institution div = new InstitutionDao().findOne(Institution.class, divisionId);
+            user.setInstitution(div);
+            new UserDao().update(user);
+            user = new Account();
+            institutionAccounts = new UserDao().findByAccessLevel(EAccessLevel.INSTITUTION_MANAGER);
+            users = new UserDao().findByInstitution(loggedInUser.getInstitution());
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("User Updated"));
+        } else {
+            if (new UserDao().findByUsername(user.getUsername()) != null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Username already used"));
+            } else {
+                user.setAccessLevel(EAccessLevel.INSTITUTION_MANAGER);
+                user.setStatus(EStatus.ACTIVE);
+                user.setPassword(new PassCode().encrypt(password));
+                Institution div = new InstitutionDao().findOne(Institution.class, divisionId);
+                user.setInstitution(div);
+                new UserDao().register(user);
+                user = new Account();
+                institutionAccounts = new UserDao().findByAccessLevel(EAccessLevel.INSTITUTION_MANAGER);
+                users = new UserDao().findByInstitution(loggedInUser.getInstitution());
+                FacesContext fc = FacesContext.getCurrentInstance();
+                fc.addMessage(null, new FacesMessage("User Registered"));
+            }
+        }
     }
 
     public void registerDivision() {
+        division.setStatus(EStatus.ACTIVE);
         division.setInstitution(loggedInUser.getInstitution());
         new DivisionDao().register(division);
         divisions = new DivisionDao().findByInstitution(loggedInUser.getInstitution());
+        activeDivisions = new DivisionDao().findByInstitutionAndStatus(loggedInUser.getInstitution(), EStatus.ACTIVE);
         division = new Division();
         FacesContext fc = FacesContext.getCurrentInstance();
-        fc.addMessage(null, new FacesMessage("Division Registered"));
+        fc.addMessage(null, new FacesMessage("Department Registered"));
+    }
+
+    public void blockUser(Account a) {
+        a.setStatus(EStatus.INACTIVE);
+        new UserDao().update(a);
+        System.out.println("Deactivated");
+        users = new UserDao().findByInstitution(loggedInUser.getInstitution());
+        FacesContext fc = FacesContext.getCurrentInstance();
+        fc.addMessage(null, new FacesMessage("Account Blocked"));
+    }
+
+    public void activateUser(Account a) {
+        a.setStatus(EStatus.ACTIVE);
+        new UserDao().update(a);
+        users = new UserDao().findByInstitution(loggedInUser.getInstitution());
+        FacesContext fc = FacesContext.getCurrentInstance();
+        fc.addMessage(null, new FacesMessage("Account Activated"));
+    }
+
+    public void blockDivision(Division a) {
+        a.setStatus(EStatus.INACTIVE);
+        new DivisionDao().update(a);
+        divisions = new DivisionDao().findByInstitution(loggedInUser.getInstitution());
+        activeDivisions = new DivisionDao().findByInstitutionAndStatus(loggedInUser.getInstitution(), EStatus.ACTIVE);
+        FacesContext fc = FacesContext.getCurrentInstance();
+        fc.addMessage(null, new FacesMessage("Division Blocked"));
+    }
+
+    public void activateDivision(Division a) {
+        a.setStatus(EStatus.ACTIVE);
+        new DivisionDao().update(a);
+        divisions = new DivisionDao().findByInstitution(loggedInUser.getInstitution());
+        activeDivisions = new DivisionDao().findByInstitutionAndStatus(loggedInUser.getInstitution(), EStatus.ACTIVE);
+        FacesContext fc = FacesContext.getCurrentInstance();
+        fc.addMessage(null, new FacesMessage("Division Activated"));
     }
 
     public String navigateDivision(Division div) {
         chosenDivision = div;
         return "project.xhtml?faces-redirect=true";
+    }
+
+    public void chooseUser(Account u) {
+        user = u;
+    }
+
+    public void chooseDivision(Division u) {
+        division = u;
+    }
+
+    public void chooseProject(Project u) {
+        project = u;
+    }
+
+    public void cleanDivision() {
+        division = new Division();
+    }
+
+    public void cleanUser() {
+        user = new Account();
+    }
+
+    public void chooseInstitution(Institution u) {
+        institution = u;
+    }
+
+    public void cleanInstitution() {
+        institution = new Institution();
     }
 
     public void registerProject() {
@@ -208,7 +366,7 @@ public class InstitutionModel {
         new ProjectDao().register(project);
         registeredProject = project;
         project = new Project();
-        projects = new ProjectDao().findAll(Project.class);
+        projects = new ProjectDao().findByInstitution(loggedInUser.getInstitution());
 
         FacesContext fc = FacesContext.getCurrentInstance();
         fc.addMessage(null, new FacesMessage("Project Registered"));
@@ -216,7 +374,7 @@ public class InstitutionModel {
 
     public void registerIndicator() {
         indicator.setProject(registeredProject);
-        
+
         new IndicatorDao().register(indicator);
         indicator = new Indicator();
         indicators = new IndicatorDao().findByProject(registeredProject);
@@ -502,6 +660,38 @@ public class InstitutionModel {
 
     public void seteMonth(EMonth eMonth) {
         this.eMonth = eMonth;
+    }
+
+    public List<Division> getActiveDivisions() {
+        return activeDivisions;
+    }
+
+    public void setActiveDivisions(List<Division> activeDivisions) {
+        this.activeDivisions = activeDivisions;
+    }
+
+    public Institution getInstitution() {
+        return institution;
+    }
+
+    public void setInstitution(Institution institution) {
+        this.institution = institution;
+    }
+
+    public List<Account> getInstitutionAccounts() {
+        return institutionAccounts;
+    }
+
+    public void setInstitutionAccounts(List<Account> institutionAccounts) {
+        this.institutionAccounts = institutionAccounts;
+    }
+
+    public List<Institution> getInstitutions() {
+        return institutions;
+    }
+
+    public void setInstitutions(List<Institution> institutions) {
+        this.institutions = institutions;
     }
 
 }

@@ -25,11 +25,12 @@ public class Institution implements Serializable{
     private String phone;
     private String location;
     
-    @OneToMany(mappedBy = "institution", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
+    
+    @OneToMany(mappedBy = "institution", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
     private List<Division> division;
     
-    @OneToMany(mappedBy = "institution", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "institution", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
     private List<Account> user;
 

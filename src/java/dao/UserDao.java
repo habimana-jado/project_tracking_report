@@ -1,25 +1,25 @@
-
 package dao;
 
 import domain.Account;
 import common.PassCode;
+import domain.EAccessLevel;
 import domain.Institution;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-public class UserDao extends GenericDao<Account>{
-    
-    public List<Account> login(String u,String password){
-        Session s=HibernateUtil.getSessionFactory().openSession();
-        Query q=s.createQuery("select a from Account a where a.username=:v and a.password=:p");
+public class UserDao extends GenericDao<Account> {
+
+    public List<Account> login(String u, String password) {
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("select a from Account a where a.username=:v and a.password=:p");
         q.setParameter("v", u);
         q.setParameter("p", password);
-        List<Account> l=q.list();
+        List<Account> l = q.list();
         return l;
-    } 
-    
+    }
+
     public List<Account> loginencrypt(String u, String pass) throws Exception {
 
         Session s = HibernateUtil.getSessionFactory().openSession();
@@ -40,8 +40,8 @@ public class UserDao extends GenericDao<Account>{
         return list;
 
     }
-    
-    public Account findByUsername(String username){
+
+    public Account findByUsername(String username) {
         Session s = HibernateUtil.getSessionFactory().openSession();
         Query q = s.createQuery("SELECT a FROM Account a WHERE a.username = :x");
         q.setParameter("x", username);
@@ -49,8 +49,8 @@ public class UserDao extends GenericDao<Account>{
         s.close();
         return u;
     }
-    
-    public List<Account> findByInstitution(Institution inst){
+
+    public List<Account> findByInstitution(Institution inst) {
         Session s = HibernateUtil.getSessionFactory().openSession();
         Query q = s.createQuery("SELECT a FROM Account a WHERE a.division.institution = :x");
         q.setParameter("x", inst);
@@ -58,5 +58,14 @@ public class UserDao extends GenericDao<Account>{
         s.close();
         return u;
     }
-    
+
+    public List<Account> findByAccessLevel(EAccessLevel inst) {
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM Account a WHERE a.accessLevel = :x");
+        q.setParameter("x", inst);
+        List<Account> u = q.list();
+        s.close();
+        return u;
+    }
+
 }

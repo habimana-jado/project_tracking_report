@@ -35,7 +35,7 @@ public class Project implements Serializable {
     @ManyToOne
     private Division division;
     
-    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
     private List<Indicator> indicator;
     

@@ -4,6 +4,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <meta charset="utf-8"/>
@@ -13,7 +14,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <!-- favicon
                     ============================================ -->
-        <link rel="shortcut icon" type="image/x-icon" href="img/favicon_1.ico"/>
+        <link rel="shortcut icon" type="image/x-icon" href="img/migeprof.ico"/>
         <!-- Google Fonts
                     ============================================ -->
         <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet"/>
@@ -85,21 +86,20 @@
         <div class="left-sidebar-pro">
             <nav id="sidebar" class="">
                 <div class="sidebar-header">
-                    <a href="#"><img style="padding-top: 5px;" width="120px;" height="80px;" class="main-logo" src="../Login_v1/images/risalogo.jpg" alt="" /></a>
-                    <strong><a href="#"><img style="padding-top: 5px;" width="60px;" height="40px;" src="../Login_v1/images/risalogo.jpg" alt="" /></a></strong>
+                    <a href="#"><img style="padding-top: 5px;" width="120px;" height="80px;" class="main-logo" src="../Login_v1/images/migeprof logo.png" alt="" /></a>
+                    <strong><a href="#"><img style="padding-top: 5px;" width="60px;" height="40px;" src="../Login_v1/images/migeprof logo.png" alt="" /></a></strong>
                 </div>
                 <div class="left-custom-menu-adp-wrap comment-scrollbar">
                     <nav class="sidebar-nav left-sidebar-menu-pro">
                         <ul class="metismenu" id="menu1">
                             <li>
-                                <a href="users.xhtml" aria-expanded="false"><span class="educate-icon educate-professor icon-wrap"></span> <span class="mini-click-non">Division Managers</span></a>
+                                <a href="divisions.xhtml" aria-expanded="false"><span class="educate-icon educate-course icon-wrap"></span> <span class="mini-click-non">Dpts/Dcts/Units</span></a>
                             </li>
                             <li>
-                                <a href="divisions.xhtml" aria-expanded="false"><span class="educate-icon educate-course icon-wrap"></span> <span class="mini-click-non">Divisions</span></a>
-
+                                <a href="users.xhtml" aria-expanded="false"><span class="educate-icon educate-professor icon-wrap"></span> <span class="mini-click-non">Dpts/Dcts/Units Users</span></a>
                             </li>
                             <li>
-                                <a href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Projects</span></a>
+                                <a href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Activity List</span></a>
                                 
                             </li>
                             <li>
@@ -117,7 +117,7 @@
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="logo-pro">
-                            <a href="#"><img style="padding-top: 5px;" width="60px;" height="40px;" class="main-logo" src="../Login_v1/images/risalogo.jpg" alt="" /></a>
+                            <a href="#"><img style="padding-top: 5px;" width="60px;" height="40px;" class="main-logo" src="../Login_v1/images/migeprof logo.png" alt="" /></a>
                         </div>
                     </div>
                 </div>
@@ -178,11 +178,11 @@
                                     <nav id="dropdown">
                                         <ul class="mobile-menu-nav">
                                             <li>
-                                                <a href="users.xhtml">Division Managers</a>
+                                                <a href="users.xhtml">Project Managers</a>
                                             </li>
 
                                             <li>
-                                                <a href="divisions.xhtml">Divisions</a>
+                                                <a href="divisions.xhtml">Departments</a>
 
                                             </li>
                                             <li>
@@ -214,7 +214,7 @@
                                             <ul class="breadcome-menu">
                                                 <li><a href="#">Home</a> <span class="bread-slash">/</span>
                                                 </li>
-                                                <li><span class="bread-blod">Projects Configuration</span>
+                                                <li><span class="bread-blod">Activity Configuration</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -230,19 +230,19 @@
                 <div class="container-fluid">
                     <div id="PrimaryModalalert" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
                         <div class="modal-dialog">
-                            <h:form>
+                            <h:form id="userForm">
                                 <p:growl />
                                 <div class="modal-content">
                                     <div class="modal-close-area modal-close-df">
                                         <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
                                     </div>
-                                    <div class="modal-header">New Project</div>
+                                    <div class="modal-header">New Activity</div>
                                     <div class="modal-body">
                                         <p:growl />
                                         <div class="row">
                                             <div class="form-group">
                                                 <div class="col-sm-3">
-                                                    <label class="col-form-label">Project Title: </label>  
+                                                    <label class="col-form-label">Activity Title: </label>  
                                                 </div>
                                                 <div class="col-sm-9">
                                                     <h:inputText class="form-control" value="#{institutionModel.project.projectTitle}" required="true" requiredMessage="Title is Required"/>
@@ -262,7 +262,7 @@
                                         <div class="row" style="padding-top: 5px;">
                                             <div class="form-group">
                                                 <div class="col-sm-3">
-                                                    <label class="col-form-label">Project Budget: </label>  
+                                                    <label class="col-form-label">Activity Budget: </label>  
                                                 </div>
                                                 <div class="col-sm-9">
                                                     <h:inputText class="form-control" value="#{institutionModel.project.projectBudget}"/>
@@ -296,11 +296,11 @@
                                         <div class="row" style="padding-top: 5px;">
                                             <div class="form-group">
                                                 <div class="col-sm-3">
-                                                    <label class="col-form-label">Division: </label>  
+                                                    <label class="col-form-label">Dpts/Dcts/Units: </label>  
                                                 </div>
                                                 <div class="col-sm-9"> 
                                                     <h:selectOneMenu class="form-control" value="#{institutionModel.divisionId}">
-                                                        <f:selectItems value="#{institutionModel.divisions}" var="d" itemValue="#{d.divisionId}" itemLabel="#{d.divisionName}" />
+                                                        <f:selectItems value="#{institutionModel.activeDivisions}" var="d" itemValue="#{d.divisionId}" itemLabel="#{d.divisionName}" />
                                                     </h:selectOneMenu>
                                                 </div>
                                             </div>
@@ -316,9 +316,9 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="product-status-wrap">
-                                <h4>Project List</h4>   
+                                <h4>Activity List</h4>   
                                 <div class="add-product">
-                                    <a href="#" data-toggle="modal" data-target="#PrimaryModalalert">Add Project</a>
+                                    <a href="#" data-toggle="modal" data-target="#PrimaryModalalert">Add Activity</a>
                                 </div>                             
                                 <div class="asset-inner">
                                     <table>
@@ -329,7 +329,7 @@
                                             <th>Start Date</th>
                                             <th>End Date</th>
                                             <th>Budget</th>
-                                            <th>Division</th>
+                                            <th>Dpts/Dcts/Units</th>
                                             <th>Action</th>
                                         </tr>
                                         <h:form>
@@ -347,7 +347,11 @@
                                                     </td>
                                                     <td>#{elements.division.divisionName}</td>
                                                     <td>
-                                                        <h:commandLink action="#{institutionModel.navigateProject(elements)}" title="More" class="pd-setting-ed"><i class="fa fa-angle-double-right" aria-hidden="true"></i></h:commandLink>
+                                                        <h:commandLink class="pd-setting" a:data-toggle="modal" value="Edit" a:data-target="#PrimaryModalalert">
+                                                            <p:ajax listener="#{institutionModel.chooseProject(elements)}" update="userForm" />
+                                                        </h:commandLink>
+
+                                                        <h:commandLink value="Indicator" action="#{institutionModel.navigateProject(elements)}" class="pd-setting" ><i class="fa fa-angle-double-right" aria-hidden="true"></i></h:commandLink>
                                                     </td>
                                                 </tr>
                                             </c:forEach>

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -23,15 +25,17 @@ public class Division implements Serializable {
     private String divisionId = UUID.randomUUID().toString();
     private String divisionName;
     private String divisionDescription;
+    @Enumerated(EnumType.STRING)
+    private EStatus status;
     
-    @OneToMany(mappedBy = "division", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "division", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
     private List<Account> user;
     
     @ManyToOne
     private Institution institution;
     
-    @OneToMany(mappedBy = "division", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "division", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
     private List<Project> project;
 
@@ -81,6 +85,14 @@ public class Division implements Serializable {
 
     public void setProject(List<Project> project) {
         this.project = project;
+    }
+
+    public EStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(EStatus status) {
+        this.status = status;
     }
     
     
