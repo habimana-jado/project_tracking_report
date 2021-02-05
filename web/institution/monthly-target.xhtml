@@ -145,7 +145,7 @@
                                                         </a>
                                                         <ul role="menu" class="dropdown-header-top author-log dropdown-menu animated zoomIn">
 
-                                                            <li><a><h:form><h:commandButton class="btn btn-primary btn-block" value="Profile"/> </h:form></a>
+                                                            <li><a><h:form><h:commandButton class="btn btn-primary btn-block" value="Profile" action="#{institutionModel.navigateProfile()}"/> </h:form></a>
                                                             </li>
                                                             <li><a><h:form><h:commandButton class="btn btn-danger btn-block" value="Log Out" action="#{accountModel.logout()}" /> </h:form></a>
                                                             </li>
@@ -228,28 +228,8 @@
                                     <div class="modal-close-area modal-close-df">
                                         <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
                                     </div>
-                                    <div class="modal-header">New Monthly Target</div>
+                                    <div class="modal-header">Quarterly Target: <h4 class="text-capitalize text-success">#{institutionModel.chosenTarget.targetTitle}</h4></div>
                                     <div class="modal-body">
-                                        <div class="row">
-                                            <div class="form-group">
-                                                <div class="col-sm-3">
-                                                    <label class="col-form-label">Target: </label>  
-                                                </div>
-                                                <div class="col-sm-9">
-                                                    <h:inputText class="form-control" value="#{institutionModel.target.targetTitle}" required="true" requiredMessage="Title is Required"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="padding-top: 5px;">
-                                            <div class="form-group">
-                                                <div class="col-sm-3">
-                                                    <label class="col-form-label">Description: </label> 
-                                                </div>
-                                                <div class="col-sm-9">
-                                                    <h:inputTextarea rows="6" class="form-control" value="#{institutionModel.target.targetDescription}"/>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div class="row" style="padding-top: 5px;">
                                             <div class="form-group">
                                                 <div class="col-sm-3">
@@ -274,6 +254,28 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Target: </label>  
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <h:inputText class="form-control" value="#{institutionModel.target.targetTitle}" required="true" requiredMessage="Title is Required"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Description: </label> 
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <h:inputTextarea rows="6" class="form-control" value="#{institutionModel.target.targetDescription}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
                                         <div class="row">
                                             <div class="payment-adress" style="padding-top: 5px;">
                                                 <h:commandButton action="#{institutionModel.registerMonthlyTarget()}" value="Register" class="btn btn-primary waves-effect waves-light"></h:commandButton>
@@ -311,6 +313,7 @@
                                                                             <th>No.</th>
                                                                             <th>Target</th>
                                                                             <th>Description</th>
+                                                                            <th>Month</th>
                                                                             <th>Action</th>
                                                                         </tr>
                                                                         <c:forEach items="#{institutionModel.monthlyTargets}" var="inst" varStatus="status">
@@ -318,6 +321,7 @@
                                                                                 <td>${status.index + 1}</td>
                                                                                 <td>#{inst.targetTitle}</td>
                                                                                 <td>#{inst.targetDescription}</td>
+                                                                                <td>#{inst.month}</td>
                                                                                 <td>
                                                                                     <h:commandLink title="Remove" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></h:commandLink>
                                                                                 </td>
@@ -344,7 +348,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="footer-copy-right">
-                                <p>Copyright © 2020</p>
+                                <p>Copyright © 2020 Powered by AFRITECK</p>
                             </div>
                         </div>
                     </div>

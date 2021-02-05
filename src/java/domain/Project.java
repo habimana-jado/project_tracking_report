@@ -31,6 +31,7 @@ public class Project implements Serializable {
     private Date startDate;
     @Temporal(TemporalType.DATE)
     private Date endDate;
+    private Boolean isInActionPlan;
     
     @ManyToOne
     private Division division;
@@ -101,6 +102,14 @@ public class Project implements Serializable {
 
     public void setIndicator(List<Indicator> indicator) {
         this.indicator = indicator;
+    }
+
+    public Boolean getIsInActionPlan() {
+        return isInActionPlan;
+    }
+
+    public void setIsInActionPlan(Boolean isInActionPlan) {
+        this.isInActionPlan = isInActionPlan;
     }
     
     

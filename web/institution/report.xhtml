@@ -98,7 +98,7 @@
                             </li>
                             <li>
                                 <a href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Activity List</span></a>
-                                
+
                             </li>
                             <li>
                                 <a href="report.xhtml" aria-expanded="false"><span class="educate-icon educate-form icon-wrap"></span> <span class="mini-click-non">Report</span></a>
@@ -151,7 +151,7 @@
                                                         </a>
                                                         <ul role="menu" class="dropdown-header-top author-log dropdown-menu animated zoomIn">
 
-                                                            <li><a><h:form><h:commandButton class="btn btn-primary btn-block" value="Profile"/> </h:form></a>
+                                                            <li><a><h:form><h:commandButton class="btn btn-primary btn-block" value="Profile" action="#{institutionModel.navigateProfile()}"/> </h:form></a>
                                                             </li>
                                                             <li><a><h:form><h:commandButton class="btn btn-danger btn-block" value="Log Out" action="#{accountModel.logout()}" /> </h:form></a>
                                                             </li>
@@ -226,50 +226,11 @@
 
             <div class="product-status mg-b-15">
                 <div class="container-fluid">
-                    <div id="PrimaryModalalert" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
-                        <div class="modal-dialog">
-                            <h:form>
-                                <p:growl />
-                                <div class="modal-content">
-                                    <div class="modal-close-area modal-close-df">
-                                        <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
-                                    </div>
-                                    <div class="modal-header">Add Dpts/Dcts/Units</div>
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="row">
-                                                <div class="form-group">
-                                                    <div class="col-sm-3">
-                                                        <label class="col-form-label">Dpts/Dcts/Units Name: </label>  
-                                                    </div>
-                                                    <div class="col-sm-9">
-                                                        <h:inputText class="form-control" value="#{institutionModel.division.divisionName}" required="true" requiredMessage="Division Name is Required"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row" style="padding-top: 5px;">
-                                                <div class="form-group">
-                                                    <div class="col-sm-3">
-                                                        <label class="col-form-label">Dpts/Dcts/Units Description: </label> 
-                                                    </div>
-                                                    <div class="col-sm-9">
-                                                        <h:inputTextarea rows="4" class="form-control" value="#{institutionModel.division.divisionDescription}" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <h:commandButton class="btn btn-primary" value="Register" action="#{institutionModel.registerDivision()}" />
-                                    </div>
-                                </div>
-                            </h:form>
-                        </div>
-                    </div>
+                    <!--Action Plan Activities Display-->
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="product-status-wrap">
-                                <h4>Weekly Report</h4>
+                                <h4>Action Plan Report</h4>
                                 <div class="asset-inner">
                                     <h:form>
                                         <div class="row">
@@ -300,9 +261,9 @@
                                                 </h:selectOneMenu>
                                             </div>
                                         </div>
-                                        
-                                        
-                                        
+
+
+
                                         <p:dataTable style="padding-top: 10px;" id="tbl" widgetVar="reportTable" var="acc" value="#{institutionModel.divisionAccomplishments}" sortBy="#{acc.target.indicator.project.division.divisionName}">
                                             <p:column headerText="Dpts/Dcts/Units" groupRow="true">
                                                 <h:outputText  styleClass="preformatted" value="#{acc.target.target.indicator.project.division.divisionName}" />
@@ -311,6 +272,9 @@
                                                 <h:outputText styleClass="preformatted" value="#{acc.target.target.indicator.project.projectTitle}" />
                                             </p:column>
 
+                                            <p:column headerText="Indicator" groupRow="true">
+                                                <h:outputText styleClass="preformatted" value="#{acc.target.target.indicator.indicatorName}" />
+                                            </p:column>
                                             <c:choose>
                                                 <c:when test="#{institutionModel.quarter eq 'Quarter1'}">
                                                     <p:column headerText="Target (Q1)" visible="true" groupRow="true">
@@ -333,7 +297,7 @@
                                                     </p:column>                                       
                                                 </c:when>
                                             </c:choose>
-                                            
+
                                             <c:choose>
                                                 <c:when test="#{institutionModel.month eq 'Month1'}">
                                                     <p:column headerText="Target (M1)" visible="true" groupRow="true">
@@ -351,25 +315,25 @@
                                                     </p:column>                                                    
                                                 </c:when>
                                             </c:choose>
-                                            
+
                                             <c:choose>
                                                 <c:when test="#{institutionModel.period eq 'Week1'}">
-                                                    <p:column headerText="Update(W1)" visible="true" groupRow="true">
+                                                    <p:column headerText="Update(W1)" visible="true" >
                                                         <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
                                                     </p:column>
                                                 </c:when>
                                                 <c:when test="#{institutionModel.period eq 'Week2'}">
-                                                    <p:column headerText="Update(W2)" visible="true" groupRow="true">
+                                                    <p:column headerText="Update(W2)" visible="true" >
                                                         <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
                                                     </p:column>
                                                 </c:when>
                                                 <c:when test="#{institutionModel.period eq 'Week3'}">
-                                                    <p:column headerText="Update(W3)" visible="true" groupRow="true">
+                                                    <p:column headerText="Update(W3)" visible="true" >
                                                         <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
                                                     </p:column>
                                                 </c:when>
                                                 <c:when test="#{institutionModel.period eq 'Week4'}">
-                                                    <p:column headerText="Update(W4)" visible="true" groupRow="true">
+                                                    <p:column headerText="Update(W4)" visible="true" >
                                                         <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
                                                     </p:column>
                                                 </c:when>
@@ -377,27 +341,27 @@
 
                                             <c:choose>
                                                 <c:when test="#{institutionModel.period eq 'Week1'}">
-                                                    <p:column headerText="Comments(W1)" groupRow="true">
+                                                    <p:column headerText="Comments(W1)" >
                                                         <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
                                                     </p:column>
                                                 </c:when>
                                                 <c:when test="#{institutionModel.period eq 'Week2'}">
-                                                    <p:column headerText="Comments(W2)" groupRow="true">
+                                                    <p:column headerText="Comments(W2)" >
                                                         <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
                                                     </p:column>
                                                 </c:when>
                                                 <c:when test="#{institutionModel.period eq 'Week3'}">
-                                                    <p:column headerText="Comments(W3)" groupRow="true">
+                                                    <p:column headerText="Comments(W3)" >
                                                         <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
                                                     </p:column>
                                                 </c:when>
                                                 <c:when test="#{institutionModel.period eq 'Week4'}">
-                                                    <p:column headerText="Comments(W4)" groupRow="true">
+                                                    <p:column headerText="Comments(W4)">
                                                         <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
                                                     </p:column>
                                                 </c:when>
                                             </c:choose>
-                                            <p:column headerText="Next-Week Plan" groupRow="true">
+                                            <p:column headerText="Next-Week Plan" >
                                                 <h:outputText styleClass="preformatted" value="#{acc.nextWeekPlan}" />
                                             </p:column>
                                         </p:dataTable>
@@ -407,6 +371,109 @@
                             </div>
                         </div>
                     </div>
+
+                    <!--Other Activities(Not In Action Plan) Display--> 
+                    <div class="row" style="padding-top: 100px;">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="product-status-wrap">
+                                <h4>Other Activities Report</h4>
+                                <div class="asset-inner">
+                                    <h:form>
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <h:selectOneMenu class="form-control" value="#{institutionModel.quarter}">
+                                                    <f:selectItem itemLabel="Quarter 1" itemValue="Quarter1" />
+                                                    <f:selectItem itemLabel="Quarter 2" itemValue="Quarter2" />
+                                                    <f:selectItem itemLabel="Quarter 3" itemValue="Quarter3" />
+                                                    <f:selectItem itemLabel="Quarter 4" itemValue="Quarter4" />
+                                                    <f:ajax render="tbl" listener="#{institutionModel.loadOtherReport()}" />
+                                                </h:selectOneMenu>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <h:selectOneMenu class="form-control" value="#{institutionModel.month}">
+                                                    <f:selectItem itemLabel="Month 1" itemValue="Month1" />
+                                                    <f:selectItem itemLabel="Month 2" itemValue="Month2" />
+                                                    <f:selectItem itemLabel="Month 3" itemValue="Month3" />
+                                                    <f:ajax render="tbl" listener="#{institutionModel.loadOtherReport()}" />
+                                                </h:selectOneMenu>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <h:selectOneMenu class="form-control" value="#{institutionModel.period}">
+                                                    <f:selectItem itemLabel="Week 1" itemValue="Week1" />
+                                                    <f:selectItem itemLabel="Week 2" itemValue="Week2" />
+                                                    <f:selectItem itemLabel="Week 3" itemValue="Week3" />
+                                                    <f:selectItem itemLabel="Week 4" itemValue="Week4" />
+                                                    <f:ajax render="tbl" listener="#{institutionModel.loadOtherReport()}" />
+                                                </h:selectOneMenu>
+                                            </div>
+                                        </div>
+
+
+
+                                        <p:dataTable style="padding-top: 10px;" id="tbl" widgetVar="reportTable" var="acc" value="#{institutionModel.divisionOtherAccomplishments}" sortBy="#{acc.project.division.divisionName}">
+                                            <p:column headerText="Dpts/Dcts/Units" groupRow="true">
+                                                <h:outputText  styleClass="preformatted" value="#{acc.project.division.divisionName}" />
+                                            </p:column>
+                                            <p:column headerText="Activity" groupRow="true">
+                                                <h:outputText styleClass="preformatted" value="#{acc.project.projectTitle}" />
+                                            </p:column>
+
+                                            <c:choose>
+                                                <c:when test="#{institutionModel.period eq 'Week1'}">
+                                                    <p:column headerText="Update(W1)" visible="true" >
+                                                        <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
+                                                    </p:column>
+                                                </c:when>
+                                                <c:when test="#{institutionModel.period eq 'Week2'}">
+                                                    <p:column headerText="Update(W2)" visible="true" >
+                                                        <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
+                                                    </p:column>
+                                                </c:when>
+                                                <c:when test="#{institutionModel.period eq 'Week3'}">
+                                                    <p:column headerText="Update(W3)" visible="true" >
+                                                        <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
+                                                    </p:column>
+                                                </c:when>
+                                                <c:when test="#{institutionModel.period eq 'Week4'}">
+                                                    <p:column headerText="Update(W4)" visible="true" >
+                                                        <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
+                                                    </p:column>
+                                                </c:when>
+                                            </c:choose>
+
+                                            <c:choose>
+                                                <c:when test="#{institutionModel.period eq 'Week1'}">
+                                                    <p:column headerText="Comments(W1)" >
+                                                        <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
+                                                    </p:column>
+                                                </c:when>
+                                                <c:when test="#{institutionModel.period eq 'Week2'}">
+                                                    <p:column headerText="Comments(W2)" >
+                                                        <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
+                                                    </p:column>
+                                                </c:when>
+                                                <c:when test="#{institutionModel.period eq 'Week3'}">
+                                                    <p:column headerText="Comments(W3)" >
+                                                        <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
+                                                    </p:column>
+                                                </c:when>
+                                                <c:when test="#{institutionModel.period eq 'Week4'}">
+                                                    <p:column headerText="Comments(W4)" >
+                                                        <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
+                                                    </p:column>
+                                                </c:when>
+                                            </c:choose>
+                                            <p:column headerText="Next-Week Plan" >
+                                                <h:outputText styleClass="preformatted" value="#{acc.nextWeekPlan}" />
+                                            </p:column>
+                                        </p:dataTable>
+                                    </h:form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="footer-copyright-area" style="position: fixed; padding: 10px 10px 0px 10px; bottom: 0; width: 100%; height: 40px;">
@@ -414,7 +481,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="footer-copy-right">
-                                <p>Copyright © 2020</p>
+                                <p>Copyright © 2020 Powered by AFRITECK</p>
                             </div>
                         </div>
                     </div>

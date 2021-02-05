@@ -85,7 +85,13 @@
                     <nav class="sidebar-nav left-sidebar-menu-pro">
                         <ul class="metismenu" id="menu1">
                             <li>
-                                <a class="has-arrow" href="project-details.xhtml" aria-expanded="false"><span class="educate-icon educate-charts icon-wrap"></span> <span class="mini-click-non">Activity</span></a>
+                                <a href="project-details.xhtml" aria-expanded="false"><span class="educate-icon educate-charts icon-wrap"></span> <span class="mini-click-non">Activity</span></a>
+                            </li>
+                            <li>
+                                <a href="other-project-details.xhtml" aria-expanded="false"><span class="educate-icon educate-event icon-wrap"></span> <span class="mini-click-non">Other</span></a>
+                            </li>
+                            <li>
+                                <a href="compiled-weekly-report.xhtml" aria-expanded="false"><span class="educate-icon educate-library icon-wrap"></span> <span class="mini-click-non">Compiled</span></a>
                             </li>
                         </ul>
                     </nav>
@@ -135,7 +141,7 @@
                                                         </a>
                                                         <ul role="menu" class="dropdown-header-top author-log dropdown-menu animated zoomIn">
 
-                                                            <li><a><h:form><h:commandButton class="btn btn-primary btn-block" value="Profile"/> </h:form></a>
+                                                            <li><a><h:form><h:commandButton class="btn btn-primary btn-block" value="Profile" action="#{institutionModel.navigateProfileDM()}"/> </h:form></a>
                                                             </li>
                                                             <li><a><h:form><h:commandButton class="btn btn-danger btn-block" value="Log Out" action="#{accountModel.logout()}" /> </h:form></a>
                                                             </li>
@@ -220,7 +226,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="footer-copy-right">
-                                <p>Copyright © 2020</p>
+                                <p>Copyright © 2020 Powered by AFRITECK</p>
                             </div>
                         </div>
                     </div>

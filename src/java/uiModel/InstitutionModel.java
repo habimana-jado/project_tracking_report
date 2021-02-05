@@ -5,6 +5,7 @@ import dao.AccomplishmentDao;
 import dao.DivisionDao;
 import dao.IndicatorDao;
 import dao.InstitutionDao;
+import dao.Other_AccomplishmentDao;
 import dao.ProjectDao;
 import dao.TargetDao;
 import dao.UserDao;
@@ -20,6 +21,7 @@ import domain.EPeriod;
 import domain.EQuarter;
 import domain.Indicator;
 import domain.Institution;
+import domain.Other_Accomplishment;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -54,7 +56,10 @@ public class InstitutionModel {
     private String quarter = "Quarter1";
     private Project registeredProject = new Project();
     private Target target = new Target();
-    private List<Accomplishment> divisionAccomplishments = new AccomplishmentDao().findAll(Accomplishment.class);
+    private List<Accomplishment> divisionAccomplishments = new ArrayList<>();
+    private List<Other_Accomplishment> divisionOtherAccomplishments = new ArrayList<>();
+    private List<Accomplishment> institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriod(EQuarter.QUARTER_ONE,EMonth.MONTH_ONE, EPeriod.WEEK_ONE);
+    private List<Other_Accomplishment> institutionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriod(EQuarter.QUARTER_ONE,EMonth.MONTH_ONE, EPeriod.WEEK_ONE);
     private Indicator chosenIndicator = new Indicator();
     private Target chosenTarget = new Target();
     private String period = new String();
@@ -69,26 +74,18 @@ public class InstitutionModel {
 
     @PostConstruct
     public void init() {
+        divisionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriod(EQuarter.QUARTER_ONE,EMonth.MONTH_ONE, EPeriod.WEEK_ONE, loggedInUser.getInstitution());
+        divisionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriod(EQuarter.QUARTER_ONE,EMonth.MONTH_ONE, EPeriod.WEEK_ONE, loggedInUser.getInstitution());
         divisions = new DivisionDao().findByInstitution(loggedInUser.getInstitution());
         activeDivisions = new DivisionDao().findByInstitutionAndStatus(loggedInUser.getInstitution(), EStatus.ACTIVE);
-        users = new UserDao().findByInstitution(loggedInUser.getInstitution());
-        projects = new ProjectDao().findByInstitution(loggedInUser.getInstitution());
+        users = new UserDao().findByAccessLevel(EAccessLevel.DIVISION_MANAGER);
+        projects = new ProjectDao().findAll(Project.class);
         loadReport();
     }
 
     public void registerInstitution() throws Exception {
         if (new InstitutionDao().findOne(Institution.class, institution.getInstitutionId()) != null) {
             new InstitutionDao().update(institution);
-//            String usern = user.getUsername();
-//            user = institution.
-//            user.setPassword(new PassCode().encrypt(password));
-//            user.setInstitution(institution);
-//            user.setEmail(institution.getEmail());
-//            user.setFirstName(institution.getInstitutionName());
-//            user.setLastName(institution.getInstitutionName());
-//            new UserDao().update(user);
-//            institutionAccounts = new UserDao().findByAccessLevel(EAccessLevel.INSTITUTION_MANAGER);
-//            user = new Account();
             institution = new Institution();
             institutions = new InstitutionDao().findAll(Institution.class);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Institution Updated"));
@@ -97,14 +94,6 @@ public class InstitutionModel {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Username already used"));
             } else {
                 new InstitutionDao().register(institution);
-//                user.setAccessLevel(EAccessLevel.INSTITUTION_MANAGER);
-//                user.setPassword(new PassCode().encrypt(password));
-//                user.setInstitution(institution);
-//                user.setEmail(institution.getEmail());
-//                user.setFirstName(institution.getInstitutionName());
-//                user.setLastName(institution.getInstitutionName());
-//                user.setStatus(EStatus.ACTIVE);
-//                new UserDao().register(user);
                 institutions = new InstitutionDao().findAll(Institution.class);
                 institutionAccounts = new UserDao().findByAccessLevel(EAccessLevel.INSTITUTION_MANAGER);
                 user = new Account();
@@ -139,37 +128,6 @@ public class InstitutionModel {
             case "Week4":
                 ePeriod = EPeriod.WEEK_FOUR;
                 break;
-            case "Week5":
-                ePeriod = EPeriod.WEEK_FIVE;
-                break;
-            case "Week6":
-                ePeriod = EPeriod.WEEK_SIX;
-                break;
-            case "Week7":
-                ePeriod = EPeriod.WEEK_SEVEN;
-                break;
-            case "Week8":
-                ePeriod = EPeriod.WEEK_EIGHT;
-                break;
-            case "Week9":
-                ePeriod = EPeriod.WEEK_NINE;
-                break;
-            case "Week10":
-                ePeriod = EPeriod.WEEK_TEN;
-                break;
-            case "Week11":
-                ePeriod = EPeriod.WEEK_ELEVEN;
-                break;
-            case "Week12":
-                ePeriod = EPeriod.WEEK_TWELVE;
-                break;
-            case "Week13":
-                ePeriod = EPeriod.WEEK_THIRTEEN;
-                break;
-            case "Week14":
-                ePeriod = EPeriod.WEEK_FOURTEEN;
-                break;
-
             default:
                 ePeriod = EPeriod.WEEK_ONE;
                 break;
@@ -217,7 +175,231 @@ public class InstitutionModel {
                 break;
 
         }
-        divisionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter, eMonth, ePeriod);
+        divisionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter, eMonth, ePeriod, loggedInUser.getInstitution());
+
+    }
+    public void loadOtherReport() {
+        if (period.isEmpty() || period == null || period.equals("")) {
+            period = "Week1";
+
+        } else if (quarter.isEmpty() || quarter == null || quarter.equals("")) {
+            quarter = "Quarter1";
+
+        } else if (month.isEmpty() || month == null || month.equals("")) {
+            month = "Month1";
+
+        }
+        switch (period) {
+            case "Week1":
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+            case "Week2":
+                ePeriod = EPeriod.WEEK_TWO;
+                break;
+            case "Week3":
+                ePeriod = EPeriod.WEEK_THREE;
+                break;
+            case "Week4":
+                ePeriod = EPeriod.WEEK_FOUR;
+                break;
+            default:
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+
+        }
+
+        switch (quarter) {
+            case "Quarter1":
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+            case "Quarter2":
+                eQuarter = EQuarter.QUARTER_TWO;
+                break;
+
+            case "Quarter3":
+                eQuarter = EQuarter.QUARTER_THREE;
+                break;
+
+            case "Quarter4":
+                eQuarter = EQuarter.QUARTER_FOUR;
+                break;
+
+            default:
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+        }
+
+        switch (month) {
+            case "Month1":
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+            case "Month2":
+                eMonth = EMonth.MONTH_TWO;
+                break;
+
+            case "Month3":
+                eMonth = EMonth.MONTH_THREE;
+                break;
+
+            default:
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+        }
+        divisionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter, eMonth, ePeriod, loggedInUser.getInstitution());
+
+    }
+    
+    public void loadInstitutionReport() {
+        if (period.isEmpty() || period == null || period.equals("")) {
+            period = "Week1";
+
+        } else if (quarter.isEmpty() || quarter == null || quarter.equals("")) {
+            quarter = "Quarter1";
+
+        } else if (month.isEmpty() || month == null || month.equals("")) {
+            month = "Month1";
+
+        }
+        switch (period) {
+            case "Week1":
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+            case "Week2":
+                ePeriod = EPeriod.WEEK_TWO;
+                break;
+            case "Week3":
+                ePeriod = EPeriod.WEEK_THREE;
+                break;
+            case "Week4":
+                ePeriod = EPeriod.WEEK_FOUR;
+                break;
+            default:
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+
+        }
+
+        switch (quarter) {
+            case "Quarter1":
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+            case "Quarter2":
+                eQuarter = EQuarter.QUARTER_TWO;
+                break;
+
+            case "Quarter3":
+                eQuarter = EQuarter.QUARTER_THREE;
+                break;
+
+            case "Quarter4":
+                eQuarter = EQuarter.QUARTER_FOUR;
+                break;
+
+            default:
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+        }
+
+        switch (month) {
+            case "Month1":
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+            case "Month2":
+                eMonth = EMonth.MONTH_TWO;
+                break;
+
+            case "Month3":
+                eMonth = EMonth.MONTH_THREE;
+                break;
+
+            default:
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+        }
+        institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter, eMonth, ePeriod);
+
+    }
+
+    public void loadInstitutionOtherReport() {
+        if (period.isEmpty() || period == null || period.equals("")) {
+            period = "Week1";
+
+        } else if (quarter.isEmpty() || quarter == null || quarter.equals("")) {
+            quarter = "Quarter1";
+
+        } else if (month.isEmpty() || month == null || month.equals("")) {
+            month = "Month1";
+
+        }
+        switch (period) {
+            case "Week1":
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+            case "Week2":
+                ePeriod = EPeriod.WEEK_TWO;
+                break;
+            case "Week3":
+                ePeriod = EPeriod.WEEK_THREE;
+                break;
+            case "Week4":
+                ePeriod = EPeriod.WEEK_FOUR;
+                break;
+            default:
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+
+        }
+
+        switch (quarter) {
+            case "Quarter1":
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+            case "Quarter2":
+                eQuarter = EQuarter.QUARTER_TWO;
+                break;
+
+            case "Quarter3":
+                eQuarter = EQuarter.QUARTER_THREE;
+                break;
+
+            case "Quarter4":
+                eQuarter = EQuarter.QUARTER_FOUR;
+                break;
+
+            default:
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+        }
+
+        switch (month) {
+            case "Month1":
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+            case "Month2":
+                eMonth = EMonth.MONTH_TWO;
+                break;
+
+            case "Month3":
+                eMonth = EMonth.MONTH_THREE;
+                break;
+
+            default:
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+        }
+        institutionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter, eMonth, ePeriod);
 
     }
 
@@ -295,8 +477,7 @@ public class InstitutionModel {
     public void blockUser(Account a) {
         a.setStatus(EStatus.INACTIVE);
         new UserDao().update(a);
-        System.out.println("Deactivated");
-        users = new UserDao().findByInstitution(loggedInUser.getInstitution());
+        users = new UserDao().findByAccessLevel(EAccessLevel.DIVISION_MANAGER);
         FacesContext fc = FacesContext.getCurrentInstance();
         fc.addMessage(null, new FacesMessage("Account Blocked"));
     }
@@ -304,7 +485,7 @@ public class InstitutionModel {
     public void activateUser(Account a) {
         a.setStatus(EStatus.ACTIVE);
         new UserDao().update(a);
-        users = new UserDao().findByInstitution(loggedInUser.getInstitution());
+        users = new UserDao().findByAccessLevel(EAccessLevel.DIVISION_MANAGER);
         FacesContext fc = FacesContext.getCurrentInstance();
         fc.addMessage(null, new FacesMessage("Account Activated"));
     }
@@ -363,13 +544,14 @@ public class InstitutionModel {
     public void registerProject() {
         Division d = new DivisionDao().findOne(Division.class, divisionId);
         project.setDivision(d);
+        project.setIsInActionPlan(Boolean.TRUE);
         new ProjectDao().register(project);
         registeredProject = project;
         project = new Project();
         projects = new ProjectDao().findByInstitution(loggedInUser.getInstitution());
 
         FacesContext fc = FacesContext.getCurrentInstance();
-        fc.addMessage(null, new FacesMessage("Project Registered"));
+        fc.addMessage(null, new FacesMessage("Activity Registered"));
     }
 
     public void registerIndicator() {
@@ -452,6 +634,24 @@ public class InstitutionModel {
         chosenTarget = ind;
         monthlyTargets = new TargetDao().findByTarget(ind);
         return "monthly-target.xhtml?faces-redirect=true";
+    }
+
+    public String navigateProfile() throws Exception{
+        password = new PassCode().decrypt(loggedInUser.getPassword());
+        return "profile.xhtml?faces-redirect=true";
+    }
+    
+    public String navigateProfileDM() throws Exception{
+        password = new PassCode().decrypt(loggedInUser.getPassword());
+        return "dm-profile.xhtml?faces-redirect=true";
+    }
+    
+    public void updateProfile() throws Exception{
+        loggedInUser.setPassword(new PassCode().encrypt(password));
+        new UserDao().update(loggedInUser);
+        
+        FacesContext fc = FacesContext.getCurrentInstance();
+        fc.addMessage(null, new FacesMessage("Account Updated"));
     }
 
     public Account getLoggedInUser() {
@@ -692,6 +892,30 @@ public class InstitutionModel {
 
     public void setInstitutions(List<Institution> institutions) {
         this.institutions = institutions;
+    }
+
+    public List<Other_Accomplishment> getDivisionOtherAccomplishments() {
+        return divisionOtherAccomplishments;
+    }
+
+    public void setDivisionOtherAccomplishments(List<Other_Accomplishment> divisionOtherAccomplishments) {
+        this.divisionOtherAccomplishments = divisionOtherAccomplishments;
+    }
+
+    public List<Accomplishment> getInstitutionAccomplishments() {
+        return institutionAccomplishments;
+    }
+
+    public void setInstitutionAccomplishments(List<Accomplishment> institutionAccomplishments) {
+        this.institutionAccomplishments = institutionAccomplishments;
+    }
+
+    public List<Other_Accomplishment> getInstitutionOtherAccomplishments() {
+        return institutionOtherAccomplishments;
+    }
+
+    public void setInstitutionOtherAccomplishments(List<Other_Accomplishment> institutionOtherAccomplishments) {
+        this.institutionOtherAccomplishments = institutionOtherAccomplishments;
     }
 
 }

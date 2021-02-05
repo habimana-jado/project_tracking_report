@@ -4,7 +4,6 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <meta charset="utf-8"/>
@@ -70,11 +69,14 @@
         <!-- modernizr JS
                     ============================================ -->
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
-
-        <h:outputScript library="primefaces" name="jquery/jquery.js" />
-
     </h:head>
     <h:body>
+        <style>
+            .preformatted {
+                white-space: pre-wrap;
+                word-break: break-all;
+            }
+        </style>
         <!--[if lt IE 8]>
                  <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
          <![endif]-->
@@ -89,24 +91,19 @@
                     <nav class="sidebar-nav left-sidebar-menu-pro">
                         <ul class="metismenu" id="menu1">
                             <li>
-                                <a href="divisions.xhtml" aria-expanded="false"><span class="educate-icon educate-course icon-wrap"></span> <span class="mini-click-non">Dpts/Dcts/Units</span></a>
+                                <a href="project-details.xhtml" aria-expanded="false"><span class="educate-icon educate-charts icon-wrap"></span> <span class="mini-click-non">Activity</span></a>
                             </li>
                             <li>
-                                <a href="users.xhtml" aria-expanded="false"><span class="educate-icon educate-professor icon-wrap"></span> <span class="mini-click-non">Dpts/Dcts/Units Users</span></a>
+                                <a href="other-project-details.xhtml" aria-expanded="false"><span class="educate-icon educate-event icon-wrap"></span> <span class="mini-click-non">Other</span></a>
                             </li>
                             <li>
-                                <a href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Activity List</span></a>
-                                
-                            </li>
-                            <li>
-                                <a href="report.xhtml" aria-expanded="false"><span class="educate-icon educate-form icon-wrap"></span> <span class="mini-click-non">Report</span></a>
+                                <a href="compiled-weekly-report.xhtml" aria-expanded="false"><span class="educate-icon educate-library icon-wrap"></span> <span class="mini-click-non">Compiled</span></a>
                             </li>
                         </ul>
                     </nav>
                 </div>
             </nav>
         </div>
-        
         <!-- End Left menu area -->
         <!-- Start Welcome area -->
         <div class="all-content-wrapper">
@@ -145,12 +142,12 @@
                                                     <li class="nav-item">
                                                         <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle">
                                                             <!--<img src="img/product/pro4.jpg" alt="" />-->
-                                                            <span class="admin-name">#{institutionModel.loggedInUser.firstName}</span>
+                                                            <span class="admin-name">#{divisionModel.loggedInUser.firstName}</span>
                                                             <i class="fa fa-angle-down edu-icon edu-down-arrow"></i>
                                                         </a>
                                                         <ul role="menu" class="dropdown-header-top author-log dropdown-menu animated zoomIn">
 
-                                                            <li><a><h:form><h:commandButton class="btn btn-primary btn-block" value="Profile" action="#{institutionModel.navigateProfile()}"/> </h:form></a>
+                                                            <li><a><h:form><h:commandButton class="btn btn-primary btn-block" value="Profile" action="#{institutionModel.navigateProfileDM()}"/> </h:form></a>
                                                             </li>
                                                             <li><a><h:form><h:commandButton class="btn btn-danger btn-block" value="Log Out" action="#{accountModel.logout()}" /> </h:form></a>
                                                             </li>
@@ -175,19 +172,7 @@
                                     <nav id="dropdown">
                                         <ul class="mobile-menu-nav">
                                             <li>
-                                                <a href="users.xhtml">Project Managers</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="divisions.xhtml">Departments</a>
-
-                                            </li>
-                                            <li>
-                                                <a href="projects.xhtml">Projects</a>
-
-                                            </li>
-                                            <li>
-                                                <a href="report.xhtml">Report</a>
+                                                <a href="project-details.xhtml" >Activity</a>
                                             </li>
                                         </ul>
                                     </nav>
@@ -199,6 +184,7 @@
                 <!-- Mobile Menu end -->
                 <div class="breadcome-area">
                     <div class="container-fluid">
+                        
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="breadcome-list single-page-breadcome">
@@ -211,7 +197,7 @@
                                             <ul class="breadcome-menu">
                                                 <li><a href="#">Home</a> <span class="bread-slash">/</span>
                                                 </li>
-                                                <li><span class="bread-blod">Accounts Configuration</span>
+                                                <li><span class="bread-blod">Reports Configuration</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -227,91 +213,97 @@
                 <div class="container-fluid">
                     <div id="PrimaryModalalert" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
                         <div class="modal-dialog">
-                            <h:form id="userForm">
+                            <h:form>
                                 <p:growl />
                                 <div class="modal-content">
                                     <div class="modal-close-area modal-close-df">
                                         <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
                                     </div>
-                                    <div class="modal-header">Add Activity Manager</div>
+                                    <div class="modal-header">Add Weekly Report</div>
                                     <div class="modal-body">
                                         <div class="row">
-                                            <div class="row">
-                                                <div class="form-group">
-                                                    <div class="col-sm-3">
-                                                        <label class="col-form-label">First Name: </label>  
-                                                    </div>
-                                                    <div class="col-sm-9">
-                                                        <h:inputText class="form-control" value="#{institutionModel.user.firstName}" required="true" requiredMessage="First Name is Required"/>
-                                                    </div>
-                                                </div>
-                                            </div>
+
                                             <div class="row" style="padding-top: 5px;">
                                                 <div class="form-group">
                                                     <div class="col-sm-3">
-                                                        <label class="col-form-label">Last Name: </label> 
-                                                    </div>
-                                                    <div class="col-sm-9">
-                                                        <h:inputText class="form-control" value="#{institutionModel.user.lastName}" required="true" requiredMessage="Last Name is Required"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row" style="padding-top: 5px;">
-                                                <div class="form-group">
-                                                    <div class="col-sm-3">
-                                                        <label class="col-form-label">Phone: </label>  
-                                                    </div>
-                                                    <div class="col-sm-9">
-                                                        <h:inputText class="form-control" value="#{institutionModel.user.phone}"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row" style="padding-top: 5px;">
-                                                <div class="form-group">
-                                                    <div class="col-sm-3">
-                                                        <label class="col-form-label">Email: </label>  
+                                                        <label class="col-form-label">Quarter: </label>  
                                                     </div>
                                                     <div class="col-sm-9"> 
-                                                        <h:inputText class="form-control" value="#{institutionModel.user.email}" required="true" requiredMessage="Email is Required"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row" style="padding-top: 5px;">
-                                                <div class="form-group">
-                                                    <div class="col-sm-3">
-                                                        <label class="col-form-label">Dpts/Dcts/Units: </label>  
-                                                    </div>
-                                                    <div class="col-sm-9"> 
-                                                        <h:selectOneMenu class="form-control" value="#{institutionModel.divisionId}">
-                                                            <f:selectItems value="#{institutionModel.activeDivisions}" var="d" itemValue="#{d.divisionId}" itemLabel="#{d.divisionName}" />
+                                                        <h:selectOneMenu class="form-control" value="#{divisionModel.quarter}">
+                                                            <f:selectItem itemLabel="Quarter 1" itemValue="QUARTER_ONE" />
+                                                            <f:selectItem itemLabel="Quarter 2" itemValue="QUARTER_TWO" />
+                                                            <f:selectItem itemLabel="Quarter 3" itemValue="QUARTER_THREE" />
+                                                            <f:selectItem itemLabel="Quarter 4" itemValue="QUARTER_FOUR" />
                                                         </h:selectOneMenu>
                                                     </div>
                                                 </div>
                                             </div>
+                                            
                                             <div class="row" style="padding-top: 5px;">
                                                 <div class="form-group">
                                                     <div class="col-sm-3">
-                                                        <label class="col-form-label">Username: </label>  
+                                                        <label class="col-form-label">Month: </label>  
                                                     </div>
                                                     <div class="col-sm-9"> 
-                                                        <h:inputText class="form-control" value="#{institutionModel.user.username}" required="true" requiredMessage="Username is Required"/>
+                                                        <h:selectOneMenu class="form-control" value="#{divisionModel.month}">
+                                                            <f:selectItem itemLabel="Month 1" itemValue="MONTH_ONE" />
+                                                            <f:selectItem itemLabel="Month 2" itemValue="MONTH_TWO" />
+                                                            <f:selectItem itemLabel="Month 3" itemValue="MONTH_THREE" />
+                                                        </h:selectOneMenu>
                                                     </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row" style="padding-top: 5px;">
+                                                <div class="form-group">
+                                                    <div class="col-sm-3">
+                                                        <label class="col-form-label">Week: </label>  
+                                                    </div>
+                                                    <div class="col-sm-9"> 
+                                                        <h:selectOneMenu class="form-control" value="#{divisionModel.week}">
+                                                            <f:selectItem itemLabel="Week 1" itemValue="Week1" />
+                                                            <f:selectItem itemLabel="Week 2" itemValue="Week2" />
+                                                            <f:selectItem itemLabel="Week 3" itemValue="Week3" />
+                                                            <f:selectItem itemLabel="Week 4" itemValue="Week4" />
+                                                        </h:selectOneMenu>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row" style="padding-top: 5px;">
+                                                <div class="form-group">
+                                                    <!--<div class="col-sm-3">-->
+                                                    <label class="col-form-label">Achievement: </label>  
+                                                    <!--</div>-->
+                                                    <!--<div class="col-sm-9">-->
+                                                    <h:inputTextarea rows="5" class="form-control" value="#{divisionModel.otherAccomplishment.accomplishment}" />
+                                                    <!--</div>-->
                                                 </div>
                                             </div>
                                             <div class="row" style="padding-top: 5px;">
                                                 <div class="form-group">
-                                                    <div class="col-sm-3">
-                                                        <label class="col-form-label">Password: </label>  
-                                                    </div>
-                                                    <div class="col-sm-9"> 
-                                                        <h:inputText class="form-control" value="#{institutionModel.password}" required="true" requiredMessage="Password is Required"/>
-                                                    </div>
+                                                    <!--<div class="col-sm-3">-->
+                                                    <label class="col-form-label">Comment: </label> 
+                                                    <!--</div>-->
+                                                    <!--<div class="col-sm-9">-->
+                                                    <h:inputTextarea rows="5" class="form-control" value="#{divisionModel.otherAccomplishment.challenge}" />
+                                                    <!--</div>-->
+                                                </div>
+                                            </div>
+                                            <div class="row" style="padding-top: 5px;">
+                                                <div class="form-group">
+                                                    <!--<div class="col-sm-3">-->
+                                                    <label class="col-form-label">Next Week Plan: </label> 
+                                                    <!--</div>-->
+                                                    <!--<div class="col-sm-9">-->
+                                                    <h:inputTextarea rows="5" class="form-control" value="#{divisionModel.otherAccomplishment.nextWeekPlan}" />
+                                                    <!--</div>-->
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <h:commandButton class="btn btn-primary" value="Register" action="#{institutionModel.registerDivisionManager()}" />
+                                        <h:commandButton class="btn btn-primary" value="Register" action="#{divisionModel.registerOtherAccomplishment()}" />
                                     </div>
                                 </div>
                             </h:form>
@@ -319,77 +311,123 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="product-status-wrap">
-                                <h4>User List</h4>
-                                <div class="add-product">
-                                    <h:form>
-                                        <h:commandLink class="pd-setting" a:data-toggle="modal" value="Add User" a:data-target="#PrimaryModalalert">
-                                            <p:ajax listener="#{institutionModel.cleanUser()}" update="userForm" />
-                                        </h:commandLink>
-                                    </h:form>
-                                </div>
-                                <div class="asset-inner">
-                                    <table>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Phone</th>
-                                            <th>Email</th>
-                                            <th>Dpts/Dcts/Units</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                        <h:form>
-                                            <c:forEach items="#{institutionModel.users}" var="elements" varStatus="status">
-                                                <tr>
-                                                    <td>${status.index + 1}</td>
-                                                    <td>#{elements.firstName}</td>
-                                                    <td>#{elements.lastName}</td>
-                                                    <td>#{elements.phone}</td>
-                                                    <td>#{elements.email}</td>
-                                                    <td>#{elements.division.divisionName}</td>
-                                                    <td>
-                                                        <c:choose>
-                                                            <c:when test="#{elements.status eq 'ACTIVE'}">
-                                                                <button class="pd-setting">Active</button>
-                                                            </c:when>
-                                                            <c:when test="#{elements.status eq 'INACTIVE'}">
-                                                                <button class="ds-setting">Inactive</button>
-                                                            </c:when>
-                                                        </c:choose>
-                                                    </td>
-                                                    <td>
-                                                        <h:commandLink class="pd-setting" a:data-toggle="modal" value="Edit" a:data-target="#PrimaryModalalert">
-                                                            <p:ajax listener="#{institutionModel.chooseUser(elements)}" update="userForm" />
-                                                        </h:commandLink>
+                            <div>
+                                <a class="btn btn-primary waves-effect waves-light" href="#" data-toggle="modal" data-target="#PrimaryModalalert">Add Report</a>
+                            </div>
 
-                                                        <c:choose>
-                                                            <c:when test="#{elements.status eq 'ACTIVE'}">
-                                                                <h:commandLink action="#{institutionModel.blockUser(elements)}" class="ds-setting" style="padding-left: 10px;" value="Block">
-                                                                </h:commandLink>
-                                                            </c:when>
-                                                            <c:when test="#{elements.status eq 'INACTIVE'}">
-                                                                <h:commandLink action="#{institutionModel.activateUser(elements)}" class="ds-setting" style="padding-left: 10px;" value="Activate">
-                                                                </h:commandLink>
-                                                            </c:when>
-                                                        </c:choose>
-                                                    </td>
-                                                </tr>
-                                            </c:forEach>
-                                        </h:form>
-                                    </table>
+                            <div class="hpanel">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <div class="product-status-wrap">
+                                                <h4>Weekly Report</h4>
+                                                <div class="asset-inner">
+                                                    <h:form>
+                                                        <p:growl />
+                                                        <div class="row">
+                                                            <div class="col-lg-4">
+                                                                <h:selectOneMenu class="form-control" value="#{divisionModel.quarter}">
+                                                                    <f:selectItem itemLabel="Quarter 1" itemValue="Quarter1" />
+                                                                    <f:selectItem itemLabel="Quarter 2" itemValue="Quarter2" />
+                                                                    <f:selectItem itemLabel="Quarter 3" itemValue="Quarter3" />
+                                                                    <f:selectItem itemLabel="Quarter 4" itemValue="Quarter4" />
+                                                                    <f:ajax render="tbl" listener="#{divisionModel.loadOtherReport()}" />
+                                                                </h:selectOneMenu>
+                                                            </div>
+                                                            <div class="col-lg-4">
+                                                                <h:selectOneMenu class="form-control" value="#{divisionModel.month}">
+                                                                    <f:selectItem itemLabel="Month 1" itemValue="MONTH_ONE" />
+                                                                    <f:selectItem itemLabel="Month 2" itemValue="MONTH_TWO" />
+                                                                    <f:selectItem itemLabel="Month 3" itemValue="MONTH_THREE" />
+                                                                    <f:ajax render="tbl" listener="#{divisionModel.loadOtherReport()}" />
+                                                                </h:selectOneMenu>
+                                                            </div>
+                                                            <div class="col-lg-4">
+                                                                <h:selectOneMenu class="form-control" value="#{divisionModel.period}">
+                                                                    <f:selectItem itemLabel="Week 1" itemValue="Week1" />
+                                                                    <f:selectItem itemLabel="Week 2" itemValue="Week2" />
+                                                                    <f:selectItem itemLabel="Week 3" itemValue="Week3" />
+                                                                    <f:selectItem itemLabel="Week 4" itemValue="Week4" />
+                                                                    <f:ajax render="tbl" listener="#{divisionModel.loadOtherReport()}" />
+                                                                </h:selectOneMenu>
+                                                            </div>
+                                                        </div>
+
+                                                        <p:dataTable style="padding-top: 10px;" id="tbl" widgetVar="reportTable" var="acc" value="#{divisionModel.otherAccomplishments}" sortBy="#{acc.project.projectTitle}">
+
+
+                                                            <p:column headerText="Activity" groupRow="true">
+                                                                <h:outputText styleClass="preformatted" value="#{acc.project.projectTitle}" />
+                                                            </p:column>
+
+                                                            <c:choose>
+                                                                <c:when test="#{divisionModel.period eq 'Week1'}">
+                                                                    <p:column headerText="Update(W1)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
+                                                                    </p:column>
+                                                                </c:when>
+                                                                <c:when test="#{divisionModel.period eq 'Week2'}">
+                                                                    <p:column headerText="Update(W2)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
+                                                                    </p:column>
+                                                                </c:when>
+                                                                <c:when test="#{divisionModel.period eq 'Week3'}">
+                                                                    <p:column headerText="Update(W3)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
+                                                                    </p:column>
+                                                                </c:when>
+                                                                <c:when test="#{divisionModel.period eq 'Week4'}">
+                                                                    <p:column headerText="Update(W4)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
+                                                                    </p:column>
+                                                                </c:when>
+                                                            </c:choose>
+                                                            <c:choose>
+                                                                <c:when test="#{divisionModel.period eq 'Week1'}">
+                                                                    <p:column headerText="Comments(W1)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
+                                                                    </p:column>
+                                                                </c:when>
+                                                                <c:when test="#{divisionModel.period eq 'Week2'}">
+                                                                    <p:column headerText="Comments(W2)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
+                                                                    </p:column>
+                                                                </c:when>
+                                                                <c:when test="#{divisionModel.period eq 'Week3'}">
+                                                                    <p:column headerText="Comments(W3)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
+                                                                    </p:column>
+                                                                </c:when>
+                                                                <c:when test="#{divisionModel.period eq 'Week4'}">
+                                                                    <p:column headerText="Comments(W4)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
+                                                                    </p:column>
+                                                                </c:when>
+                                                            </c:choose>
+                                                            <p:column headerText="Next-Week Plan" groupRow="true">
+                                                                <h:outputText styleClass="preformatted" value="#{acc.nextWeekPlan}" />
+                                                            </p:column>
+                                                            <p:column headerText="Action" groupRow="true">
+                                                                <h:commandButton class="btn btn-custon-rounded-three btn-danger" value="Remove" action="#{divisionModel.deleteOtherReport(acc)}" />
+                                                            </p:column>
+                                                        </p:dataTable>
+                                                    </h:form>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>                    
                 </div>
             </div>
             <div class="footer-copyright-area" style="position: fixed; padding: 10px 10px 0px 10px; bottom: 0; width: 100%; height: 40px;">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="footer-copy-right">
+                            <div class="footer-copy-right" >
                                 <p>Copyright © 2020 Powered by AFRITECK</p>
                             </div>
                         </div>
@@ -400,7 +438,7 @@
 
         <!-- jquery
                     ============================================ -->
-        <!--<script src="js/vendor/jquery-1.12.4.min.js"></script>-->
+        <script src="js/vendor/jquery-1.12.4.min.js"></script>
         <!-- bootstrap JS
                     ============================================ -->
         <script src="js/bootstrap.min.js"></script>

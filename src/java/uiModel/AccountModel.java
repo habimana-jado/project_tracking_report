@@ -63,7 +63,7 @@ public class AccountModel {
         }
 
     }
-
+    
     public void createUser() throws Exception {
         Institution institution = new Institution();
         institution.setEmail("info@ministry.gov.rw");

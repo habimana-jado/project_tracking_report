@@ -160,7 +160,7 @@
                                                         </a>
                                                         <ul role="menu" class="dropdown-header-top author-log dropdown-menu animated zoomIn">
 
-                                                            <li><a><h:form><h:commandButton class="btn btn-primary btn-block" value="Profile"/> </h:form></a>
+                                                            <li><a><h:form><h:commandButton class="btn btn-primary btn-block" value="Profile" action="#{institutionModel.navigateProfile()}"/> </h:form></a>
                                                             </li>
                                                             <li><a><h:form><h:commandButton class="btn btn-danger btn-block" value="Log Out" action="#{accountModel.logout()}" /> </h:form></a>
                                                             </li>
@@ -335,7 +335,8 @@
                                             <th>Start Date</th>
                                             <th>End Date</th>
                                             <th>Budget</th>
-                                            <th>Department</th>
+                                            <th>Dpt/Dct/Unit</th>
+                                            <th>Institution</th>
                                             <th>Action</th>
                                         </tr>
                                         <h:form>
@@ -352,6 +353,7 @@
                                                         </h:outputText>
                                                     </td>
                                                     <td>#{elements.division.divisionName}</td>
+                                                    <td>#{elements.division.institution.institutionName}</td>
                                                     <td>
                                                         
                                                         <h:commandLink value="Indicator" action="#{institutionModel.navigateProject(elements)}" class="pd-setting" ><i class="fa fa-angle-double-right" aria-hidden="true"></i></h:commandLink>
@@ -371,7 +373,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="footer-copy-right">
-                                <p>Copyright © 2020</p>
+                                <p>Copyright © 2020 Powered by AFRITECK</p>
                             </div>
                         </div>
                     </div>

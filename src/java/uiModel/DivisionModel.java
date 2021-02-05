@@ -2,6 +2,7 @@ package uiModel;
 
 import dao.AccomplishmentDao;
 import dao.IndicatorDao;
+import dao.Other_AccomplishmentDao;
 import dao.ProjectDao;
 import dao.TargetDao;
 import domain.Accomplishment;
@@ -14,6 +15,7 @@ import static domain.EMonth.MONTH_TWO;
 import domain.EPeriod;
 import domain.EQuarter;
 import domain.Indicator;
+import domain.Other_Accomplishment;
 import domain.Target;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +36,14 @@ public class DivisionModel {
     private Account loggedInUser = (Account) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("session");
     private Project project = new Project();
     private List<Project> projects = new ArrayList<>();
+    private List<Project> otherProjects = new ArrayList<>();
     private Target chosenTarget = new Target();
     private Accomplishment accomplishment = new Accomplishment();
+    private Other_Accomplishment otherAccomplishment = new Other_Accomplishment();
+    private List<Other_Accomplishment> compiledOtherAccomplishments = new ArrayList<>();
     private List<Accomplishment> accomplishments = new ArrayList<>();
+    private List<Accomplishment> compiledAccomplishments = new ArrayList<>();
+    private List<Other_Accomplishment> otherAccomplishments = new ArrayList<>();
     private List<Target> targets = new ArrayList<>();
     private String week = new String();
     private String quarter = "Quarter1";
@@ -48,46 +55,64 @@ public class DivisionModel {
     private Project chosenProject = new Project();
     private List<Indicator> indicators = new ArrayList<>();
     private String projectId = new String();
-    private String indicatorId = new String();   
+    private String indicatorId = new String();
     private Indicator chosenIndicator = new Indicator();
     private Target oneTarget = new Target();
     private Target quarterTarget = new Target();
     private String month = new String();
-    
+
     @PostConstruct
     public void init() {
+        compiledAccomplishments = new AccomplishmentDao().findByDivisionAndQuarterAndPeriodAndMonth(EQuarter.QUARTER_ONE, EPeriod.WEEK_ONE, loggedInUser.getDivision(), MONTH_ONE);
+        compiledOtherAccomplishments = new Other_AccomplishmentDao().findByDivisionAndQuarterAndPeriodAndMonth(EQuarter.QUARTER_ONE, EPeriod.WEEK_ONE, loggedInUser.getDivision(), MONTH_ONE);
         projects = new ProjectDao().findByDivision(loggedInUser.getDivision());
+        otherProjects = new ProjectDao().findByDivisionAndNotInActionPlan(loggedInUser.getDivision());
         loadReport();
     }
-    
-    public void loadIndicator(){
+
+    public void loadIndicator() {
         indicators.clear();
-        for(Indicator i: new IndicatorDao().findAll(Indicator.class)){
-            if(i.getProject().getProjectId().equals(projectId)){
+        for (Indicator i : new IndicatorDao().findAll(Indicator.class)) {
+            if (i.getProject().getProjectId().equals(projectId)) {
                 indicators.add(i);
             }
         }
 //        indicators = new ProjectDao().findOne(Project.class, projectId).getIndicator();
     }
 
-    public void findQuarter(){
-        Target t = new TargetDao().findOne(Target.class, targetId);
-        System.out.println(t.getTargetTitle());
-        quarter = t.getQuarter()+"";
+    public void registerOtherProject() {
+        project.setIsInActionPlan(Boolean.FALSE);
+        project.setDivision(loggedInUser.getDivision());
+        new ProjectDao().register(project);
+        project = new Project();
+        otherProjects = new ProjectDao().findByDivisionAndNotInActionPlan(loggedInUser.getDivision());
+
+        FacesContext fc = FacesContext.getCurrentInstance();
+        fc.addMessage(null, new FacesMessage("Activity Registered"));
     }
-    
-    public void deleteReport(Accomplishment acc){
+
+    public void findQuarter() {
+        Target t = new TargetDao().findOne(Target.class, targetId);
+        quarter = t.getQuarter() + "";
+    }
+
+    public void deleteReport(Accomplishment acc) {
         new AccomplishmentDao().delete(acc);
         loadReport();
+        loadReportCompiled();
         FacesContext fc = FacesContext.getCurrentInstance();
         fc.addMessage(null, new FacesMessage("Report Removed"));
     }
-    
-    public void loadTarget(){
-        
-//        targets.clear();
-//        targets = new IndicatorDao().findOne(Indicator.class, indicatorId).getTarget();
-        
+
+    public void deleteOtherReport(Other_Accomplishment acc) {
+        new Other_AccomplishmentDao().delete(acc);
+        loadOtherReport();
+        FacesContext fc = FacesContext.getCurrentInstance();
+        fc.addMessage(null, new FacesMessage("Report Removed"));
+    }
+
+    public void loadTarget() {
+
         switch (quarter) {
             case "Quarter1":
                 eQuarter = EQuarter.QUARTER_ONE;
@@ -110,32 +135,28 @@ public class DivisionModel {
                 break;
 
         }
-        System.out.println(quarter);
-        System.out.println(eQuarter);
-        System.out.println(chosenIndicator.getIndicatorName());
         oneTarget = new TargetDao().findByIndicatorAndQuarter(chosenIndicator, eQuarter);
-        System.out.println(oneTarget.getTargetTitle());
     }
+
     public void chooseTarget(Target target) {
-        System.out.println(target.getTargetTitle());
         chosenTarget = target;
         accomplishments = new AccomplishmentDao().findByTarget(target);
     }
-    
-    public String chooseIndicator(Indicator i){        
+
+    public String chooseIndicator(Indicator i) {
         chosenIndicator = i;
-//        accomplishments = new AccomplishmentDao().findByIndicatorAndQuarterAndPeriod(i, EQuarter.QUARTER_ONE, EPeriod.WEEK_ONE);
+        compiledAccomplishments = new AccomplishmentDao().findByDivisionAndQuarterAndPeriodAndMonth(EQuarter.QUARTER_ONE, EPeriod.WEEK_ONE, loggedInUser.getDivision(), MONTH_ONE);
         accomplishments = new AccomplishmentDao().findByDivisionAndProjectAndQuarterAndPeriodAndMonth(eQuarter, ePeriod, chosenProject, eMonth);
-        quarter = EQuarter.QUARTER_ONE+"";
-        month = EMonth.MONTH_ONE+"";
+        quarter = EQuarter.QUARTER_ONE + "";
+        month = EMonth.MONTH_ONE + "";
         targets = new TargetDao().findByIndicator(i);
         quarterTarget = new TargetDao().findByIndicatorAndQuarter(i, EQuarter.QUARTER_ONE);
         oneTarget = new TargetDao().findByIndicatorAndQuarterAndMonth(i, EQuarter.QUARTER_ONE, EMonth.MONTH_ONE);
         return "weekly-report.xhtml?faces-redirect=true";
     }
-    
-    public void findTarget(){
-        
+
+    public void findTarget() {
+
         switch (quarter) {
             case "QUARTER_ONE":
                 eQuarter = EQuarter.QUARTER_ONE;
@@ -158,7 +179,7 @@ public class DivisionModel {
                 break;
 
         }
-        
+
         switch (month) {
             case "MONTH_ONE":
                 eMonth = MONTH_ONE;
@@ -178,7 +199,7 @@ public class DivisionModel {
 
         }
         oneTarget = new TargetDao().findByIndicatorAndQuarterAndMonth(chosenIndicator, eQuarter, eMonth);
-        quarterTarget =  new TargetDao().findByIndicatorAndQuarter(chosenIndicator, eQuarter);
+        quarterTarget = new TargetDao().findByIndicatorAndQuarter(chosenIndicator, eQuarter);
     }
 
     public void loadReport() {
@@ -202,35 +223,78 @@ public class DivisionModel {
             case "Week4":
                 ePeriod = EPeriod.WEEK_FOUR;
                 break;
-            case "Week5":
-                ePeriod = EPeriod.WEEK_FIVE;
+
+            default:
+                ePeriod = EPeriod.WEEK_ONE;
                 break;
-            case "Week6":
-                ePeriod = EPeriod.WEEK_SIX;
+
+        }
+
+        switch (quarter) {
+            case "Quarter1":
+                eQuarter = EQuarter.QUARTER_ONE;
                 break;
-            case "Week7":
-                ePeriod = EPeriod.WEEK_SEVEN;
+
+            case "Quarter2":
+                eQuarter = EQuarter.QUARTER_TWO;
                 break;
-            case "Week8":
-                ePeriod = EPeriod.WEEK_EIGHT;
+
+            case "Quarter3":
+                eQuarter = EQuarter.QUARTER_THREE;
                 break;
-            case "Week9":
-                ePeriod = EPeriod.WEEK_NINE;
+
+            case "Quarter4":
+                eQuarter = EQuarter.QUARTER_FOUR;
                 break;
-            case "Week10":
-                ePeriod = EPeriod.WEEK_TEN;
+
+            default:
+                eQuarter = EQuarter.QUARTER_ONE;
                 break;
-            case "Week11":
-                ePeriod = EPeriod.WEEK_ELEVEN;
+
+        }
+
+        switch (month) {
+            case "MONTH_ONE":
+                eMonth = EMonth.MONTH_ONE;
                 break;
-            case "Week12":
-                ePeriod = EPeriod.WEEK_TWELVE;
+
+            case "MONTH_TWO":
+                eMonth = EMonth.MONTH_TWO;
                 break;
-            case "Week13":
-                ePeriod = EPeriod.WEEK_THIRTEEN;
+
+            case "MONTH_THREE":
+                eMonth = EMonth.MONTH_THREE;
                 break;
-            case "Week14":
-                ePeriod = EPeriod.WEEK_FOURTEEN;
+
+            default:
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+        }
+        accomplishments = new AccomplishmentDao().findByDivisionAndProjectAndQuarterAndPeriodAndMonth(eQuarter, ePeriod, chosenProject, eMonth);
+
+    }
+
+    public void loadReportCompiled() {
+        if (period.isEmpty() || period == null || period.equals("")) {
+            period = "Week1";
+
+        } else if (quarter.isEmpty() || quarter == null || quarter.equals("")) {
+            quarter = "Quarter1";
+
+        }
+        switch (period) {
+            case "Week1":
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+            case "Week2":
+                ePeriod = EPeriod.WEEK_TWO;
+                break;
+            case "Week3":
+                ePeriod = EPeriod.WEEK_THREE;
+                break;
+            case "Week4":
+                ePeriod = EPeriod.WEEK_FOUR;
                 break;
 
             default:
@@ -261,7 +325,7 @@ public class DivisionModel {
                 break;
 
         }
-        
+
         switch (month) {
             case "MONTH_ONE":
                 eMonth = EMonth.MONTH_ONE;
@@ -280,11 +344,232 @@ public class DivisionModel {
                 break;
 
         }
-        accomplishments = new AccomplishmentDao().findByDivisionAndProjectAndQuarterAndPeriodAndMonth(eQuarter, ePeriod, chosenProject, eMonth);
+        compiledAccomplishments = new AccomplishmentDao().findByDivisionAndQuarterAndPeriodAndMonth(eQuarter, ePeriod, loggedInUser.getDivision(), eMonth);
+
+    }
+
+    public void filterReport() {
+        if (period.isEmpty() || period == null || period.equals("")) {
+            period = "Week1";
+
+        } else if (quarter.isEmpty() || quarter == null || quarter.equals("")) {
+            quarter = "Quarter1";
+
+        }
+        switch (period) {
+            case "Week1":
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+            case "Week2":
+                ePeriod = EPeriod.WEEK_TWO;
+                break;
+            case "Week3":
+                ePeriod = EPeriod.WEEK_THREE;
+                break;
+            case "Week4":
+                ePeriod = EPeriod.WEEK_FOUR;
+                break;
+
+            default:
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+
+        }
+
+        switch (quarter) {
+            case "Quarter1":
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+            case "Quarter2":
+                eQuarter = EQuarter.QUARTER_TWO;
+                break;
+
+            case "Quarter3":
+                eQuarter = EQuarter.QUARTER_THREE;
+                break;
+
+            case "Quarter4":
+                eQuarter = EQuarter.QUARTER_FOUR;
+                break;
+
+            default:
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+        }
+
+        switch (month) {
+            case "MONTH_ONE":
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+            case "MONTH_TWO":
+                eMonth = EMonth.MONTH_TWO;
+                break;
+
+            case "MONTH_THREE":
+                eMonth = EMonth.MONTH_THREE;
+                break;
+
+            default:
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+        }
+        accomplishments = new AccomplishmentDao().findByDivisionAndQuarterAndPeriodAndMonth(eQuarter, ePeriod, loggedInUser.getDivision(), eMonth);
+
+    }
+
+    public void loadOtherReport() {
+        if (period.isEmpty() || period == null || period.equals("")) {
+            period = "Week1";
+
+        } else if (quarter.isEmpty() || quarter == null || quarter.equals("")) {
+            quarter = "Quarter1";
+
+        }
+        switch (period) {
+            case "Week1":
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+            case "Week2":
+                ePeriod = EPeriod.WEEK_TWO;
+                break;
+            case "Week3":
+                ePeriod = EPeriod.WEEK_THREE;
+                break;
+            case "Week4":
+                ePeriod = EPeriod.WEEK_FOUR;
+                break;
+            default:
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+
+        }
+
+        switch (quarter) {
+            case "Quarter1":
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+            case "Quarter2":
+                eQuarter = EQuarter.QUARTER_TWO;
+                break;
+
+            case "Quarter3":
+                eQuarter = EQuarter.QUARTER_THREE;
+                break;
+
+            case "Quarter4":
+                eQuarter = EQuarter.QUARTER_FOUR;
+                break;
+
+            default:
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+        }
+
+        switch (month) {
+            case "MONTH_ONE":
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+            case "MONTH_TWO":
+                eMonth = EMonth.MONTH_TWO;
+                break;
+
+            case "MONTH_THREE":
+                eMonth = EMonth.MONTH_THREE;
+                break;
+
+            default:
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+        }
+        otherAccomplishments = new Other_AccomplishmentDao().findByProjectAndQuarterAndPeriodAndMonth(eQuarter, ePeriod, chosenProject, eMonth);
+
+    }
+    public void loadOtherReportCompiled() {
+        if (period.isEmpty() || period == null || period.equals("")) {
+            period = "Week1";
+
+        } else if (quarter.isEmpty() || quarter == null || quarter.equals("")) {
+            quarter = "Quarter1";
+
+        }
+        switch (period) {
+            case "Week1":
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+            case "Week2":
+                ePeriod = EPeriod.WEEK_TWO;
+                break;
+            case "Week3":
+                ePeriod = EPeriod.WEEK_THREE;
+                break;
+            case "Week4":
+                ePeriod = EPeriod.WEEK_FOUR;
+                break;
+            default:
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+
+        }
+
+        switch (quarter) {
+            case "Quarter1":
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+            case "Quarter2":
+                eQuarter = EQuarter.QUARTER_TWO;
+                break;
+
+            case "Quarter3":
+                eQuarter = EQuarter.QUARTER_THREE;
+                break;
+
+            case "Quarter4":
+                eQuarter = EQuarter.QUARTER_FOUR;
+                break;
+
+            default:
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+        }
+
+        switch (month) {
+            case "MONTH_ONE":
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+            case "MONTH_TWO":
+                eMonth = EMonth.MONTH_TWO;
+                break;
+
+            case "MONTH_THREE":
+                eMonth = EMonth.MONTH_THREE;
+                break;
+
+            default:
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+        }
+        compiledOtherAccomplishments = new Other_AccomplishmentDao().findByDivisionAndQuarterAndPeriodAndMonth(eQuarter, ePeriod, loggedInUser.getDivision(), eMonth);
 
     }
 
     public void registerAccomplishment() {
+        if (oneTarget == null) {
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("No Monthly Target Available for " + month));
+            return;
+        }
         switch (week) {
             case "Week1":
                 accomplishment.setPeriod(EPeriod.WEEK_ONE);
@@ -297,36 +582,6 @@ public class DivisionModel {
                 break;
             case "Week4":
                 accomplishment.setPeriod(EPeriod.WEEK_FOUR);
-                break;
-            case "Week5":
-                accomplishment.setPeriod(EPeriod.WEEK_FIVE);
-                break;
-            case "Week6":
-                accomplishment.setPeriod(EPeriod.WEEK_SIX);
-                break;
-            case "Week7":
-                accomplishment.setPeriod(EPeriod.WEEK_SEVEN);
-                break;
-            case "Week8":
-                accomplishment.setPeriod(EPeriod.WEEK_EIGHT);
-                break;
-            case "Week9":
-                accomplishment.setPeriod(EPeriod.WEEK_NINE);
-                break;
-            case "Week10":
-                accomplishment.setPeriod(EPeriod.WEEK_TEN);
-                break;
-            case "Week11":
-                accomplishment.setPeriod(EPeriod.WEEK_ELEVEN);
-                break;
-            case "Week12":
-                accomplishment.setPeriod(EPeriod.WEEK_TWELVE);
-                break;
-            case "Week13":
-                accomplishment.setPeriod(EPeriod.WEEK_THIRTEEN);
-                break;
-            case "Week14":
-                accomplishment.setPeriod(EPeriod.WEEK_FOURTEEN);
                 break;
         }
         switch (quarter) {
@@ -351,11 +606,81 @@ public class DivisionModel {
                 break;
 
         }
-        
+
         accomplishment.setTarget(oneTarget);
         new AccomplishmentDao().register(accomplishment);
         accomplishment = new Accomplishment();
         loadReport();
+        compiledAccomplishments = new AccomplishmentDao().findByDivisionAndQuarterAndPeriodAndMonth(EQuarter.QUARTER_ONE, EPeriod.WEEK_ONE, loggedInUser.getDivision(), MONTH_ONE);
+
+        FacesContext fc = FacesContext.getCurrentInstance();
+        fc.addMessage(null, new FacesMessage("Report Submitted"));
+
+    }
+
+    public void registerOtherAccomplishment() {
+        switch (week) {
+            case "Week1":
+                otherAccomplishment.setPeriod(EPeriod.WEEK_ONE);
+                break;
+            case "Week2":
+                otherAccomplishment.setPeriod(EPeriod.WEEK_TWO);
+                break;
+            case "Week3":
+                otherAccomplishment.setPeriod(EPeriod.WEEK_THREE);
+                break;
+            case "Week4":
+                otherAccomplishment.setPeriod(EPeriod.WEEK_FOUR);
+                break;
+        }
+        switch (quarter) {
+            case "QUARTER_ONE":
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+            case "QUARTER_TWO":
+                eQuarter = EQuarter.QUARTER_TWO;
+                break;
+
+            case "QUARTER_THREE":
+                eQuarter = EQuarter.QUARTER_THREE;
+                break;
+
+            case "QUARTER_FOUR":
+                eQuarter = EQuarter.QUARTER_FOUR;
+                break;
+
+            default:
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+        }
+
+        switch (month) {
+            case "MONTH_ONE":
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+            case "MONTH_TWO":
+                eMonth = EMonth.MONTH_TWO;
+                break;
+
+            case "MONTH_THREE":
+                eMonth = EMonth.MONTH_THREE;
+                break;
+
+            default:
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+        }
+
+        otherAccomplishment.setQuarter(eQuarter);
+        otherAccomplishment.setMonth(eMonth);
+        otherAccomplishment.setProject(chosenProject);
+        new Other_AccomplishmentDao().register(otherAccomplishment);
+        otherAccomplishment = new Other_Accomplishment();
+
+        otherAccomplishments = new Other_AccomplishmentDao().findByProjectAndQuarterAndPeriodAndMonth(eQuarter, ePeriod, chosenProject, eMonth);
 
         FacesContext fc = FacesContext.getCurrentInstance();
         fc.addMessage(null, new FacesMessage("Report Submitted"));
@@ -368,6 +693,16 @@ public class DivisionModel {
 //        targets = new TargetDao().findByProject(p);
         accomplishments = new AccomplishmentDao().findByDivisionAndProjectAndQuarterAndPeriodAndMonth(EQuarter.QUARTER_ONE, EPeriod.WEEK_ONE, p, EMonth.MONTH_ONE);
         return "weekly-view?faces-redirect=true";
+    }
+
+    public String navigateOtherProject(Project p) {
+        chosenProject = p;
+        otherAccomplishments = new Other_AccomplishmentDao().findByProjectAndNotInActionPlan(p);
+        return "weekly-other-report?faces-redirect=true";
+    }
+
+    public void chooseProject(Project u) {
+        project = u;
     }
 
     public Account getLoggedInUser() {
@@ -536,6 +871,54 @@ public class DivisionModel {
 
     public void setQuarterTarget(Target quarterTarget) {
         this.quarterTarget = quarterTarget;
+    }
+
+    public List<Project> getOtherProjects() {
+        return otherProjects;
+    }
+
+    public void setOtherProjects(List<Project> otherProjects) {
+        this.otherProjects = otherProjects;
+    }
+
+    public EMonth geteMonth() {
+        return eMonth;
+    }
+
+    public void seteMonth(EMonth eMonth) {
+        this.eMonth = eMonth;
+    }
+
+    public List<Other_Accomplishment> getOtherAccomplishments() {
+        return otherAccomplishments;
+    }
+
+    public void setOtherAccomplishments(List<Other_Accomplishment> otherAccomplishments) {
+        this.otherAccomplishments = otherAccomplishments;
+    }
+
+    public Other_Accomplishment getOtherAccomplishment() {
+        return otherAccomplishment;
+    }
+
+    public void setOtherAccomplishment(Other_Accomplishment otherAccomplishment) {
+        this.otherAccomplishment = otherAccomplishment;
+    }
+
+    public List<Accomplishment> getCompiledAccomplishments() {
+        return compiledAccomplishments;
+    }
+
+    public void setCompiledAccomplishments(List<Accomplishment> compiledAccomplishments) {
+        this.compiledAccomplishments = compiledAccomplishments;
+    }
+
+    public List<Other_Accomplishment> getCompiledOtherAccomplishments() {
+        return compiledOtherAccomplishments;
+    }
+
+    public void setCompiledOtherAccomplishments(List<Other_Accomplishment> compiledOtherAccomplishments) {
+        this.compiledOtherAccomplishments = compiledOtherAccomplishments;
     }
 
 }

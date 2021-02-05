@@ -25,6 +25,7 @@
         <link rel="stylesheet" href="css/font-awesome.min.css"/>
         <!-- owl.carousel CSS
                     ============================================ -->
+        <a href="project.xhtml"></a>
         <link rel="stylesheet" href="css/owl.carousel.css"/>
         <link rel="stylesheet" href="css/owl.theme.css"/>
         <link rel="stylesheet" href="css/owl.transitions.css"/>
@@ -85,19 +86,14 @@
                     <nav class="sidebar-nav left-sidebar-menu-pro">
                         <ul class="metismenu" id="menu1">
                             <li>
-                                <a href="institutions.xhtml" aria-expanded="false"><span class="educate-icon educate-event icon-wrap"></span> <span class="mini-click-non">Institution</span></a>
-                            </li>
-                            <li>
-                                <a href="institution-users.xhtml" aria-expanded="false"><span class="educate-icon educate-professor icon-wrap"></span> <span class="mini-click-non">Institution User</span></a>
-                            </li>
-                            <li>
                                 <a href="divisions.xhtml" aria-expanded="false"><span class="educate-icon educate-course icon-wrap"></span> <span class="mini-click-non">Dpts/Dcts/Units</span></a>
                             </li>
                             <li>
-                                <a href="users.xhtml" aria-expanded="false"><span class="educate-icon educate-professor icon-wrap"></span> <span class="mini-click-non">Dpts/Dcts/Units User</span></a>
+                                <a href="users.xhtml" aria-expanded="false"><span class="educate-icon educate-professor icon-wrap"></span> <span class="mini-click-non">Dpts/Dcts/Units Users</span></a>
                             </li>
                             <li>
                                 <a href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Activity List</span></a>
+                                
                             </li>
                             <li>
                                 <a href="report.xhtml" aria-expanded="false"><span class="educate-icon educate-form icon-wrap"></span> <span class="mini-click-non">Report</span></a>
@@ -156,7 +152,6 @@
                                                             </li>
                                                         </ul>
                                                     </li>
-
                                                 </ul>
                                             </div>
                                         </div>
@@ -211,7 +206,7 @@
                                             <ul class="breadcome-menu">
                                                 <li><a href="#">Home</a> <span class="bread-slash">/</span>
                                                 </li>
-                                                <li><span class="bread-blod">Indicator/Target Configuration</span>
+                                                <li><span class="bread-blod">Account Configuration</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -225,121 +220,97 @@
 
             <div class="product-status mg-b-15">
                 <div class="container-fluid">
-                    <div id="PrimaryModalalert" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
-                        <div class="modal-dialog">
-                            <h:form>
-                                <p:growl />
-                                <div class="modal-content">
-                                    <div class="modal-close-area modal-close-df">
-                                        <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
-                                    </div>
-                                    <div class="modal-header">New Monthly Target</div>
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="form-group">
-                                                <div class="col-sm-3">
-                                                    <label class="col-form-label">Target: </label>  
-                                                </div>
-                                                <div class="col-sm-9">
-                                                    <h:inputText class="form-control" value="#{institutionModel.target.targetTitle}" required="true" requiredMessage="Title is Required"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="padding-top: 5px;">
-                                            <div class="form-group">
-                                                <div class="col-sm-3">
-                                                    <label class="col-form-label">Description: </label> 
-                                                </div>
-                                                <div class="col-sm-9">
-                                                    <h:inputTextarea rows="6" class="form-control" value="#{institutionModel.target.targetDescription}"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="padding-top: 5px;">
-                                            <div class="form-group">
-                                                <div class="col-sm-3">
-                                                    <label class="col-form-label">Quarter: </label>  
-                                                </div>
-                                                <div class="col-sm-9"> 
-                                                    <h:inputText disabled="true" class="form-control" value="#{institutionModel.chosenTarget.quarter}" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="padding-top: 5px;">
-                                            <div class="form-group">
-                                                <div class="col-sm-3">
-                                                    <label class="col-form-label">Month: </label>  
-                                                </div>
-                                                <div class="col-sm-9"> 
-                                                    <h:selectOneMenu class="form-control" value="#{institutionModel.month}" >
-                                                        <f:selectItem itemLabel="Month 1" itemValue="MONTH_ONE" /> 
-                                                        <f:selectItem itemLabel="Month 2" itemValue="MONTH_TWO" /> 
-                                                        <f:selectItem itemLabel="Month 3" itemValue="MONTH_THREE" /> 
-                                                    </h:selectOneMenu>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="payment-adress" style="padding-top: 5px;">
-                                                <h:commandButton action="#{institutionModel.registerMonthlyTarget()}" value="Register" class="btn btn-primary waves-effect waves-light"></h:commandButton>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </h:form>
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="product-payment-inner-st">
-                                <ul id="myTabedu1" class="tab-review-design">
-                                    <li class="active"><a href="#description">Monthly-Target Information</a></li>
-                                </ul>
-                                <div id="myTabContent" class="tab-content custom-product-edit">
-                                    <div class="product-tab-list tab-pane fade active in" id="description">
+                            <div class="sparkline12-list mt-b-30">
+                                <div class="sparkline12-hd">
+                                    <div class="main-sparkline12-hd">
+                                        <h1>Account Info</h1>
+                                    </div>
+                                </div>
+                                <h:form id="userForm">
+                                    <p:growl />
+                                    <div class="input-knob-dial-wrap">
                                         <div class="row">
-                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                <h3 class="text-primary">Activity Title: #{institutionModel.registeredProject.projectTitle}</h3>
-                                                <h3 class="text-primary">Quarterly Target: #{institutionModel.chosenTarget.targetTitle}</h3>
-                                                
-                                                <div class="add-product" style="padding-top: 18px;">
-                                                    <!--<a href="#" data-toggle="modal" data-target="#PrimaryModalalert">Add Monthly Target</a>-->
-                                                </div>                 
-                                                <div class="row">
-                                                    <h:form>
-                                                        <p:growl />
-                                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                            <div class="product-status-wrap">
-                                                                <div class="asset-inner">
-                                                                    <table class="table table-bordered">
-                                                                        <tr>
-                                                                            <th>No.</th>
-                                                                            <th>Target</th>
-                                                                            <th>Description</th>
-                                                                            <th>Month</th>
-                                                                        </tr>
-                                                                        <c:forEach items="#{institutionModel.monthlyTargets}" var="inst" varStatus="status">
-                                                                            <tr>
-                                                                                <td>${status.index + 1}</td>
-                                                                                <td>#{inst.targetTitle}</td>
-                                                                                <td>#{inst.targetDescription}</td>
-                                                                                <td>#{inst.month}</td>
-                                                                            </tr>
-                                                                        </c:forEach>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </h:form>
+                                            <div class="form-group">
+                                                <div class="col-sm-1"></div>
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">First Name: </label>  
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <h:inputText class="form-control" value="#{institutionModel.loggedInUser.firstName}" required="true" requiredMessage="First Name is Required"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-1"></div>
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Last Name: </label> 
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <h:inputText class="form-control" value="#{institutionModel.loggedInUser.lastName}" required="true" requiredMessage="Last Name is Required" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-1"></div>
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Phone: </label>  
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <p:inputMask mask="999 999 9999" class="form-control" value="#{institutionModel.loggedInUser.phone}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-1"></div>
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Email: </label> 
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <h:inputText class="form-control" value="#{institutionModel.loggedInUser.email}"  required="true" requiredMessage="Email is Required"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-1"></div>
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Username: </label>  
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <h:inputText disabled="true" class="form-control" value="#{institutionModel.loggedInUser.username}" required="true" requiredMessage="Username is Required"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-1"></div>
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Password: </label> 
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <h:inputText class="form-control" value="#{institutionModel.password}" required="true" requiredMessage="Password is Required" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-6"></div>
+                                                <div class="col-sm-6">
+                                                    <h:commandButton class="btn btn-success" value="Update" action="#{institutionModel.updateProfile()}" />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                </div>
+                                </h:form>
                             </div>
                         </div>
                     </div>
+                
                 </div>
             </div>
             <div class="footer-copyright-area" style="position: fixed; padding: 10px 10px 0px 10px; bottom: 0; width: 100%; height: 40px;">

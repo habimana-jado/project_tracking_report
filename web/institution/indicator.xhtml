@@ -145,7 +145,7 @@
                                                         </a>
                                                         <ul role="menu" class="dropdown-header-top author-log dropdown-menu animated zoomIn">
 
-                                                            <li><a><h:form><h:commandButton class="btn btn-primary btn-block" value="Profile"/> </h:form></a>
+                                                            <li><a><h:form><h:commandButton class="btn btn-primary btn-block" value="Profile" action="#{institutionModel.navigateProfile()}"/> </h:form></a>
                                                             </li>
                                                             <li><a><h:form><h:commandButton class="btn btn-danger btn-block" value="Log Out" action="#{accountModel.logout()}" /> </h:form></a>
                                                             </li>
@@ -228,9 +228,24 @@
                                     <div class="modal-close-area modal-close-df">
                                         <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
                                     </div>
-                                    <div class="modal-header">New Target</div>
+                                    <div class="modal-header">Indicator: <h3 class="text-capitalize text-success">#{institutionModel.chosenIndicator.indicatorName}</h3></div>
                                     <div class="modal-body">
-                                        <div class="row">
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Quarter: </label>  
+                                                </div>
+                                                <div class="col-sm-9"> 
+                                                    <h:selectOneMenu class="form-control" value="#{institutionModel.quarter}" >
+                                                        <f:selectItem itemLabel="Quarter 1" itemValue="QUARTER_ONE" /> 
+                                                        <f:selectItem itemLabel="Quarter 2" itemValue="QUARTER_TWO" /> 
+                                                        <f:selectItem itemLabel="Quarter 3" itemValue="QUARTER_THREE" /> 
+                                                        <f:selectItem itemLabel="Quarter 4" itemValue="QUARTER_FOUR" /> 
+                                                    </h:selectOneMenu>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
                                             <div class="form-group">
                                                 <div class="col-sm-3">
                                                     <label class="col-form-label">Target: </label>  
@@ -250,21 +265,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row" style="padding-top: 5px;">
-                                            <div class="form-group">
-                                                <div class="col-sm-3">
-                                                    <label class="col-form-label">Quarter: </label>  
-                                                </div>
-                                                <div class="col-sm-9"> 
-                                                    <h:selectOneMenu class="form-control" value="#{institutionModel.quarter}" >
-                                                        <f:selectItem itemLabel="Quarter 1" itemValue="QUARTER_ONE" /> 
-                                                        <f:selectItem itemLabel="Quarter 2" itemValue="QUARTER_TWO" /> 
-                                                        <f:selectItem itemLabel="Quarter 3" itemValue="QUARTER_THREE" /> 
-                                                        <f:selectItem itemLabel="Quarter 4" itemValue="QUARTER_FOUR" /> 
-                                                    </h:selectOneMenu>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                         <div class="row">
                                             <div class="payment-adress" style="padding-top: 5px;">
                                                 <h:commandButton action="#{institutionModel.registerTarget()}" value="Register" class="btn btn-primary waves-effect waves-light"></h:commandButton>
@@ -356,7 +357,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="footer-copy-right">
-                                <p>Copyright © 2020</p>
+                                <p>Copyright © 2020 Powered by AFRITECK</p>
                             </div>
                         </div>
                     </div>
