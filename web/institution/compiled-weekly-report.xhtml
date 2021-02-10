@@ -91,13 +91,13 @@
                     <nav class="sidebar-nav left-sidebar-menu-pro">
                         <ul class="metismenu" id="menu1">
                             <li>
-                                <a href="project-details.xhtml" aria-expanded="false"><span class="educate-icon educate-charts icon-wrap"></span> <span class="mini-click-non">Activity</span></a>
+                                <a href="project-details.xhtml" aria-expanded="false"><span class="educate-icon educate-charts icon-wrap"></span> <span class="mini-click-non">Action-Plan Activity</span></a>
                             </li>
                             <li>
-                                <a href="other-project-details.xhtml" aria-expanded="false"><span class="educate-icon educate-event icon-wrap"></span> <span class="mini-click-non">Other</span></a>
+                                <a href="other-project-details.xhtml" aria-expanded="false"><span class="educate-icon educate-event icon-wrap"></span> <span class="mini-click-non">Other Activity</span></a>
                             </li>
                             <li>
-                                <a href="compiled-weekly-report.xhtml" aria-expanded="false"><span class="educate-icon educate-library icon-wrap"></span> <span class="mini-click-non">Compiled</span></a>
+                                <a href="compiled-weekly-report.xhtml" aria-expanded="false"><span class="educate-icon educate-library icon-wrap"></span> <span class="mini-click-non">Compiled Report</span></a>
                             </li>
                         </ul>
                     </nav>
@@ -210,21 +210,46 @@
 
             <div class="product-status mg-b-15">
                 <div class="container-fluid">
-                    
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            
+                            <div class="product-status-wrap">
+                                <!--<h4>Action Plan Report</h4>-->
+                                <div class="asset-inner">
+                                    <h:form>
+                                        <div class="col-lg-4">
+                                            <h:outputLabel value="Activity Type" class="text text-muted text-right" style="padding-left: 300px;" />
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <h:selectOneMenu class="form-control" value="#{divisionModel.activityType}">
+                                                <!--<f:selectItem itemLabel="All" itemValue="All"/>-->
+                                                <f:selectItem itemValue="ActionPlan" itemLabel="Action Plan Activity"/>
+                                                <f:selectItem itemValue="Other" itemLabel="Other Activity"/>
+                                            </h:selectOneMenu>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <h:commandButton value="Change" action="#{divisionModel.updateRendering()}" class="btn btn-danger" />
+                                        </div>
+                                        <div class="col-lg-2"></div>
+                                    </h:form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
                             <div class="hpanel" style="padding-top: 5px;">
                                 <div class="panel-body">
-                                                                       
+
                                     <!--Compiled Report-->
                                     <div class="row">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <div class="product-status-wrap">
-                                                <h4>Action Plan Report</h4>
                                                 <div class="asset-inner">
-                                                    <h:form>
+                                                    <h:form rendered="#{divisionModel.activityType == 'ActionPlan' || divisionModel.activityType == 'All'}" style="padding-top: 45px;">
                                                         <p:growl />
+                                                        <h4>Action Plan</h4>
                                                         <div class="row">
                                                             <div class="col-lg-4">
                                                                 <h:selectOneMenu class="form-control" value="#{divisionModel.quarter}">
@@ -359,16 +384,16 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    
+
+
                                     <!--Other Activities Compiled Report-->
-                                    <div class="row" style="padding-top: 100px;">
+                                    <div class="row">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <div class="product-status-wrap">
-                                                <h4>Other Activities Report</h4>
                                                 <div class="asset-inner">
-                                                    <h:form>
+                                                    <h:form rendered="#{divisionModel.activityType == 'Other' || divisionModel.activityType == 'All'}" style="padding-bottom: 45px;">
                                                         <p:growl />
+                                                        <h4>Other Activities Report</h4>
                                                         <div class="row">
                                                             <div class="col-lg-4">
                                                                 <h:selectOneMenu class="form-control" value="#{divisionModel.quarter}">
@@ -458,7 +483,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                         </div>

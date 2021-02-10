@@ -42,9 +42,9 @@ Contributor(s):
 <hibernate-configuration>
   <session-factory>
     <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-    <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/reporting_db1</property>
+    <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/report_db</property>
     <property name="hibernate.connection.username">postgres</property>
-    <property name="hibernate.connection.password">root</property>
+    <property name="hibernate.connection.password">postgres</property>
     <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
     <property name="hibernate.show_sql">false</property>
     <property name="hibernate.format_sql">false</property>

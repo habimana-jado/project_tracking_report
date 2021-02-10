@@ -41,11 +41,15 @@ public class InstitutionModel {
     private Account loggedInUser = (Account) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("session");
     private Division division = new Division();
     private List<Division> divisions = new ArrayList<>();
+    private List<Division> allDivisions = new DivisionDao().findAll(Division.class);
     private List<Division> activeDivisions = new ArrayList<>();
     private Project project = new Project();
     private List<Project> projects = new ArrayList<>();
     private Account user = new Account();
     private String password = new String();
+    private String departmentFilterValue = new String();
+    private boolean activityFilterType = true;
+    private String activityType = "All";
     private List<Account> users = new ArrayList<>();
     private List<Target> targets = new ArrayList<>();
     private List<Accomplishment> accomplishments = new ArrayList<>();
@@ -58,8 +62,8 @@ public class InstitutionModel {
     private Target target = new Target();
     private List<Accomplishment> divisionAccomplishments = new ArrayList<>();
     private List<Other_Accomplishment> divisionOtherAccomplishments = new ArrayList<>();
-    private List<Accomplishment> institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriod(EQuarter.QUARTER_ONE,EMonth.MONTH_ONE, EPeriod.WEEK_ONE);
-    private List<Other_Accomplishment> institutionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriod(EQuarter.QUARTER_ONE,EMonth.MONTH_ONE, EPeriod.WEEK_ONE);
+    private List<Accomplishment> institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriod(EQuarter.QUARTER_ONE, EMonth.MONTH_ONE, EPeriod.WEEK_ONE);
+    private List<Other_Accomplishment> institutionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriod(EQuarter.QUARTER_ONE, EMonth.MONTH_ONE, EPeriod.WEEK_ONE);
     private Indicator chosenIndicator = new Indicator();
     private Target chosenTarget = new Target();
     private String period = new String();
@@ -74,8 +78,8 @@ public class InstitutionModel {
 
     @PostConstruct
     public void init() {
-        divisionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriod(EQuarter.QUARTER_ONE,EMonth.MONTH_ONE, EPeriod.WEEK_ONE, loggedInUser.getInstitution());
-        divisionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriod(EQuarter.QUARTER_ONE,EMonth.MONTH_ONE, EPeriod.WEEK_ONE, loggedInUser.getInstitution());
+        divisionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriod(EQuarter.QUARTER_ONE, EMonth.MONTH_ONE, EPeriod.WEEK_ONE, loggedInUser.getInstitution());
+        divisionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriod(EQuarter.QUARTER_ONE, EMonth.MONTH_ONE, EPeriod.WEEK_ONE, loggedInUser.getInstitution());
         divisions = new DivisionDao().findByInstitution(loggedInUser.getInstitution());
         activeDivisions = new DivisionDao().findByInstitutionAndStatus(loggedInUser.getInstitution(), EStatus.ACTIVE);
         users = new UserDao().findByAccessLevel(EAccessLevel.DIVISION_MANAGER);
@@ -102,6 +106,34 @@ public class InstitutionModel {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Institution Registered"));
             }
         }
+    }
+
+    public void updateRendering() {
+        if (activityType.isEmpty() || activityType == null) {
+            activityType = "ActionPlan";
+        } else if (activityType.equalsIgnoreCase("ActionPlan")) {
+            activityType = "ActionPlan";
+        } else if (activityType.equalsIgnoreCase("Other")) {
+            activityType = "Other";
+        } else if (activityType.equalsIgnoreCase("All")) {
+            activityType = "All";
+        }
+        loadReport();
+        loadOtherReport();
+    }
+
+    public void updateRenderingInstitution() {
+        if (activityType.isEmpty() || activityType == null) {
+            activityType = "ActionPlan";
+        } else if (activityType.equalsIgnoreCase("ActionPlan")) {
+            activityType = "ActionPlan";
+        } else if (activityType.equalsIgnoreCase("Other")) {
+            activityType = "Other";
+        } else if (activityType.equalsIgnoreCase("All")) {
+            activityType = "All";
+        }
+        loadInstitutionReport();
+        loadInstitutionOtherReport();
     }
 
     public void loadReport() {
@@ -175,9 +207,19 @@ public class InstitutionModel {
                 break;
 
         }
-        divisionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter, eMonth, ePeriod, loggedInUser.getInstitution());
+        if (departmentFilterValue.isEmpty() || departmentFilterValue == null) {
+            divisionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter, eMonth, ePeriod, loggedInUser.getInstitution());
+        } else {
+            Division division = new DivisionDao().findOne(Division.class, departmentFilterValue);
+            if (division == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Division Not Found"));
+            } else {
+                divisionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndDivision(eQuarter, eMonth, ePeriod, division);
+            }
+        }
 
     }
+
     public void loadOtherReport() {
         if (period.isEmpty() || period == null || period.equals("")) {
             period = "Week1";
@@ -249,10 +291,20 @@ public class InstitutionModel {
                 break;
 
         }
-        divisionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter, eMonth, ePeriod, loggedInUser.getInstitution());
+
+        if (departmentFilterValue.isEmpty() || departmentFilterValue == null) {
+            divisionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter, eMonth, ePeriod, loggedInUser.getInstitution());
+        } else {
+            Division division = new DivisionDao().findOne(Division.class, departmentFilterValue);
+            if (division == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Division Not Found"));
+            } else {
+                divisionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriodAndDivision(eQuarter, eMonth, ePeriod, division);
+            }
+        }
 
     }
-    
+
     public void loadInstitutionReport() {
         if (period.isEmpty() || period == null || period.equals("")) {
             period = "Week1";
@@ -326,6 +378,16 @@ public class InstitutionModel {
         }
         institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter, eMonth, ePeriod);
 
+        if (departmentFilterValue.isEmpty() || departmentFilterValue == null) {
+            institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter, eMonth, ePeriod);
+        } else {
+            Division division = new DivisionDao().findOne(Division.class, departmentFilterValue);
+            if (division == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Division Not Found"));
+            } else {
+                institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndDivision(eQuarter, eMonth, ePeriod, division);
+            }
+        }
     }
 
     public void loadInstitutionOtherReport() {
@@ -401,6 +463,16 @@ public class InstitutionModel {
         }
         institutionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter, eMonth, ePeriod);
 
+        if (departmentFilterValue.isEmpty() || departmentFilterValue == null) {
+            institutionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter, eMonth, ePeriod);
+        } else {
+            Division division = new DivisionDao().findOne(Division.class, departmentFilterValue);
+            if (division == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Division Not Found"));
+            } else {
+                institutionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriodAndDivision(eQuarter, eMonth, ePeriod, division);
+            }
+        }
     }
 
     public void registerDivisionManager() throws Exception {
@@ -636,20 +708,20 @@ public class InstitutionModel {
         return "monthly-target.xhtml?faces-redirect=true";
     }
 
-    public String navigateProfile() throws Exception{
+    public String navigateProfile() throws Exception {
         password = new PassCode().decrypt(loggedInUser.getPassword());
         return "profile.xhtml?faces-redirect=true";
     }
-    
-    public String navigateProfileDM() throws Exception{
+
+    public String navigateProfileDM() throws Exception {
         password = new PassCode().decrypt(loggedInUser.getPassword());
         return "dm-profile.xhtml?faces-redirect=true";
     }
-    
-    public void updateProfile() throws Exception{
+
+    public void updateProfile() throws Exception {
         loggedInUser.setPassword(new PassCode().encrypt(password));
         new UserDao().update(loggedInUser);
-        
+
         FacesContext fc = FacesContext.getCurrentInstance();
         fc.addMessage(null, new FacesMessage("Account Updated"));
     }
@@ -916,6 +988,38 @@ public class InstitutionModel {
 
     public void setInstitutionOtherAccomplishments(List<Other_Accomplishment> institutionOtherAccomplishments) {
         this.institutionOtherAccomplishments = institutionOtherAccomplishments;
+    }
+
+    public String getDepartmentFilterValue() {
+        return departmentFilterValue;
+    }
+
+    public void setDepartmentFilterValue(String departmentFilterValue) {
+        this.departmentFilterValue = departmentFilterValue;
+    }
+
+    public boolean isActivityFilterType() {
+        return activityFilterType;
+    }
+
+    public void setActivityFilterType(boolean activityFilterType) {
+        this.activityFilterType = activityFilterType;
+    }
+
+    public String getActivityType() {
+        return activityType;
+    }
+
+    public void setActivityType(String activityType) {
+        this.activityType = activityType;
+    }
+
+    public List<Division> getAllDivisions() {
+        return allDivisions;
+    }
+
+    public void setAllDivisions(List<Division> allDivisions) {
+        this.allDivisions = allDivisions;
     }
 
 }

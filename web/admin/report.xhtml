@@ -156,7 +156,7 @@
                                                             <span class="admin-name">#{institutionModel.loggedInUser.firstName}</span>
                                                             <i class="fa fa-angle-down edu-icon edu-down-arrow"></i>
                                                         </a>
-                                                       <ul role="menu" class="dropdown-header-top author-log dropdown-menu animated zoomIn">
+                                                        <ul role="menu" class="dropdown-header-top author-log dropdown-menu animated zoomIn">
 
                                                             <li><a><h:form><h:commandButton class="btn btn-primary btn-block" value="Profile" action="#{institutionModel.navigateProfile()}"/> </h:form></a>
                                                             </li>
@@ -233,13 +233,39 @@
 
             <div class="product-status mg-b-15">
                 <div class="container-fluid">
+                    <!--Activity Type Filter-->
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="product-status-wrap">
+                                <!--<h4>Action Plan Report</h4>-->
+                                <div class="asset-inner">
+                                    <h:form>
+                                        <div class="col-lg-4">
+                                            <h:outputLabel value="Activity Type" class="text text-muted text-right" style="padding-left: 300px;" />
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <h:selectOneMenu class="form-control" value="#{institutionModel.activityType}">
+                                                <!--<f:selectItem itemLabel="All" itemValue="All"/>-->
+                                                <f:selectItem itemValue="ActionPlan" itemLabel="Action Plan Activity"/>
+                                                <f:selectItem itemValue="Other" itemLabel="Other Activity"/>
+                                            </h:selectOneMenu>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <h:commandButton value="Change" action="#{institutionModel.updateRenderingInstitution()}" class="btn btn-danger" />
+                                        </div>
+                                        <div class="col-lg-2"></div>
+                                    </h:form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!--Action Plan Report Display-->
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="product-status-wrap">
-                                <h4>Action Plan Report</h4>
                                 <div class="asset-inner">
-                                    <h:form>
+                                    <h:form rendered="#{institutionModel.activityType == 'ActionPlan' || institutionModel.activityType == 'All'}" >
+                                        <h4>Action Plan</h4>
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <h:selectOneMenu class="form-control" value="#{institutionModel.quarter}">
@@ -267,6 +293,20 @@
                                                     <f:ajax render="tbl" listener="#{institutionModel.loadInstitutionReport()}" />
                                                 </h:selectOneMenu>
                                             </div>
+                                        </div>
+
+                                        <div class="row" style="padding-top: 15px;">
+                                            <div class="col-lg-4">
+                                                <h:outputLabel value="Department" class="text text-muted text-right" style="padding-left: 300px;" />
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <h:selectOneMenu class="form-control" value="#{institutionModel.departmentFilterValue}">
+                                                    <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
+                                                    <f:selectItems value="#{institutionModel.allDivisions}" var="it" itemValue="#{it.divisionId}" itemLabel="#{it.divisionName}"/>
+                                                    <f:ajax render="tbl" listener="#{institutionModel.loadInstitutionReport()}" />
+                                                </h:selectOneMenu>
+                                            </div>
+                                            <div class="col-lg-4"></div>
                                         </div>
 
                                         <p:dataTable style="padding-top: 10px;" id="tbl" widgetVar="reportTable" var="acc" value="#{institutionModel.institutionAccomplishments}" sortBy="#{acc.target.indicator.project.division.institution.institutionName}">
@@ -384,9 +424,9 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="product-status-wrap">
-                                <h4>Other Activities Report</h4>
                                 <div class="asset-inner">
-                                    <h:form>
+                                    <h:form rendered="#{institutionModel.activityType == 'Other' || institutionModel.activityType == 'All'}" >
+                                        <h4>Other Activities Report</h4>
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <h:selectOneMenu class="form-control" value="#{institutionModel.quarter}">
@@ -414,6 +454,20 @@
                                                     <f:ajax render="tbl" listener="#{institutionModel.loadInstitutionOtherReport()}" />
                                                 </h:selectOneMenu>
                                             </div>
+                                        </div>
+                                        
+                                        <div class="row" style="padding-top: 15px;">
+                                            <div class="col-lg-4">
+                                                <h:outputLabel value="Department" class="text text-muted text-right" style="padding-left: 300px;" />
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <h:selectOneMenu class="form-control" value="#{institutionModel.departmentFilterValue}">
+                                                    <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
+                                                    <f:selectItems value="#{institutionModel.allDivisions}" var="it" itemValue="#{it.divisionId}" itemLabel="#{it.divisionName}"/>
+                                                    <f:ajax render="tbl" listener="#{institutionModel.loadInstitutionOtherReport()}" />
+                                                </h:selectOneMenu>
+                                            </div>
+                                            <div class="col-lg-4"></div>
                                         </div>
 
                                         <p:dataTable style="padding-top: 10px;" id="tbl" widgetVar="reportTable" var="acc" value="#{institutionModel.institutionOtherAccomplishments}" sortBy="#{acc.project.division.institution.institutionName}">

@@ -85,13 +85,13 @@
                     <nav class="sidebar-nav left-sidebar-menu-pro">
                         <ul class="metismenu" id="menu1">
                             <li>
-                                <a href="project-details.xhtml" aria-expanded="false"><span class="educate-icon educate-charts icon-wrap"></span> <span class="mini-click-non">Activity</span></a>
+                                <a href="project-details.xhtml" aria-expanded="false"><span class="educate-icon educate-charts icon-wrap"></span> <span class="mini-click-non">Action-Plan Activity</span></a>
                             </li>
                             <li>
-                                <a href="other-project-details.xhtml" aria-expanded="false"><span class="educate-icon educate-event icon-wrap"></span> <span class="mini-click-non">Other</span></a>
+                                <a href="other-project-details.xhtml" aria-expanded="false"><span class="educate-icon educate-event icon-wrap"></span> <span class="mini-click-non">Other Activity</span></a>
                             </li>
                             <li>
-                                <a href="compiled-weekly-report.xhtml" aria-expanded="false"><span class="educate-icon educate-library icon-wrap"></span> <span class="mini-click-non">Compiled</span></a>
+                                <a href="compiled-weekly-report.xhtml" aria-expanded="false"><span class="educate-icon educate-library icon-wrap"></span> <span class="mini-click-non">Compiled Report</span></a>
                             </li>
                         </ul>
                     </nav>
@@ -285,20 +285,40 @@
                                 <a class="btn btn-primary waves-effect waves-light" href="#" data-toggle="modal" data-target="#PrimaryModalalert">Add New Activity</a>
                             </div>
                         </div>
-                        <h:form>
-                            <c:forEach items="#{divisionModel.otherProjects}" var="elements">
-                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">                      
-                                    <div class="modal-bootstrap shadow-inner mg-tb-30 responsive-mg-b-0">
-                                        <h2>#{elements.projectTitle}</h2>
-                                        <p>#{elements.projectDescription}</p>
-                                        <div class="modal-area-button">
-                                            <h:commandButton class="btn btn-info" value="Continue" action="#{divisionModel.navigateOtherProject(elements)}"></h:commandButton>                                    
-                                        </div>
-                                    </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="product-status-wrap">
+                                <h4>Activity List</h4>                                
+                                <div class="asset-inner">
+                                    <table>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Activity Title</th>
+                                            <th>Activity Description</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        <h:form>
+                                            <c:forEach items="#{divisionModel.otherProjects}" var="elements" varStatus="status">
+                                                <tr>
+                                                    <td>${status.index + 1}</td>
+                                                    <td>#{elements.projectTitle}</td>
+                                                    <td>#{elements.projectDescription}</td>
+                                                    <td>#{elements.startDate}</td>
+                                                    <td>#{elements.endDate}</td>
+                                                    
+                                                    <td>
+                                                        <h:commandLink class="pd-setting" value="Continue"  action="#{divisionModel.navigateOtherProject(elements)}"></h:commandLink>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </h:form>
+                                    </table>
                                 </div>
-                            </c:forEach>
-                        </h:form>
+                            </div>
+                        </div>
                     </div>
+                    
                 </div>
             </div>
             <div class="footer-copyright-area" style="position: fixed; padding: 10px 10px 0px 10px; bottom: 0; width: 100%; height: 40px;">

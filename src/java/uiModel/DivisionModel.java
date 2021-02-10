@@ -38,6 +38,7 @@ public class DivisionModel {
     private List<Project> projects = new ArrayList<>();
     private List<Project> otherProjects = new ArrayList<>();
     private Target chosenTarget = new Target();
+    private String activityType = "All";
     private Accomplishment accomplishment = new Accomplishment();
     private Other_Accomplishment otherAccomplishment = new Other_Accomplishment();
     private List<Other_Accomplishment> compiledOtherAccomplishments = new ArrayList<>();
@@ -111,6 +112,20 @@ public class DivisionModel {
         fc.addMessage(null, new FacesMessage("Report Removed"));
     }
 
+    public void updateRendering(){
+        if(activityType.isEmpty() || activityType == null){
+            activityType = "ActionPlan";
+        }else if(activityType.equalsIgnoreCase("ActionPlan")){
+            activityType = "ActionPlan";
+        }else if(activityType.equalsIgnoreCase("Other")){
+            activityType = "Other";
+        }else if(activityType.equalsIgnoreCase("All")){
+            activityType = "All";
+        }
+        loadReport();
+        loadOtherReport();
+    }
+    
     public void loadTarget() {
 
         switch (quarter) {
@@ -919,6 +934,14 @@ public class DivisionModel {
 
     public void setCompiledOtherAccomplishments(List<Other_Accomplishment> compiledOtherAccomplishments) {
         this.compiledOtherAccomplishments = compiledOtherAccomplishments;
+    }
+
+    public String getActivityType() {
+        return activityType;
+    }
+
+    public void setActivityType(String activityType) {
+        this.activityType = activityType;
     }
 
 }

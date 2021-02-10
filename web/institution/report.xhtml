@@ -76,6 +76,10 @@
                 white-space: pre-wrap;
                 word-break: break-all;
             }
+            .ui-filter-column .ui-column-customfilter .custom-filter {
+                width: 100%;
+                box-sizing: border-box;
+            }
         </style>
         <!--[if lt IE 8]>
                  <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -226,13 +230,38 @@
 
             <div class="product-status mg-b-15">
                 <div class="container-fluid">
-                    <!--Action Plan Activities Display-->
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="product-status-wrap">
-                                <h4>Action Plan Report</h4>
+                                <!--<h4>Action Plan Report</h4>-->
                                 <div class="asset-inner">
                                     <h:form>
+                                        <div class="col-lg-4">
+                                            <h:outputLabel value="Activity Type" class="text text-muted text-right" style="padding-left: 300px;" />
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <h:selectOneMenu class="form-control" value="#{institutionModel.activityType}">
+                                                <!--<f:selectItem itemLabel="All" itemValue="All"/>-->
+                                                <f:selectItem itemValue="ActionPlan" itemLabel="Action Plan Activity"/>
+                                                <f:selectItem itemValue="Other" itemLabel="Other Activity"/>
+                                            </h:selectOneMenu>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <h:commandButton value="Change" action="#{institutionModel.updateRendering()}" class="btn btn-danger" />
+                                        </div>
+                                        <div class="col-lg-2"></div>
+                                    </h:form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Action Plan Activities Display-->
+                    <div class="row" style="padding-bottom: 50px;">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="product-status-wrap">
+                                <div class="asset-inner">                                    
+                                    <h:form rendered="#{institutionModel.activityType == 'ActionPlan' || institutionModel.activityType == 'All'}" style="padding-top: 45px;">
+                                        <h4>Action Plan </h4>
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <h:selectOneMenu class="form-control" value="#{institutionModel.quarter}">
@@ -262,10 +291,26 @@
                                             </div>
                                         </div>
 
+                                        <div class="row" style="padding-top: 15px;">
+                                            <div class="col-lg-4">
+                                                <h:outputLabel value="Department" class="text text-muted text-right" style="padding-left: 300px;" />
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <h:selectOneMenu class="form-control" value="#{institutionModel.departmentFilterValue}">
+                                                    <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
+                                                    <f:selectItems value="#{institutionModel.divisions}" var="it" itemValue="#{it.divisionId}" itemLabel="#{it.divisionName}"/>
+                                                    <f:ajax render="tbl" listener="#{institutionModel.loadReport()}" />
+                                                </h:selectOneMenu>
+                                            </div>
+                                            <div class="col-lg-4"></div>
+                                        </div>
 
 
-                                        <p:dataTable style="padding-top: 10px;" id="tbl" widgetVar="reportTable" var="acc" value="#{institutionModel.divisionAccomplishments}" sortBy="#{acc.target.indicator.project.division.divisionName}">
-                                            <p:column headerText="Dpts/Dcts/Units" groupRow="true">
+
+                                        <p:dataTable style="padding-top: 10px;" id="tbl" widgetVar="reportTable" var="acc" 
+                                                     value="#{institutionModel.divisionAccomplishments}" sortBy="#{acc.target.indicator.project.division.divisionName}">
+
+                                            <p:column headerText="Dpts/Dcts/Units" groupRow="true">                                                
                                                 <h:outputText  styleClass="preformatted" value="#{acc.target.target.indicator.project.division.divisionName}" />
                                             </p:column>
                                             <p:column headerText="Activity" groupRow="true">
@@ -366,19 +411,18 @@
                                             </p:column>
                                         </p:dataTable>
                                     </h:form>
-
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!--Other Activities(Not In Action Plan) Display--> 
-                    <div class="row" style="padding-top: 100px;">
+                    <div class="row" style="padding-bottom: 50px;">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="product-status-wrap">
-                                <h4>Other Activities Report</h4>
                                 <div class="asset-inner">
-                                    <h:form>
+                                    <h:form rendered="#{institutionModel.activityType == 'Other' || institutionModel.activityType == 'All'}" style="padding-top: 45px;">
+                                        <h4>Other Activities </h4>
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <h:selectOneMenu class="form-control" value="#{institutionModel.quarter}">
@@ -406,6 +450,20 @@
                                                     <f:ajax render="tbl" listener="#{institutionModel.loadOtherReport()}" />
                                                 </h:selectOneMenu>
                                             </div>
+                                        </div>
+
+                                        <div class="row" style="padding-top: 15px;">
+                                            <div class="col-lg-4">
+                                                <h:outputLabel value="Department" class="text text-muted text-right" style="padding-left: 300px;" />
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <h:selectOneMenu class="form-control" value="#{institutionModel.departmentFilterValue}">
+                                                    <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
+                                                    <f:selectItems value="#{institutionModel.divisions}" var="it" itemValue="#{it.divisionId}" itemLabel="#{it.divisionName}"/>
+                                                    <f:ajax render="tbl" listener="#{institutionModel.loadOtherReport()}" />
+                                                </h:selectOneMenu>
+                                            </div>
+                                            <div class="col-lg-4"></div>
                                         </div>
 
 
