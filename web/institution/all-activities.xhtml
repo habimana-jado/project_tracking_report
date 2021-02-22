@@ -71,6 +71,21 @@
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
     </h:head>
     <h:body>
+        <style>
+            .preformatted {
+                white-space: pre-wrap;
+                word-break: break-all;
+            }
+            .ui-filter-column .ui-column-customfilter .custom-filter {
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .ui-datatable th {
+                background-image: none;
+                background-color: #D5DBDB;
+                color: #17202A;
+            }
+        </style>
         <!--[if lt IE 8]>
                  <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
          <![endif]-->
@@ -85,17 +100,10 @@
                     <nav class="sidebar-nav left-sidebar-menu-pro">
                         <ul class="metismenu" id="menu1">
                             <li>
-                                <a href="institutions.xhtml" aria-expanded="false"><span class="educate-icon educate-event icon-wrap"></span> <span class="mini-click-non">Institution</span></a>
-                            </li>
-                            <li>
-                                <a href="institution-users.xhtml" aria-expanded="false"><span class="educate-icon educate-professor icon-wrap"></span> <span class="mini-click-non">Institution User</span></a>
-                            </li>
-                            <li>
                                 <a href="divisions.xhtml" aria-expanded="false"><span class="educate-icon educate-course icon-wrap"></span> <span class="mini-click-non">Dpts/Dcts/Units</span></a>
-
                             </li>
                             <li>
-                                <a href="users.xhtml" aria-expanded="false"><span class="educate-icon educate-professor icon-wrap"></span> <span class="mini-click-non">Dpts/Dcts/Units User</span></a>
+                                <a href="users.xhtml" aria-expanded="false"><span class="educate-icon educate-professor icon-wrap"></span> <span class="mini-click-non">Dpts/Dcts/Units Users</span></a>
                             </li>
                             <li>
                                 <a class="has-arrow" href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Activity List</span></a>
@@ -217,7 +225,7 @@
                                             <ul class="breadcome-menu">
                                                 <li><a href="#">Home</a> <span class="bread-slash">/</span>
                                                 </li>
-                                                <li><span class="bread-blod">Indicator/Target Configuration</span>
+                                                <li><span class="bread-blod">Plan Configuration</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -231,109 +239,104 @@
 
             <div class="product-status mg-b-15">
                 <div class="container-fluid">
-                    <div id="PrimaryModalalert" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
-                        <div class="modal-dialog">
-                            <h:form>
-                                <p:growl />
-                                <div class="modal-content">
-                                    <div class="modal-close-area modal-close-df">
-                                        <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
-                                    </div>
-                                    <div class="modal-header">New Activity</div>
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="form-group">
-                                                <div class="col-sm-3">
-                                                    <label class="col-form-label">Indicator: </label>  
-                                                </div>
-                                                <div class="col-sm-9">
-                                                    <h:inputText class="form-control" value="#{institutionModel.indicator.indicatorName}" required="true" requiredMessage="Title is Required"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="padding-top: 5px;">
-                                            <div class="form-group">
-                                                <div class="col-sm-3">
-                                                    <label class="col-form-label">Description: </label> 
-                                                </div>
-                                                <div class="col-sm-9">
-                                                    <h:inputTextarea rows="6" class="form-control" value="#{institutionModel.indicator.description}"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="padding-top: 5px;">
-                                            <div class="form-group">
-                                                <div class="col-sm-3">
-                                                    <label class="col-form-label">Remarks: </label>  
-                                                </div>
-                                                <div class="col-sm-9">
-                                                    <h:inputText class="form-control" value="#{institutionModel.indicator.remarks}"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="payment-adress" style="padding-top: 5px;">
-                                                <h:commandButton action="#{institutionModel.registerIndicator()}" value="Register" class="btn btn-primary waves-effect waves-light"></h:commandButton>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </h:form>
-                        </div>
-                    </div>
-                    <div class="row">
+                    <!--Action Plan Activities Display-->
+                    <div class="row" style="padding-bottom: 50px;">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="product-payment-inner-st">
-                                <ul id="myTabedu1" class="tab-review-design">
-                                    <li class="active"><a href="#description">Indicator Information</a></li>
-                                    <!--<li><a href="#reviews"> Targets Information</a></li>-->
-                                    <!--<li><a href="#INFORMATION">Targets Information</a></li>-->
-                                </ul>
-                                <div id="myTabContent" class="tab-content custom-product-edit">
-                                    <div class="product-tab-list tab-pane fade active in" id="description">
-                                        <div class="row">
-                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                <h3 class="text-primary">Activity Title: #{institutionModel.registeredProject.projectTitle}</h3>  
-                                                <div class="add-product" style="padding-top: 18px;">
-                                                    <!--<a href="#" data-toggle="modal" data-target="#PrimaryModalalert">Add Indicator</a>-->
-                                                </div>                 
-                                                <div class="row">
-                                                    <h:form>
-                                                        <p:growl />
-                                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                            <div class="product-status-wrap">
-                                                                <div class="asset-inner">
-                                                                    <table class="table table-bordered">
-                                                                        <tr>
-                                                                            <th>No.</th>
-                                                                            <th>Indicator</th>
-                                                                            <th>Description</th>
-                                                                            <th>Remarks</th>
-                                                                            <th>Action</th>
-                                                                        </tr>
-                                                                        <c:forEach items="#{institutionModel.indicators}" var="inst" varStatus="status">
-                                                                            <tr>
-                                                                                <td>${status.index + 1}</td>
-                                                                                <td>#{inst.indicatorName}</td>
-                                                                                <td>#{inst.description}</td>
-                                                                                <td>#{inst.remarks}</td>
-                                                                                <td>
-                                                                                    <h:commandLink value="Target" action="#{institutionModel.navigateIndicator(inst)}" title="More" class="pd-setting-ed"><i class="fa fa-angle-double-right" aria-hidden="true"></i></h:commandLink>
-                                                                                    <!--<h:commandLink title="Remove" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></h:commandLink>-->
-                                                                                </td>
-                                                                            </tr>
-                                                                        </c:forEach>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </h:form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    
+                            <div class="product-status-wrap">
+                                <div class="asset-inner">                                    
+                                    <h:form style="padding-top: 45px;">
+                                        <h4>Operational Plan </h4>
+
+                                        <p:dataTable style="padding-top: 10px;" id="tbl" widgetVar="reportTable" var="acc" 
+                                                     value="#{institutionModel.institutionMonthlyTargets}" rowIndexVar="row" sortBy="#{acc.target.indicator.project.projectTitle}">
+
+                                            <p:columnGroup type="header">
+                                                <p:row>
+                                                    <p:column rowspan="2" headerText="Activity"/>
+                                                    <p:column rowspan="2" headerText="Indicator"/>
+                                                    <p:column rowspan="2" headerText="Unit"/>
+                                                    <p:column colspan="3" headerText="Quarter 1"/>
+                                                    <p:column colspan="3" headerText="Quarter 2"/>
+                                                    <p:column colspan="3" headerText="Quarter 3"/>
+                                                    <p:column colspan="3" headerText="Quarter 4"/>
+                                                </p:row>
+                                                <p:row>
+                                                    <p:column headerText="M1"/>
+                                                    <p:column headerText="M2"/>
+                                                    <p:column headerText="M3"/>
+                                                    <p:column headerText="M1"/>
+                                                    <p:column headerText="M2"/>
+                                                    <p:column headerText="M3"/>
+                                                    <p:column headerText="M1"/>
+                                                    <p:column headerText="M2"/>
+                                                    <p:column headerText="M3"/>
+                                                    <p:column headerText="M1"/>
+                                                    <p:column headerText="M2"/>
+                                                    <p:column headerText="M3"/>
+                                                </p:row>
+                                            </p:columnGroup>
+                                            <p:column groupRow="true">
+                                                <h:outputText styleClass="preformatted" value="#{acc.target.indicator.project.projectTitle}" />
+                                            </p:column>
+
+                                            <p:column groupRow="true">
+                                                <h:outputText styleClass="preformatted" value="#{acc.target.indicator.indicatorName}" />
+                                            </p:column>
+
+                                            <p:column groupRow="true">
+                                                <h:outputText styleClass="preformatted" value="#{acc.target.indicator.project.division.divisionName}" />
+                                            </p:column>
+                                            
+                                            <p:column visible="true" >
+                                                <h:outputText styleClass="preformatted" value="#{(acc.month eq 'MONTH_ONE' and acc.target.quarter eq 'QUARTER_ONE') ? acc.targetTitle : ''}"  />
+                                            </p:column> 
+
+                                            <p:column visible="true" >
+                                                <h:outputText styleClass="preformatted" value="#{(acc.month eq 'MONTH_TWO' and acc.target.quarter eq 'QUARTER_ONE') ? acc.targetTitle : ''}"  />
+                                            </p:column> 
+
+                                            <p:column visible="true" >
+                                                <h:outputText styleClass="preformatted" value="#{(acc.month eq 'MONTH_THREE' and acc.target.quarter eq 'QUARTER_ONE') ? acc.targetTitle : ''}" />
+                                            </p:column>
+
+                                            <p:column visible="true" >
+                                                <h:outputText styleClass="preformatted" value="#{(acc.month eq 'MONTH_ONE' and acc.target.quarter eq 'QUARTER_TWO') ? acc.targetTitle : ''}" />
+                                            </p:column> 
+
+                                            <p:column visible="true" >
+                                                <h:outputText styleClass="preformatted" value="#{(acc.month eq 'MONTH_TWO' and acc.target.quarter eq 'QUARTER_TWO') ? acc.targetTitle : ''}" />
+                                            </p:column> 
+
+                                            <p:column visible="true" >
+                                                <h:outputText styleClass="preformatted" value="#{(acc.month eq 'MONTH_THREE' and acc.target.quarter eq 'QUARTER_TWO') ? acc.targetTitle : ''}" />
+                                            </p:column> 
+ 
+                                            <p:column visible="true" >
+                                                <h:outputText styleClass="preformatted" value="#{(acc.month eq 'MONTH_ONE' and acc.target.quarter eq 'QUARTER_THREE') ? acc.targetTitle : ''}" />
+                                            </p:column> 
+
+                                            <p:column visible="true" >
+                                                <h:outputText styleClass="preformatted" value="#{(acc.month eq 'MONTH_TWO' and acc.target.quarter eq 'QUARTER_THREE') ? acc.targetTitle : ''}" />
+                                            </p:column> 
+
+                                            <p:column visible="true" >
+                                                <h:outputText styleClass="preformatted" value="#{(acc.month eq 'MONTH_THREE' and acc.target.quarter eq 'QUARTER_THREE') ? acc.targetTitle : ''}" />
+                                            </p:column> 
+ 
+                                            <p:column visible="true" >
+                                                <h:outputText styleClass="preformatted" value="#{(acc.month eq 'MONTH_ONE' and acc.target.quarter eq 'QUARTER_FOUR') ? acc.targetTitle : ''}" />
+                                            </p:column> 
+
+                                            <p:column visible="true" >
+                                                <h:outputText styleClass="preformatted" value="#{(acc.month eq 'MONTH_TWO' and acc.target.quarter eq 'QUARTER_FOUR') ? acc.targetTitle : ''}" />
+                                            </p:column> 
+
+                                            <p:column visible="true" >
+                                                <h:outputText styleClass="preformatted" value="#{(acc.month eq 'MONTH_THREE' and acc.target.quarter eq 'QUARTER_FOUR') ? acc.targetTitle : ''}" />
+                                            </p:column> 
+
+                                        </p:dataTable>
+                                    </h:form>
                                 </div>
                             </div>
                         </div>

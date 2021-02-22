@@ -4,11 +4,12 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <meta charset="utf-8"/>
         <meta http-equiv="x-ua-compatible" content="ie=edge"/>
-        <title>SMM Targets Track</title>
+        <title>Weekly Reporting System</title>
         <meta name="description" content=""/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <!-- favicon
@@ -91,8 +92,12 @@
                                 <a href="users.xhtml" aria-expanded="false"><span class="educate-icon educate-professor icon-wrap"></span> <span class="mini-click-non">Dpts/Dcts/Units Users</span></a>
                             </li>
                             <li>
-                                <a href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Activity List</span></a>
-                                
+                                <a class="has-arrow" href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Activity List</span></a>
+                                <ul class="submenu-angle" aria-expanded="false">
+                                    <li><a title="All Activities" href="projects.xhtml"><span class="mini-sub-pro">All Activities</span></a></li>
+                                    <li><a title="Operational Plan" href="all-activities.xhtml"><span class="mini-sub-pro">Operational Plan</span></a></li>
+                                    
+                                </ul>
                             </li>
                             <li>
                                 <a href="report.xhtml" aria-expanded="false"><span class="educate-icon educate-form icon-wrap"></span> <span class="mini-click-non">Report</span></a>
@@ -222,7 +227,7 @@
                 <div class="container-fluid">
                     <div id="PrimaryModalalert" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
                         <div class="modal-dialog">
-                            <h:form>
+                            <h:form id="indicatorForm">
                                 <p:growl />
                                 <div class="modal-content">
                                     <div class="modal-close-area modal-close-df">
@@ -307,6 +312,10 @@
                                                                                 <td>#{inst.description}</td>
                                                                                 <td>#{inst.remarks}</td>
                                                                                 <td>
+                                                                                    <h:commandLink class="pd-setting" a:data-toggle="modal" value="Edit" a:data-target="#PrimaryModalalert">
+                                                                                        <p:ajax listener="#{institutionModel.chooseIndicator(inst)}" update="indicatorForm" />
+                                                                                    </h:commandLink>
+                                                                                    
                                                                                     <h:commandLink value="Target" action="#{institutionModel.navigateIndicator(inst)}" title="More" class="pd-setting-ed"><i class="fa fa-angle-double-right" aria-hidden="true"></i></h:commandLink>
                                                                                     <!--<h:commandLink title="Remove" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></h:commandLink>-->
                                                                                 </td>
@@ -321,8 +330,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    
+
+
                                 </div>
                             </div>
                         </div>

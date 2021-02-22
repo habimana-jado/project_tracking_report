@@ -45,6 +45,7 @@ public class InstitutionModel {
     private List<Division> activeDivisions = new ArrayList<>();
     private Project project = new Project();
     private List<Project> projects = new ArrayList<>();
+    private List<Project> allProjects = new ProjectDao().findAll(Project.class);
     private Account user = new Account();
     private String password = new String();
     private String departmentFilterValue = new String();
@@ -75,6 +76,8 @@ public class InstitutionModel {
     private Institution institution = new Institution();
     private List<Account> institutionAccounts = new UserDao().findByAccessLevel(EAccessLevel.INSTITUTION_MANAGER);
     private List<Institution> institutions = new InstitutionDao().findAll(Institution.class);
+    private List<Target> allMonthlyTargets = new TargetDao().findMonthlyTargets();
+    private List<Target> institutionMonthlyTargets = new TargetDao().findMonthlyTargetsByInstitution(loggedInUser.getInstitution());
 
     @PostConstruct
     public void init() {
@@ -83,7 +86,7 @@ public class InstitutionModel {
         divisions = new DivisionDao().findByInstitution(loggedInUser.getInstitution());
         activeDivisions = new DivisionDao().findByInstitutionAndStatus(loggedInUser.getInstitution(), EStatus.ACTIVE);
         users = new UserDao().findByAccessLevel(EAccessLevel.DIVISION_MANAGER);
-        projects = new ProjectDao().findAll(Project.class);
+        projects = new ProjectDao().findByInstitution(loggedInUser.getInstitution());
         loadReport();
     }
 
@@ -613,6 +616,20 @@ public class InstitutionModel {
         institution = new Institution();
     }
 
+    public void chooseIndicator(Indicator u) {
+        indicator = u;
+    }
+
+    public void chooseTarget(Target u) {
+        month = u.getMonth().toString();
+        target = u;
+    }
+    
+    public void chooseQuarterlyTarget(Target u) {
+        quarter = u.getQuarter().toString();
+        target = u;
+    }
+    
     public void registerProject() {
         Division d = new DivisionDao().findOne(Division.class, divisionId);
         project.setDivision(d);
@@ -638,56 +655,162 @@ public class InstitutionModel {
     }
 
     public void registerTarget() {
-        target.setIndicator(chosenIndicator);
+        boolean flag = false;
+
         switch (quarter) {
             case "QUARTER_ONE":
-                target.setQuarter(EQuarter.QUARTER_ONE);
+                eQuarter = EQuarter.QUARTER_ONE;
                 break;
 
             case "QUARTER_TWO":
-                target.setQuarter(EQuarter.QUARTER_TWO);
+                eQuarter = EQuarter.QUARTER_TWO;
                 break;
 
             case "QUARTER_THREE":
-                target.setQuarter(EQuarter.QUARTER_THREE);
+                eQuarter = EQuarter.QUARTER_THREE;
                 break;
 
             case "QUARTER_FOUR":
-                target.setQuarter(EQuarter.QUARTER_FOUR);
+                eQuarter = EQuarter.QUARTER_FOUR;
                 break;
         }
 
-        new TargetDao().register(target);
-        target = new Target();
-        targets = new TargetDao().findByIndicator(chosenIndicator);
+        for (Target t : new TargetDao().findByIndicator(chosenIndicator)) {
+            if (t.getQuarter().equals(eQuarter)) {
+                flag = true;
+            }
+        }
 
-        FacesContext fc = FacesContext.getCurrentInstance();
-        fc.addMessage(null, new FacesMessage("Target Added"));
+        if (flag) {
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("Target for " + eQuarter + " has already been added"));
+        } else {
+            target.setIndicator(chosenIndicator);
+            target.setQuarter(eQuarter);
+            new TargetDao().register(target);
+            target = new Target();
+            targets = new TargetDao().findByIndicator(chosenIndicator);
+
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("Target Added"));
+        }
     }
 
-    public void registerMonthlyTarget() {
-        target.setTarget(chosenTarget);
-        switch (month) {
-            case "MONTH_ONE":
-                target.setMonth(EMonth.MONTH_ONE);
+    public void updateTarget() {
+        switch (quarter) {
+            case "QUARTER_ONE":
+                eQuarter = EQuarter.QUARTER_ONE;
                 break;
 
-            case "MONTH_TWO":
-                target.setMonth(EMonth.MONTH_TWO);
+            case "QUARTER_TWO":
+                eQuarter = EQuarter.QUARTER_TWO;
                 break;
 
-            case "MONTH_THREE":
-                target.setMonth(EMonth.MONTH_THREE);
+            case "QUARTER_THREE":
+                eQuarter = EQuarter.QUARTER_THREE;
                 break;
 
+            case "QUARTER_FOUR":
+                eQuarter = EQuarter.QUARTER_FOUR;
+                break;
         }
+
+        target.setMonth(eMonth);
+        target.setTarget(chosenTarget);
+
         target.setQuarter(chosenTarget.getQuarter());
         new TargetDao().register(target);
         target = new Target();
         monthlyTargets = new TargetDao().findByTarget(chosenTarget);
 
         FacesContext fc = FacesContext.getCurrentInstance();
-        fc.addMessage(null, new FacesMessage("Target Added"));
+        fc.addMessage(null, new FacesMessage("Target Updated"));
+
+    }
+
+    public void registerMonthlyTarget() {
+        boolean flag = false;
+
+        switch (month) {
+            case "MONTH_ONE":
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+            case "MONTH_TWO":
+                eMonth = EMonth.MONTH_TWO;
+                break;
+
+            case "MONTH_THREE":
+                eMonth = EMonth.MONTH_THREE;
+                break;
+
+        }
+
+        for (Target t : new TargetDao().findByTarget(chosenTarget)) {
+            if (t.getMonth().equals(eMonth)) {
+                flag = true;
+            }
+        }
+
+        if (flag) {
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("Target for " + eMonth + " has already been added"));
+        } else {
+            target.setMonth(eMonth);
+            target.setTarget(chosenTarget);
+
+            target.setQuarter(chosenTarget.getQuarter());
+            new TargetDao().register(target);
+            target = new Target();
+            monthlyTargets = new TargetDao().findByTarget(chosenTarget);
+
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("Target Added"));
+        }
+
+    }
+
+    public void updateMonthlyTarget() {
+        boolean flag = false;
+
+        switch (month) {
+            case "MONTH_ONE":
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+            case "MONTH_TWO":
+                eMonth = EMonth.MONTH_TWO;
+                break;
+
+            case "MONTH_THREE":
+                eMonth = EMonth.MONTH_THREE;
+                break;
+
+        }
+
+        for (Target t : new TargetDao().findByTarget(chosenTarget)) {
+            if (t.getMonth().equals(eMonth)) {
+                flag = true;
+            }
+        }
+
+        if (flag && !month.equalsIgnoreCase(target.getMonth().toString())) {
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("Target for " + eMonth + " has already been added"));
+            target = new Target();
+        } else {
+            target.setMonth(eMonth);
+            target.setTarget(chosenTarget);
+
+            target.setQuarter(chosenTarget.getQuarter());
+            new TargetDao().register(target);
+            target = new Target();
+            monthlyTargets = new TargetDao().findByTarget(chosenTarget);
+
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("Target Updated"));
+        }
+
     }
 
     public String navigateProject(Project p) {
@@ -724,6 +847,14 @@ public class InstitutionModel {
 
         FacesContext fc = FacesContext.getCurrentInstance();
         fc.addMessage(null, new FacesMessage("Account Updated"));
+    }
+
+    public void removeMontlyTarget(Target t) {
+        new TargetDao().delete(t);
+        monthlyTargets = new TargetDao().findByTarget(chosenTarget);
+
+        FacesContext fc = FacesContext.getCurrentInstance();
+        fc.addMessage(null, new FacesMessage("Target Removed"));
     }
 
     public Account getLoggedInUser() {
@@ -1020,6 +1151,30 @@ public class InstitutionModel {
 
     public void setAllDivisions(List<Division> allDivisions) {
         this.allDivisions = allDivisions;
+    }
+
+    public List<Target> getInstitutionMonthlyTargets() {
+        return institutionMonthlyTargets;
+    }
+
+    public void setInstitutionMonthlyTargets(List<Target> institutionMonthlyTargets) {
+        this.institutionMonthlyTargets = institutionMonthlyTargets;
+    }
+
+    public List<Project> getAllProjects() {
+        return allProjects;
+    }
+
+    public void setAllProjects(List<Project> allProjects) {
+        this.allProjects = allProjects;
+    }
+
+    public List<Target> getAllMonthlyTargets() {
+        return allMonthlyTargets;
+    }
+
+    public void setAllMonthlyTargets(List<Target> allMonthlyTargets) {
+        this.allMonthlyTargets = allMonthlyTargets;
     }
 
 }

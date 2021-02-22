@@ -4,11 +4,12 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <meta charset="utf-8"/>
         <meta http-equiv="x-ua-compatible" content="ie=edge"/>
-        <title>SMM Targets Track</title>
+        <title>Weekly Reporting System</title>
         <meta name="description" content=""/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <!-- favicon
@@ -91,8 +92,12 @@
                                 <a href="users.xhtml" aria-expanded="false"><span class="educate-icon educate-professor icon-wrap"></span> <span class="mini-click-non">Dpts/Dcts/Units Users</span></a>
                             </li>
                             <li>
-                                <a href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Activity List</span></a>
-                                
+                                <a class="has-arrow" href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Activity List</span></a>
+                                <ul class="submenu-angle" aria-expanded="false">
+                                    <li><a title="All Activities" href="projects.xhtml"><span class="mini-sub-pro">All Activities</span></a></li>
+                                    <li><a title="Operational Plan" href="all-activities.xhtml"><span class="mini-sub-pro">Operational Plan</span></a></li>
+                                    
+                                </ul>
                             </li>
                             <li>
                                 <a href="report.xhtml" aria-expanded="false"><span class="educate-icon educate-form icon-wrap"></span> <span class="mini-click-non">Report</span></a>
@@ -222,7 +227,7 @@
                 <div class="container-fluid">
                     <div id="PrimaryModalalert" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
                         <div class="modal-dialog">
-                            <h:form>
+                            <h:form id="targetForm">
                                 <p:growl />
                                 <div class="modal-content">
                                     <div class="modal-close-area modal-close-df">
@@ -276,6 +281,63 @@
                             </h:form>
                         </div>
                     </div>
+                    
+                    <div id="PrimaryModalalert1" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <h:form id="targetEditForm">
+                                <p:growl />
+                                <div class="modal-content">
+                                    <div class="modal-close-area modal-close-df">
+                                        <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
+                                    </div>
+                                    <div class="modal-header">Indicator: <h3 class="text-capitalize text-success">#{institutionModel.chosenIndicator.indicatorName}</h3></div>
+                                    <div class="modal-body">
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Quarter: </label>  
+                                                </div>
+                                                <div class="col-sm-9"> 
+                                                    <h:selectOneMenu disabled="true" class="form-control" value="#{institutionModel.quarter}" >
+                                                        <f:selectItem itemLabel="Quarter 1" itemValue="QUARTER_ONE" /> 
+                                                        <f:selectItem itemLabel="Quarter 2" itemValue="QUARTER_TWO" /> 
+                                                        <f:selectItem itemLabel="Quarter 3" itemValue="QUARTER_THREE" /> 
+                                                        <f:selectItem itemLabel="Quarter 4" itemValue="QUARTER_FOUR" /> 
+                                                    </h:selectOneMenu>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Target: </label>  
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <h:inputText class="form-control" value="#{institutionModel.target.targetTitle}" required="true" requiredMessage="Title is Required"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Description: </label> 
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <h:inputTextarea rows="6" class="form-control" value="#{institutionModel.target.targetDescription}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="payment-adress" style="padding-top: 5px;">
+                                                <h:commandButton action="#{institutionModel.updateTarget()}" value="Update" class="btn btn-primary waves-effect waves-light"></h:commandButton>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </h:form>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="product-payment-inner-st">
@@ -289,6 +351,7 @@
                                         <div class="row">
                                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                 <h3 class="text-primary">Activity Title: #{institutionModel.registeredProject.projectTitle}</h3>  
+                                                <h3 class="text-primary">Indicator: #{institutionModel.chosenIndicator.indicatorName}</h3>  
                                                 <div class="add-product" style="padding-top: 18px;">
                                                     <a href="#" data-toggle="modal" data-target="#PrimaryModalalert">Add Target</a>
                                                 </div>                 
@@ -331,6 +394,10 @@
                                                                                     </c:choose>
                                                                                 </td>
                                                                                 <td>
+                                                                                    <h:commandLink class="pd-setting" a:data-toggle="modal" value="Edit" a:data-target="#PrimaryModalalert1">
+                                                                                        <p:ajax listener="#{institutionModel.chooseQuarterlyTarget(inst)}" update="targetEditForm" />
+                                                                                    </h:commandLink>
+                                                                                       
                                                                                     <h:commandLink value="Montly-Target" action="#{institutionModel.navigateMonthlyTarget(inst)}" title="More" class="pd-setting-ed"><i class="fa fa-angle-double-right" aria-hidden="true"></i></h:commandLink>
                                                                                 </td>
                                                                             </tr>

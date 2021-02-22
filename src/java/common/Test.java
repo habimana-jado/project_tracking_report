@@ -5,6 +5,7 @@ import dao.AccomplishmentDao;
 import dao.DivisionDao;
 import dao.InstitutionDao;
 import dao.ProjectDao;
+import dao.TargetDao;
 import dao.UserDao;
 import domain.Accomplishment;
 import domain.Account;
@@ -17,6 +18,7 @@ import domain.EQuarter;
 import domain.EStatus;
 import domain.Institution;
 import domain.Project;
+import domain.Target;
 import java.util.List;
 import javax.faces.context.FacesContext;
 import org.eclipse.jdt.internal.compiler.flow.InsideSubRoutineFlowContext;
@@ -30,17 +32,17 @@ public class Test {
 //        institution.setPhone("078898970");
 //        new InstitutionDao().register(institution);
 
-Institution institution = new InstitutionDao().findOne(Institution.class, "ea42fd8a-4a9f-4521-8ea5-b7b3b32652a3");
-        Account u = new Account();
-        u.setAccessLevel(EAccessLevel.GLOBAL);
-        u.setEmail("info@migeprof.gov.rw");
-        u.setFirstName("Migeprof");
-        u.setLastName("Migeprof");
-        u.setPassword(new PassCode().encrypt("secret"));
-        u.setStatus(EStatus.ACTIVE);
-        u.setUsername("superadmin");
-        u.setInstitution(institution);
-        new UserDao().register(u);
+//Institution institution = new InstitutionDao().findOne(Institution.class, "ea42fd8a-4a9f-4521-8ea5-b7b3b32652a3");
+//        Account u = new Account();
+//        u.setAccessLevel(EAccessLevel.GLOBAL);
+//        u.setEmail("info@migeprof.gov.rw");
+//        u.setFirstName("Migeprof");
+//        u.setLastName("Migeprof");
+//        u.setPassword(new PassCode().encrypt("secret"));
+//        u.setStatus(EStatus.ACTIVE);
+//        u.setUsername("superadmin");
+//        u.setInstitution(institution);
+//        new UserDao().register(u);
 
 //        Indicator i = new IndicatorDao().findOne(Indicator.class, "c81a8be5-f7d4-468e-8246-8585ee05f699");
 //        Target t = new TargetDao().findByIndicatorAndQuarter(i, EQuarter.QUARTER_ONE);
@@ -88,5 +90,15 @@ Institution institution = new InstitutionDao().findOne(Institution.class, "ea42f
 //        for(Project p: new ProjectDao().findByDivisionAndNotInActionPlan(d)){
 //            System.out.println("Test 2-- "+p.getProjectTitle());
 //        }
+
+
+//        Project p = new ProjectDao().findOne(Project.class, "465e6e9c-a3b7-4d2d-bdd7-8eb484024351");
+//        new ProjectDao().delete(p);
+
+
+        Institution in = new InstitutionDao().findOne(Institution.class, "93789d57-42b8-45ef-a496-2edc03c17e47");
+        new TargetDao().findMonthlyTargetsByInstitution(in).forEach((t) -> {
+            System.out.println(t.getMonth()+"----"+t.getTarget().getQuarter()+"----"+t.getTargetTitle()+"----"+t.getTarget().getIndicator().getIndicatorName()+"---"+t.getTarget().getIndicator().getProject().getProjectTitle());
+        });
     }
 }

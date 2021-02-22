@@ -18,6 +18,14 @@
             30
         </session-timeout>
     </session-config>
+    <context-param>
+        <param-name>com.sun.faces.enableRestoreView11Compatibility</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <!--    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/index.xhtml</location>
+    </error-page>-->
     <welcome-file-list>
         <welcome-file>faces/index.xhtml</welcome-file>
     </welcome-file-list>

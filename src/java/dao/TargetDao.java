@@ -4,6 +4,7 @@ package dao;
 import domain.EMonth;
 import domain.EQuarter;
 import domain.Indicator;
+import domain.Institution;
 import domain.Project;
 import domain.Target;
 import java.util.List;
@@ -69,6 +70,23 @@ public class TargetDao extends GenericDao<Target>{
         q.setParameter("y", in);
         q.setParameter("z", qu);
         Target list = (Target) q.uniqueResult();
+        s.close();
+        return list;
+    }
+    
+    public List<Target> findMonthlyTargets(){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM Target a WHERE a.month IS NOT NULL");
+        List<Target> list = q.list();
+        s.close();
+        return list;
+    }
+    
+    public List<Target> findMonthlyTargetsByInstitution(Institution i){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM Target a WHERE a.target.indicator.project.division.institution = :i");
+        q.setParameter("i", i);
+        List<Target> list = q.list();
         s.close();
         return list;
     }

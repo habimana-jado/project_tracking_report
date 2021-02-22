@@ -9,7 +9,7 @@
     <h:head>
         <meta charset="utf-8"/>
         <meta http-equiv="x-ua-compatible" content="ie=edge"/>
-        <title>SMM Targets Track</title>
+        <title>Weekly Reporting System</title>
         <meta name="description" content=""/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <!-- favicon
@@ -106,8 +106,12 @@
                                 <a href="users.xhtml" aria-expanded="false"><span class="educate-icon educate-professor icon-wrap"></span> <span class="mini-click-non">Dpts/Dcts/Units User</span></a>
                             </li>
                             <li>
-                                <a href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Activity List</span></a>
-
+                                <a class="has-arrow" href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Activity List</span></a>
+                                <ul class="submenu-angle" aria-expanded="false">
+                                    <li><a title="All Activities" href="projects.xhtml"><span class="mini-sub-pro">All Activities</span></a></li>
+                                    <li><a title="Operational Plan" href="all-activities.xhtml"><span class="mini-sub-pro">Operational Plan</span></a></li>
+                                    
+                                </ul>
                             </li>
                             <li>
                                 <a href="report.xhtml" aria-expanded="false"><span class="educate-icon educate-form icon-wrap"></span> <span class="mini-click-non">Report</span></a>
@@ -234,91 +238,7 @@
 
             <div class="product-status mg-b-15">
                 <div class="container-fluid">
-                    <div id="PrimaryModalalert" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
-                        <div class="modal-dialog">
-                            <h:form id="userForm">
-                                <p:growl />
-                                <div class="modal-content">
-                                    <div class="modal-close-area modal-close-df">
-                                        <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
-                                    </div>
-                                    <div class="modal-header">New Activity</div>
-                                    <div class="modal-body">
-                                        <p:growl />
-                                        <div class="row">
-                                            <div class="form-group">
-                                                <div class="col-sm-3">
-                                                    <label class="col-form-label">Activity Title: </label>  
-                                                </div>
-                                                <div class="col-sm-9">
-                                                    <h:inputText class="form-control" value="#{institutionModel.project.projectTitle}" required="true" requiredMessage="Title is Required"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="padding-top: 5px;">
-                                            <div class="form-group">
-                                                <div class="col-sm-3">
-                                                    <label class="col-form-label">Description: </label> 
-                                                </div>
-                                                <div class="col-sm-9">
-                                                    <h:inputTextarea rows="6" class="form-control" value="#{institutionModel.project.projectDescription}"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="padding-top: 5px;">
-                                            <div class="form-group">
-                                                <div class="col-sm-3">
-                                                    <label class="col-form-label">Activity Budget: </label>  
-                                                </div>
-                                                <div class="col-sm-9">
-                                                    <h:inputText class="form-control" value="#{institutionModel.project.projectBudget}"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="padding-top: 5px;">
-                                            <div class="form-group">
-                                                <div class="col-sm-3">
-                                                    <label class="col-form-label">Start Date: </label>  
-                                                </div>
-                                                <div class="col-sm-9"> 
-                                                    <h:inputText class="form-control" value="#{institutionModel.project.startDate}" required="true" requiredMessage="Start Date is Required">
-                                                        <f:convertDateTime pattern="dd/MM/yyyy" />
-                                                    </h:inputText>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="padding-top: 5px;">
-                                            <div class="form-group">
-                                                <div class="col-sm-3">
-                                                    <label class="col-form-label">End Date: </label>  
-                                                </div>
-                                                <div class="col-sm-9"> 
-                                                    <h:inputText class="form-control" value="#{institutionModel.project.endDate}" required="true" requiredMessage="End Date is Required">
-                                                        <f:convertDateTime pattern="dd/MM/yyyy" />
-                                                    </h:inputText>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="padding-top: 5px;">
-                                            <div class="form-group">
-                                                <div class="col-sm-3">
-                                                    <label class="col-form-label">Division: </label>  
-                                                </div>
-                                                <div class="col-sm-9"> 
-                                                    <h:selectOneMenu class="form-control" value="#{institutionModel.divisionId}">
-                                                        <f:selectItems value="#{institutionModel.activeDivisions}" var="d" itemValue="#{d.divisionId}" itemLabel="#{d.divisionName}" />
-                                                    </h:selectOneMenu>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <h:commandButton class="btn btn-primary" value="Register" action="#{institutionModel.registerProject()}" />
-                                    </div>
-                                </div>
-                            </h:form>
-                        </div>
-                    </div>
+                    
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="product-status-wrap">
@@ -340,7 +260,7 @@
                                             <th>Action</th>
                                         </tr>
                                         <h:form>
-                                            <c:forEach items="#{institutionModel.projects}" var="elements" varStatus="status">
+                                            <c:forEach items="#{institutionModel.allProjects}" var="elements" varStatus="status">
                                                 <tr>
                                                     <td>${status.index + 1}</td>
                                                     <td><h:outputText styleClass="preformatted" value="#{elements.projectTitle}" /></td>
@@ -355,7 +275,6 @@
                                                     <td>#{elements.division.divisionName}</td>
                                                     <td>#{elements.division.institution.institutionName}</td>
                                                     <td>
-                                                        
                                                         <h:commandLink value="Indicator" action="#{institutionModel.navigateProject(elements)}" class="pd-setting" ><i class="fa fa-angle-double-right" aria-hidden="true"></i></h:commandLink>
                                                     </td>
                                                 </tr>
