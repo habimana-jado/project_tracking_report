@@ -40,6 +40,7 @@ public class DivisionModel {
     private Target chosenTarget = new Target();
     private String activityType = "All";
     private Accomplishment accomplishment = new Accomplishment();
+    private Accomplishment chosenAccomplishment = new Accomplishment();
     private Other_Accomplishment otherAccomplishment = new Other_Accomplishment();
     private List<Other_Accomplishment> compiledOtherAccomplishments = new ArrayList<>();
     private List<Accomplishment> accomplishments = new ArrayList<>();
@@ -61,6 +62,7 @@ public class DivisionModel {
     private Target oneTarget = new Target();
     private Target quarterTarget = new Target();
     private String month = new String();
+    private Other_Accomplishment chosenOtherAccomplishment = new Other_Accomplishment();
 
     @PostConstruct
     public void init() {
@@ -97,6 +99,14 @@ public class DivisionModel {
         quarter = t.getQuarter() + "";
     }
 
+    public void chooseReport(Accomplishment acc) {
+        chosenAccomplishment = acc;
+    }
+
+    public void chooseOtherReport(Other_Accomplishment acc) {
+        chosenOtherAccomplishment = acc;
+    }
+
     public void deleteReport(Accomplishment acc) {
         new AccomplishmentDao().delete(acc);
         loadReport();
@@ -112,20 +122,20 @@ public class DivisionModel {
         fc.addMessage(null, new FacesMessage("Report Removed"));
     }
 
-    public void updateRendering(){
-        if(activityType.isEmpty() || activityType == null){
+    public void updateRendering() {
+        if (activityType.isEmpty() || activityType == null) {
             activityType = "ActionPlan";
-        }else if(activityType.equalsIgnoreCase("ActionPlan")){
+        } else if (activityType.equalsIgnoreCase("ActionPlan")) {
             activityType = "ActionPlan";
-        }else if(activityType.equalsIgnoreCase("Other")){
+        } else if (activityType.equalsIgnoreCase("Other")) {
             activityType = "Other";
-        }else if(activityType.equalsIgnoreCase("All")){
+        } else if (activityType.equalsIgnoreCase("All")) {
             activityType = "All";
         }
         loadReport();
         loadOtherReport();
     }
-    
+
     public void loadTarget() {
 
         switch (quarter) {
@@ -507,6 +517,7 @@ public class DivisionModel {
         otherAccomplishments = new Other_AccomplishmentDao().findByProjectAndQuarterAndPeriodAndMonth(eQuarter, ePeriod, chosenProject, eMonth);
 
     }
+
     public void loadOtherReportCompiled() {
         if (period.isEmpty() || period == null || period.equals("")) {
             period = "Week1";
@@ -633,6 +644,60 @@ public class DivisionModel {
 
     }
 
+    public void updateAccomplishment() {
+        if (oneTarget == null) {
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage(null, new FacesMessage("No Monthly Target Available for " + month));
+            return;
+        }
+        switch (week) {
+            case "Week1":
+                chosenAccomplishment.setPeriod(EPeriod.WEEK_ONE);
+                break;
+            case "Week2":
+                chosenAccomplishment.setPeriod(EPeriod.WEEK_TWO);
+                break;
+            case "Week3":
+                chosenAccomplishment.setPeriod(EPeriod.WEEK_THREE);
+                break;
+            case "Week4":
+                chosenAccomplishment.setPeriod(EPeriod.WEEK_FOUR);
+                break;
+        }
+        switch (quarter) {
+            case "QUARTER_ONE":
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+            case "QUARTER_TWO":
+                eQuarter = EQuarter.QUARTER_TWO;
+                break;
+
+            case "QUARTER_THREE":
+                eQuarter = EQuarter.QUARTER_THREE;
+                break;
+
+            case "QUARTER_FOUR":
+                eQuarter = EQuarter.QUARTER_FOUR;
+                break;
+
+            default:
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+        }
+
+        chosenAccomplishment.setTarget(oneTarget);
+        new AccomplishmentDao().update(chosenAccomplishment);
+        chosenAccomplishment = new Accomplishment();
+        loadReport();
+        compiledAccomplishments = new AccomplishmentDao().findByDivisionAndQuarterAndPeriodAndMonth(EQuarter.QUARTER_ONE, EPeriod.WEEK_ONE, loggedInUser.getDivision(), MONTH_ONE);
+
+        FacesContext fc = FacesContext.getCurrentInstance();
+        fc.addMessage(null, new FacesMessage("Report Updated"));
+
+    }
+
     public void registerOtherAccomplishment() {
         switch (week) {
             case "Week1":
@@ -702,6 +767,75 @@ public class DivisionModel {
 
     }
 
+    public void updateOtherAccomplishment() {
+        switch (week) {
+            case "Week1":
+                chosenOtherAccomplishment.setPeriod(EPeriod.WEEK_ONE);
+                break;
+            case "Week2":
+                chosenOtherAccomplishment.setPeriod(EPeriod.WEEK_TWO);
+                break;
+            case "Week3":
+                chosenOtherAccomplishment.setPeriod(EPeriod.WEEK_THREE);
+                break;
+            case "Week4":
+                chosenOtherAccomplishment.setPeriod(EPeriod.WEEK_FOUR);
+                break;
+        }
+        switch (quarter) {
+            case "QUARTER_ONE":
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+            case "QUARTER_TWO":
+                eQuarter = EQuarter.QUARTER_TWO;
+                break;
+
+            case "QUARTER_THREE":
+                eQuarter = EQuarter.QUARTER_THREE;
+                break;
+
+            case "QUARTER_FOUR":
+                eQuarter = EQuarter.QUARTER_FOUR;
+                break;
+
+            default:
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+        }
+
+        switch (month) {
+            case "MONTH_ONE":
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+            case "MONTH_TWO":
+                eMonth = EMonth.MONTH_TWO;
+                break;
+
+            case "MONTH_THREE":
+                eMonth = EMonth.MONTH_THREE;
+                break;
+
+            default:
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+        }
+
+        chosenOtherAccomplishment.setQuarter(eQuarter);
+        chosenOtherAccomplishment.setMonth(eMonth);
+        chosenOtherAccomplishment.setProject(chosenProject);
+        new Other_AccomplishmentDao().update(chosenOtherAccomplishment);
+        chosenOtherAccomplishment = new Other_Accomplishment();
+
+        otherAccomplishments = new Other_AccomplishmentDao().findByProjectAndQuarterAndPeriodAndMonth(eQuarter, ePeriod, chosenProject, eMonth);
+
+        FacesContext fc = FacesContext.getCurrentInstance();
+        fc.addMessage(null, new FacesMessage("Report Updated"));
+
+    }
+
     public String navigateProject(Project p) {
         chosenProject = p;
         indicators = new IndicatorDao().findByProject(p);
@@ -712,7 +846,8 @@ public class DivisionModel {
 
     public String navigateOtherProject(Project p) {
         chosenProject = p;
-        otherAccomplishments = new Other_AccomplishmentDao().findByProjectAndNotInActionPlan(p);
+//        otherAccomplishments = new Other_AccomplishmentDao().findByProjectAndNotInActionPlan(p);
+        otherAccomplishments = new Other_AccomplishmentDao().findByProjectAndQuarterAndPeriodAndMonth(EQuarter.QUARTER_ONE, EPeriod.WEEK_ONE, p, EMonth.MONTH_ONE);
         return "weekly-other-report?faces-redirect=true";
     }
 
@@ -942,6 +1077,22 @@ public class DivisionModel {
 
     public void setActivityType(String activityType) {
         this.activityType = activityType;
+    }
+
+    public Accomplishment getChosenAccomplishment() {
+        return chosenAccomplishment;
+    }
+
+    public void setChosenAccomplishment(Accomplishment chosenAccomplishment) {
+        this.chosenAccomplishment = chosenAccomplishment;
+    }
+
+    public Other_Accomplishment getChosenOtherAccomplishment() {
+        return chosenOtherAccomplishment;
+    }
+
+    public void setChosenOtherAccomplishment(Other_Accomplishment chosenOtherAccomplishment) {
+        this.chosenOtherAccomplishment = chosenOtherAccomplishment;
     }
 
 }

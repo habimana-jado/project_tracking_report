@@ -78,6 +78,7 @@ public class InstitutionModel {
     private List<Institution> institutions = new InstitutionDao().findAll(Institution.class);
     private List<Target> allMonthlyTargets = new TargetDao().findMonthlyTargets();
     private List<Target> institutionMonthlyTargets = new TargetDao().findMonthlyTargetsByInstitution(loggedInUser.getInstitution());
+    private String activityId = new String();
 
     @PostConstruct
     public void init() {
@@ -87,6 +88,7 @@ public class InstitutionModel {
         activeDivisions = new DivisionDao().findByInstitutionAndStatus(loggedInUser.getInstitution(), EStatus.ACTIVE);
         users = new UserDao().findByAccessLevel(EAccessLevel.DIVISION_MANAGER);
         projects = new ProjectDao().findByInstitution(loggedInUser.getInstitution());
+        institutionMonthlyTargets = new TargetDao().findMonthlyTargetsByInstitution(loggedInUser.getInstitution());
         loadReport();
     }
 
@@ -477,6 +479,23 @@ public class InstitutionModel {
             }
         }
     }
+    
+    public void filterOperationPlan(){
+        if(activityId.equalsIgnoreCase("All")){
+            institutionMonthlyTargets = new TargetDao().findMonthlyTargetsByInstitution(loggedInUser.getInstitution());
+        }else{
+            Project p = new ProjectDao().findOne(Project.class, activityId);
+            institutionMonthlyTargets = new TargetDao().findMonthlyTargetsByInstitutionAndProject(loggedInUser.getInstitution(), p);
+        }
+    }
+ public void adminFilterOperationPlan(){
+        if(activityId.equalsIgnoreCase("All")){
+            allMonthlyTargets = new TargetDao().findMonthlyTargets();
+        }else{
+            Project p = new ProjectDao().findOne(Project.class, activityId);
+            allMonthlyTargets = new TargetDao().findMonthlyTargetsByActivity(p);
+        }
+    }
 
     public void registerDivisionManager() throws Exception {
         if (new UserDao().findOne(Account.class, user.getUserId()) != null) {
@@ -624,12 +643,12 @@ public class InstitutionModel {
         month = u.getMonth().toString();
         target = u;
     }
-    
+
     public void chooseQuarterlyTarget(Target u) {
         quarter = u.getQuarter().toString();
         target = u;
     }
-    
+
     public void registerProject() {
         Division d = new DivisionDao().findOne(Division.class, divisionId);
         project.setDivision(d);
@@ -767,7 +786,7 @@ public class InstitutionModel {
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.addMessage(null, new FacesMessage("Target Added"));
         }
-
+        institutionMonthlyTargets = new TargetDao().findMonthlyTargetsByInstitution(loggedInUser.getInstitution());
     }
 
     public void updateMonthlyTarget() {
@@ -1175,6 +1194,14 @@ public class InstitutionModel {
 
     public void setAllMonthlyTargets(List<Target> allMonthlyTargets) {
         this.allMonthlyTargets = allMonthlyTargets;
+    }
+
+    public String getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(String activityId) {
+        this.activityId = activityId;
     }
 
 }

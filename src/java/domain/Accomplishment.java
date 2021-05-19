@@ -20,7 +20,7 @@ public class Accomplishment implements Serializable {
     private String accomplishmentId = UUID.randomUUID().toString();
     @Column(length = 2048)
     private String accomplishment;
-    @Column(length = 100)
+    @Column(length = 2048)
     private String challenge;
     @Column(length = 2048)
     private String remarks;

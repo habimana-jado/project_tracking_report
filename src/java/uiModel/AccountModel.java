@@ -38,28 +38,28 @@ public class AccountModel {
             switch (user.getAccessLevel()) {
                 case GLOBAL:
                     FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("session", user);
-                    ec.redirect(ec.getRequestContextPath() + "/faces/admin/institutions.xhtml");
-                    return "faces/admin/institutions.xhtml?faces-redirect=true";
+                    ec.redirect(ec.getRequestContextPath() + "/pages/admin/institutions.xhtml");
+                    return "pages/admin/institutions.xhtml?faces-redirect=true";
                 case INSTITUTION_MANAGER:
                     FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("session", user);
-                    ec.redirect(ec.getRequestContextPath() + "/faces/institution/users.xhtml");
-                    return "faces/institution/users?faces-redirect=true";
+                    ec.redirect(ec.getRequestContextPath() + "/pages/institution/users.xhtml");
+                    return "pages/institution/users?faces-redirect=true";
                 case DIVISION_MANAGER:
                     FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("session", user);
-                    ec.redirect(ec.getRequestContextPath() + "/faces/institution/project-details.xhtml");
-                    return "faces/institution/project-details.xhtml?faces-redirect=true";
+                    ec.redirect(ec.getRequestContextPath() + "/pages/institution/project-details.xhtml");
+                    return "pages/institution/project-details.xhtml?faces-redirect=true";
                 default:
                     user = null;
 
-                    ec.redirect(ec.getRequestContextPath() + "/faces/index.xhtml");
+                    ec.redirect(ec.getRequestContextPath() + "/index.xhtml");
 
-                    return "/QuarterlyTarget/faces/index.xhtml";
+                    return "/QuarterlyTarget/index.xhtml";
             }
 
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Wrong Password Or Accountname"));
-            ec.redirect(ec.getRequestContextPath() + "/faces/index.xhtml");
-            return "faces/index.xhtml";
+            ec.redirect(ec.getRequestContextPath() + "/index.xhtml");
+            return "index.xhtml";
         }
 
     }
@@ -101,7 +101,7 @@ public class AccountModel {
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         user = null;
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-        ec.redirect(ec.getRequestContextPath() + "/faces/index.xhtml");
+        ec.redirect(ec.getRequestContextPath() + "/index.xhtml");
     }
 
     public Account getAccount() {

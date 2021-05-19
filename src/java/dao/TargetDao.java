@@ -81,11 +81,29 @@ public class TargetDao extends GenericDao<Target>{
         s.close();
         return list;
     }
+    public List<Target> findMonthlyTargetsByActivity(Project p){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM Target a WHERE a.month IS NOT NULL AND a.target.indicator.project = :p");
+        q.setParameter("p", p);
+        List<Target> list = q.list();
+        s.close();
+        return list;
+    }
     
     public List<Target> findMonthlyTargetsByInstitution(Institution i){
         Session s = HibernateUtil.getSessionFactory().openSession();
         Query q = s.createQuery("SELECT a FROM Target a WHERE a.target.indicator.project.division.institution = :i");
         q.setParameter("i", i);
+        List<Target> list = q.list();
+        s.close();
+        return list;
+    }
+    
+    public List<Target> findMonthlyTargetsByInstitutionAndProject(Institution i, Project p){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM Target a WHERE a.target.indicator.project.division.institution = :i AND a.target.indicator.project = :p");
+        q.setParameter("i", i);
+        q.setParameter("p", p);
         List<Target> list = q.list();
         s.close();
         return list;
