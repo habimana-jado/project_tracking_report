@@ -4,6 +4,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <meta charset="utf-8"/>
@@ -69,6 +70,9 @@
         <!-- modernizr JS
                     ============================================ -->
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+
+        <h:outputScript library="primefaces" name="jquery/jquery.js" />
+
     </h:head>
     <h:body>
         <!--[if lt IE 8]>
@@ -220,7 +224,7 @@
                                             <ul class="breadcome-menu">
                                                 <li><a href="#">Home</a> <span class="bread-slash">/</span>
                                                 </li>
-                                                <li><span class="bread-blod">Indicator/Target Configuration</span>
+                                                <li><span class="bread-blod">Accounts Configuration</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -234,78 +238,146 @@
 
             <div class="product-status mg-b-15">
                 <div class="container-fluid">
-                    
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="product-payment-inner-st">
-                                <ul id="myTabedu1" class="tab-review-design">
-                                    <li class="active"><a href="#description">Target Information</a></li>
-                                    <!--<li><a href="#reviews"> Targets Information</a></li>-->
-                                    <!--<li><a href="#INFORMATION">Targets Information</a></li>-->
-                                </ul>
-                                <div id="myTabContent" class="tab-content custom-product-edit">
-                                    <div class="product-tab-list tab-pane fade active in" id="description">
+                    <div id="PrimaryModalalert" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <h:form id="userForm">
+                                <p:growl />
+                                <div class="modal-content">
+                                    <div class="modal-close-area modal-close-df">
+                                        <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
+                                    </div>
+                                    <div class="modal-header">Add Global User</div>
+                                    <div class="modal-body">
                                         <div class="row">
-                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                <strong>Output Title: <a href="projects.xhtml" style="color: #0368FE; white-space: pre-wrap">#{institutionModel.registeredProject.projectTitle}</a></strong> <br />
-                                                <strong>Indicator: <a href="target.xhtml" style="color: #0368FE; white-space: pre-wrap">#{institutionModel.chosenIndicator.indicatorName}</a></strong> 
-                                                <div class="add-product" style="padding-top: 18px;">
-                                                    <!--<a href="#" data-toggle="modal" data-target="#PrimaryModalalert">Add Target</a>-->
-                                                </div>                 
-                                                <div class="row" style="padding-bottom: 25px;">
-                                                    <h:form>
-                                                        <p:growl />
-                                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                            <div class="product-status-wrap">
-                                                                <div class="asset-inner">
-                                                                    <table class="table table-bordered">
-                                                                        <tr>
-                                                                            <th>No.</th>
-                                                                            <th>Target</th>
-                                                                            <th>Description</th>
-                                                                            <th>Quarter</th>
-                                                                            <th>Action</th>
-                                                                        </tr>
-                                                                        <c:forEach items="#{institutionModel.targets}" var="inst" varStatus="status">
-                                                                            <tr>
-                                                                                <td>${status.index + 1}</td>
-                                                                                <td style="white-space: pre-wrap">#{inst.targetTitle}</td>
-                                                                                <td style="white-space: pre-wrap">#{inst.targetDescription}</td>
-                                                                                <td>
-                                                                                    <c:choose>
-                                                                                        <c:when test="${inst.quarter eq 'QUARTER_ONE'}">
-                                                                                            Q1
-                                                                                        </c:when>
-                                                                                        <c:when test="${inst.quarter eq 'QUARTER_TWO'}">
-                                                                                            Q2
-                                                                                        </c:when>
-                                                                                        <c:when test="${inst.quarter eq 'QUARTER_THREE'}">
-                                                                                            Q3
-                                                                                        </c:when>
-                                                                                        <c:when test="${inst.quarter eq 'QUARTER_FOUR'}">
-                                                                                            Q4
-                                                                                        </c:when>
-                                                                                        <c:otherwise>
-                                                                                            None
-                                                                                        </c:otherwise>
-                                                                                    </c:choose>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <h:commandLink value="Monthly-Target" action="#{institutionModel.navigateMonthlyTarget(inst)}" title="More" class="pd-setting-ed"><i class="fa fa-angle-double-right" aria-hidden="true"></i></h:commandLink>
-                                                                                </td>
-                                                                            </tr>
-                                                                        </c:forEach>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </h:form>
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <div class="col-sm-3">
+                                                        <label class="col-form-label">First Name: </label>  
+                                                    </div>
+                                                    <div class="col-sm-9">
+                                                        <h:inputText class="form-control" value="#{institutionModel.user.firstName}" required="true" requiredMessage="First Name is Required"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="padding-top: 5px;">
+                                                <div class="form-group">
+                                                    <div class="col-sm-3">
+                                                        <label class="col-form-label">Last Name: </label> 
+                                                    </div>
+                                                    <div class="col-sm-9">
+                                                        <h:inputText class="form-control" value="#{institutionModel.user.lastName}" required="true" requiredMessage="Last Name is Required"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="padding-top: 5px;">
+                                                <div class="form-group">
+                                                    <div class="col-sm-3">
+                                                        <label class="col-form-label">Phone: </label>  
+                                                    </div>
+                                                    <div class="col-sm-9">
+                                                        <h:inputText class="form-control" value="#{institutionModel.user.phone}"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="padding-top: 5px;">
+                                                <div class="form-group">
+                                                    <div class="col-sm-3">
+                                                        <label class="col-form-label">Email: </label>  
+                                                    </div>
+                                                    <div class="col-sm-9"> 
+                                                        <h:inputText class="form-control" value="#{institutionModel.user.email}" required="true" requiredMessage="Email is Required"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="padding-top: 5px;">
+                                                <div class="form-group">
+                                                    <div class="col-sm-3">
+                                                        <label class="col-form-label">Username: </label>  
+                                                    </div>
+                                                    <div class="col-sm-9"> 
+                                                        <h:inputText class="form-control" value="#{institutionModel.user.username}" required="true" requiredMessage="Username is Required"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="padding-top: 5px;">
+                                                <div class="form-group">
+                                                    <div class="col-sm-3">
+                                                        <label class="col-form-label">Password: </label>  
+                                                    </div>
+                                                    <div class="col-sm-9"> 
+                                                        <h:inputText class="form-control" value="#{institutionModel.password}" required="true" requiredMessage="Password is Required"/>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="modal-footer">
+                                        <h:commandButton class="btn btn-primary" value="Register" action="#{institutionModel.registerGlobalUser()}" />
+                                    </div>
+                                </div>
+                            </h:form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="product-status-wrap">
+                                <h4>Global User List</h4>
+                                <div class="add-product">
+                                    <h:form>
+                                        <h:commandLink class="pd-setting" a:data-toggle="modal" value="Add User" a:data-target="#PrimaryModalalert">
+                                            <p:ajax listener="#{institutionModel.cleanUser()}" update="userForm" />
+                                        </h:commandLink>
+                                    </h:form>
+                                </div>
+                                <div class="asset-inner">
+                                    <table>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        <h:form>
+                                            <c:forEach items="#{institutionModel.globalUsers}" var="elements" varStatus="status">
+                                                <tr>
+                                                    <td>${status.index + 1}</td>
+                                                    <td>#{elements.firstName}</td>
+                                                    <td>#{elements.lastName}</td>
+                                                    <td>#{elements.email}</td>
+                                                    <td>#{elements.phone}</td>
+                                                    <td>
+                                                        <c:choose>
+                                                            <c:when test="#{elements.status eq 'ACTIVE'}">
+                                                                <button class="pd-setting">Active</button>
+                                                            </c:when>
+                                                            <c:when test="#{elements.status eq 'INACTIVE'}">
+                                                                <button class="ds-setting">Inactive</button>
+                                                            </c:when>
+                                                        </c:choose>
+                                                    </td>
+                                                    <td>
+                                                        <h:commandLink class="pd-setting" a:data-toggle="modal" value="Edit" a:data-target="#PrimaryModalalert">
+                                                            <p:ajax listener="#{institutionModel.chooseUser(elements)}" update="userForm" />
+                                                        </h:commandLink>
 
-
+                                                        <c:choose>
+                                                            <c:when test="#{elements.status eq 'ACTIVE'}">
+                                                                <h:commandLink action="#{institutionModel.blockGlobalUser(elements)}" class="ds-setting" style="padding-left: 10px;" value="Block">
+                                                                </h:commandLink>
+                                                            </c:when>
+                                                            <c:when test="#{elements.status eq 'INACTIVE'}">
+                                                                <h:commandLink action="#{institutionModel.activateGlobalUser(elements)}" class="ds-setting" style="padding-left: 10px;" value="Activate">
+                                                                </h:commandLink>
+                                                            </c:when>
+                                                        </c:choose>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </h:form>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -328,7 +400,7 @@
 
         <!-- jquery
                     ============================================ -->
-        <script src="js/vendor/jquery-1.12.4.min.js"></script>
+        <!--<script src="js/vendor/jquery-1.12.4.min.js"></script>-->
         <!-- bootstrap JS
                     ============================================ -->
         <script src="js/bootstrap.min.js"></script>

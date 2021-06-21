@@ -345,7 +345,7 @@
                                             <th>Action</th>
                                         </tr>
                                         <h:form>
-                                            <c:forEach items="#{institutionModel.users}" var="elements" varStatus="status">
+                                            <c:forEach items="#{institutionModel.divisionUsers}" var="elements" varStatus="status">
                                                 <tr>
                                                     <td>${status.index + 1}</td>
                                                     <td>#{elements.firstName}</td>
@@ -389,6 +389,7 @@
                     </div>
                 </div>
             </div>
+            <div style="padding-bottom: 15px" />
             <div class="footer-copyright-area" style="position: fixed; padding: 10px 10px 0px 10px; bottom: 0; width: 100%; height: 40px;">
                 <div class="container-fluid">
                     <div class="row">

@@ -59,7 +59,8 @@ public class AccomplishmentDao extends GenericDao<Accomplishment>{
     
     public List<Accomplishment> findByQuarterAndMonthAndPeriod(EQuarter q,EMonth m, EPeriod p, Institution ins){
         Session s = HibernateUtil.getSessionFactory().openSession();
-        Query qu = s.createQuery("SELECT a FROM Accomplishment a WHERE a.period = :p AND a.target.quarter = :q AND a.target.month = :m AND a.target.target.indicator.project.division.institution = :ins");
+        Query qu = s.createQuery("SELECT a FROM Accomplishment a WHERE a.period = :p AND a.target.quarter = :q AND a.target.month = :m AND a.target.target.indicator.project.division.institution = :ins "
+                + "ORDER BY a.target.target.indicator.project.division.divisionName ASC, a.target.target.indicator.project.projectTitle ASC, a.target.target.indicator.indicatorName ASC, a.target.target.targetTitle ASC, a.target.targetTitle ASC");
         qu.setParameter("p", p);
         qu.setParameter("q", q);
         qu.setParameter("m", m);
@@ -82,7 +83,9 @@ public class AccomplishmentDao extends GenericDao<Accomplishment>{
     }
     public List<Accomplishment> findByQuarterAndMonthAndPeriod(EQuarter q,EMonth m, EPeriod p){
         Session s = HibernateUtil.getSessionFactory().openSession();
-        Query qu = s.createQuery("SELECT a FROM Accomplishment a WHERE a.period = :p AND a.target.quarter = :q AND a.target.month = :m ");
+        Query qu = s.createQuery("SELECT a FROM Accomplishment a WHERE a.period = :p AND a.target.quarter = :q AND a.target.month = :m "
+                + "ORDER BY a.target.target.indicator.project.division.institution.institutionName ASC, a.target.target.indicator.project.division.divisionName ASC, "
+                + "a.target.target.indicator.project.projectTitle ASC, a.target.target.indicator.indicatorName ASC, a.target.target.targetTitle ASC, a.target.targetTitle ASC ");
         qu.setParameter("p", p);
         qu.setParameter("q", q);
         qu.setParameter("m", m);
