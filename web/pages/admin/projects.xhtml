@@ -234,28 +234,45 @@
 
             <div class="product-status mg-b-15">
                 <div class="container-fluid">
-                    
+
                     <div class="row" style="padding-bottom: 25px;">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="product-status-wrap">
+                                <h:form>
+                                    <div class="row" style="padding-top: 5px; padding-bottom: 5px;">
+                                        <div class="form-group">
+                                            <div class="col-sm-3">
+                                                <label class="col-form-label">Choose Date: </label>  
+                                            </div>
+                                            <div class="col-sm-6"> 
+                                                <p:datePicker value="#{institutionModel.fiscalYearDate}" pattern="dd/MM/yyyy" showIcon="true">
+                                                    <p:ajax event="dateSelect" listener="#{institutionModel.fetchProjectsByFiscalYear}" update="projectForm, fiscalYearBar" />
+                                                </p:datePicker>                                                    
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <h:outputLabel id="fiscalYearBar" style="color: #0368FE;">Fiscal Year:#{institutionModel.fiscalYear}</h:outputLabel>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </h:form>
                                 <h4>Output List</h4>   
                                 <div class="add-product">
                                     <!--<a href="#" data-toggle="modal" data-target="#PrimaryModalalert">Add Project</a>-->
                                 </div>                             
                                 <div class="asset-inner">
-                                    <table>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Title</th>
-                                            <th>Description</th>
-                                            <th>Start Date</th>
-                                            <th>End Date</th>
-                                            <th>Budget</th>
-                                            <th>Dpt/Dct/Unit</th>
-                                            <th>Institution</th>
-                                            <th>Action</th>
-                                        </tr>
-                                        <h:form>
+                                    <h:form id="projectForm">
+                                        <table>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Title</th>
+                                                <th>Description</th>
+                                                <th>Start Date</th>
+                                                <th>End Date</th>
+                                                <th>Budget</th>
+                                                <th>Dpt/Dct/Unit</th>
+                                                <th>Institution</th>
+                                                <th>Action</th>
+                                            </tr>
                                             <c:forEach items="#{institutionModel.allProjects}" var="elements" varStatus="status">
                                                 <tr>
                                                     <td>${status.index + 1}</td>
@@ -275,8 +292,8 @@
                                                     </td>
                                                 </tr>
                                             </c:forEach>
-                                        </h:form>
-                                    </table>
+                                        </table>
+                                    </h:form>
                                 </div>
                             </div>
                         </div>
@@ -299,7 +316,7 @@
 
         <!-- jquery
                     ============================================ -->
-        <script src="js/vendor/jquery-1.12.4.min.js"></script>
+        <!--<script src="js/vendor/jquery-1.12.4.min.js"></script>-->
         <!-- bootstrap JS
                     ============================================ -->
         <script src="js/bootstrap.min.js"></script>

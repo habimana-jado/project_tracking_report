@@ -28,16 +28,16 @@ public class Division implements Serializable {
     @Enumerated(EnumType.STRING)
     private EStatus status;
     
-    @OneToMany(mappedBy = "division", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-    @Fetch(FetchMode.SUBSELECT)
-    private List<Account> user;
+//    @OneToMany(mappedBy = "division", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+//    @Fetch(FetchMode.SUBSELECT)
+//    private List<Account> user;
     
     @ManyToOne
     private Institution institution;
     
-    @OneToMany(mappedBy = "division", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-    @Fetch(FetchMode.SUBSELECT)
-    private List<Project> project;
+//    @OneToMany(mappedBy = "division", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+//    @Fetch(FetchMode.SUBSELECT)
+//    private List<Project> project;
 
     public String getDivisionId() {
         return divisionId;
@@ -63,28 +63,12 @@ public class Division implements Serializable {
         this.divisionDescription = divisionDescription;
     }
 
-    public List<Account> getUser() {
-        return user;
-    }
-
-    public void setUser(List<Account> user) {
-        this.user = user;
-    }
-
     public Institution getInstitution() {
         return institution;
     }
 
     public void setInstitution(Institution institution) {
         this.institution = institution;
-    }
-
-    public List<Project> getProject() {
-        return project;
-    }
-
-    public void setProject(List<Project> project) {
-        this.project = project;
     }
 
     public EStatus getStatus() {

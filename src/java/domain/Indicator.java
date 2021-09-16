@@ -30,9 +30,9 @@ public class Indicator implements Serializable{
     private EQuarter quarter;
     private String baseline;
     
-    @OneToMany(mappedBy = "indicator", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @Fetch(FetchMode.SUBSELECT)
-    private List<Target> target;
+//    @OneToMany(mappedBy = "indicator", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//    @Fetch(FetchMode.SUBSELECT)
+//    private List<Target> target;
     
     @ManyToOne
     private Project project;
@@ -83,14 +83,6 @@ public class Indicator implements Serializable{
 
     public void setProject(Project project) {
         this.project = project;
-    }
-
-    public List<Target> getTarget() {
-        return target;
-    }
-
-    public void setTarget(List<Target> target) {
-        this.target = target;
     }
 
     public String getBaseline() {

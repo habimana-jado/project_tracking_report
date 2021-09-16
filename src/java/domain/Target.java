@@ -36,9 +36,9 @@ public class Target implements Serializable {
     @ManyToOne
     private Indicator indicator;
     
-    @OneToMany(mappedBy = "target", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-    @Fetch(FetchMode.SUBSELECT)
-    private List<Accomplishment> accomplishment;
+//    @OneToMany(mappedBy = "target", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+//    @Fetch(FetchMode.SUBSELECT)
+//    private List<Accomplishment> accomplishment;
 
     public String getTargetId() {
         return targetId;
@@ -62,15 +62,6 @@ public class Target implements Serializable {
 
     public void setIndicator(Indicator indicator) {
         this.indicator = indicator;
-    }
-
-
-    public List<Accomplishment> getAccomplishment() {
-        return accomplishment;
-    }
-
-    public void setAccomplishment(List<Accomplishment> accomplishment) {
-        this.accomplishment = accomplishment;
     }
 
     public EQuarter getQuarter() {

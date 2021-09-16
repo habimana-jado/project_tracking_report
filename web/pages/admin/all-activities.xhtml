@@ -259,6 +259,18 @@
                                         <h4>Operational Plan </h4>
                                         
                                         <div class="row">
+                                            <div class="col-lg-4"><h:outputLabel value="Institution" class="text-right" style="padding-left: 300px;" /></div>
+                                            <div class="col-lg-4">
+                                                <h:selectOneMenu class="form-control" value="#{institutionModel.institutionId}">
+                                                    <f:selectItem itemLabel="All" itemValue="All"/>
+                                                    <f:selectItems value="#{institutionModel.institutions}" var="p" itemValue="#{p.institutionId}" itemLabel="#{p.institutionName}" />
+                                                    <f:ajax listener="#{institutionModel.adminFilterOperationPlanByInstitution()}" render="tbl" />
+                                                </h:selectOneMenu>
+                                            </div>
+                                            <div class="col-lg-4"></div>
+                                        </div>
+                                        
+                                        <div class="row" style="padding-top: 10px;">
                                             <div class="col-lg-4"><h:outputLabel value="Output" class="text-right" style="padding-left: 300px;" /></div>
                                             <div class="col-lg-4">
                                                 <h:selectOneMenu class="form-control" value="#{institutionModel.activityId}">
@@ -275,6 +287,7 @@
 
                                             <p:columnGroup type="header" >
                                                 <p:row>
+                                                    <p:column rowspan="2" width="150px;" headerText="Institution"></p:column>
                                                     <p:column rowspan="2" width="150px;" headerText="Activity"></p:column>
                                                     <p:column rowspan="2" width="150px;" headerText="Indicator"/>
                                                     <p:column colspan="3" width="450px;" headerText="Quarter 1"/>
@@ -297,6 +310,9 @@
                                                     <p:column headerText="M3" width="150px;"/>
                                                 </p:row>
                                             </p:columnGroup>
+                                            <p:column groupRow="true">
+                                                <h:outputText style="float: top" styleClass="preformatted" value="#{acc.target.indicator.project.division.institution.institutionName}" />
+                                            </p:column>
                                             <p:column groupRow="true">
                                                 <h:outputText style="float: top" styleClass="preformatted" value="#{acc.target.indicator.project.projectTitle}" />
                                             </p:column>

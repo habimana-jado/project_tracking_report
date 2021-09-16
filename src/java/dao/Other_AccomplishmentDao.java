@@ -9,6 +9,7 @@ import domain.EQuarter;
 import domain.Institution;
 import domain.Other_Accomplishment;
 import domain.Project;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -51,6 +52,21 @@ public class Other_AccomplishmentDao extends GenericDao<Other_Accomplishment>{
         s.close();
         return list;
     }
+    
+    public List<Other_Accomplishment> findByDivisionAndQuarterAndPeriodAndMonthAndFiscalYear(EQuarter q, EPeriod p, Division pr, EMonth mo, Date from, Date to){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query qu = s.createQuery("SELECT a FROM Other_Accomplishment a WHERE a.period = :p AND a.quarter = :q AND a.project.division = :pr AND a.month = :mo AND a.project.startDate BETWEEN :from AND :to ");
+        qu.setParameter("p", p);
+        qu.setParameter("q", q);
+        qu.setParameter("pr", pr);
+        qu.setParameter("mo", mo);
+        qu.setParameter("from", from);
+        qu.setParameter("to", to);
+        List<Other_Accomplishment> list = qu.list();
+        s.close();
+        return list;
+    }
+    
     public List<Other_Accomplishment> findByInstitution(Institution p){
         Session s = HibernateUtil.getSessionFactory().openSession();
         Query q = s.createQuery("SELECT a FROM Other_Accomplishment a WHERE a.project.division.institution = :x");
@@ -70,6 +86,32 @@ public class Other_AccomplishmentDao extends GenericDao<Other_Accomplishment>{
         s.close();
         return list;
     }
+    public List<Other_Accomplishment> findByQuarterAndMonthAndPeriodAndFiscalYear(EQuarter q,EMonth m, EPeriod p, Institution ins, Date from, Date to){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query qu = s.createQuery("SELECT a FROM Other_Accomplishment a WHERE a.period = :p AND a.quarter = :q AND a.month = :m AND a.project.division.institution = :ins AND a.project.startDate BETWEEN :from AND :to ");
+        qu.setParameter("p", p);
+        qu.setParameter("q", q);
+        qu.setParameter("m", m);
+        qu.setParameter("ins", ins);
+        qu.setParameter("from", from);
+        qu.setParameter("to", to);
+        List<Other_Accomplishment> list = qu.list();
+        s.close();
+        return list;
+    }
+    
+    public List<Other_Accomplishment> findByQuarterAndMonthAndPeriodAndFiscalYearAndNoInstitution(EQuarter q,EMonth m, EPeriod p, Date from, Date to){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query qu = s.createQuery("SELECT a FROM Other_Accomplishment a WHERE a.period = :p AND a.quarter = :q AND a.month = :m AND a.project.startDate BETWEEN :from AND :to ");
+        qu.setParameter("p", p);
+        qu.setParameter("q", q);
+        qu.setParameter("m", m);
+        qu.setParameter("from", from);
+        qu.setParameter("to", to);
+        List<Other_Accomplishment> list = qu.list();
+        s.close();
+        return list;
+    }
     public List<Other_Accomplishment> findByQuarterAndMonthAndPeriodAndDivision(EQuarter q,EMonth m, EPeriod p, Division ins){
         Session s = HibernateUtil.getSessionFactory().openSession();
         Query qu = s.createQuery("SELECT a FROM Other_Accomplishment a WHERE a.period = :p AND a.quarter = :q AND a.month = :m AND a.project.division = :ins");
@@ -77,6 +119,34 @@ public class Other_AccomplishmentDao extends GenericDao<Other_Accomplishment>{
         qu.setParameter("q", q);
         qu.setParameter("m", m);
         qu.setParameter("ins", ins);
+        List<Other_Accomplishment> list = qu.list();
+        s.close();
+        return list;
+    }
+    
+    public List<Other_Accomplishment> findByQuarterAndMonthAndPeriodAndDivisionAndFiscalYear(EQuarter q,EMonth m, EPeriod p, Division ins, Date from, Date to){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query qu = s.createQuery("SELECT a FROM Other_Accomplishment a WHERE a.period = :p AND a.quarter = :q AND a.month = :m AND a.project.division = :ins AND a.project.startDate BETWEEN :from AND :to ");
+        qu.setParameter("p", p);
+        qu.setParameter("q", q);
+        qu.setParameter("m", m);
+        qu.setParameter("ins", ins);
+        qu.setParameter("from", from);
+        qu.setParameter("to", to);
+        List<Other_Accomplishment> list = qu.list();
+        s.close();
+        return list;
+    }
+    
+    public List<Other_Accomplishment> findByQuarterAndMonthAndPeriodAndInstitutionAndFiscalYear(EQuarter q,EMonth m, EPeriod p, Institution ins, Date from, Date to){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query qu = s.createQuery("SELECT a FROM Other_Accomplishment a WHERE a.period = :p AND a.quarter = :q AND a.month = :m AND a.project.division.institution = :ins AND a.project.startDate BETWEEN :from AND :to ");
+        qu.setParameter("p", p);
+        qu.setParameter("q", q);
+        qu.setParameter("m", m);
+        qu.setParameter("ins", ins);
+        qu.setParameter("from", from);
+        qu.setParameter("to", to);
         List<Other_Accomplishment> list = qu.list();
         s.close();
         return list;

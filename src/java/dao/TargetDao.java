@@ -90,6 +90,15 @@ public class TargetDao extends GenericDao<Target>{
         return list;
     }
     
+    public List<Target> findMonthlyTargetsByInstitutionAndActionPlan(Institution p){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query q = s.createQuery("SELECT a FROM Target a WHERE a.month IS NOT NULL AND a.target.indicator.project.division.institution = :p");
+        q.setParameter("p", p);
+        List<Target> list = q.list();
+        s.close();
+        return list;
+    }
+    
     public List<Target> findMonthlyTargetsByInstitution(Institution i){
         Session s = HibernateUtil.getSessionFactory().openSession();
         Query q = s.createQuery("SELECT a FROM Target a WHERE a.target.indicator.project.division.institution = :i");

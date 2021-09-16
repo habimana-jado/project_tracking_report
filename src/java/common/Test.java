@@ -1,16 +1,22 @@
 
 package common;
 
+import dao.AccomplishmentDao;
 import dao.InstitutionDao;
+import dao.Other_AccomplishmentDao;
 import dao.ProjectDao;
 import dao.TargetDao;
 import dao.UserDao;
+import domain.Accomplishment;
 import domain.Account;
 import domain.EAccessLevel;
 import domain.EStatus;
 import domain.Institution;
+import domain.Other_Accomplishment;
 import domain.Project;
 import domain.Target;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Test {
     public static void main(String[] args) throws Exception {
@@ -33,13 +39,36 @@ public class Test {
 //        u.setInstitution(institution);
 //        new UserDao().register(u);
         
-        Project p = new ProjectDao().findOne(Project.class, "f7d8ce73-de98-4698-a09f-5d29079d40df");
-        for(Target t: new TargetDao().findByProject(p)){
-            for(Target tt: new TargetDao().findByTarget(t)){
-                new TargetDao().delete(tt);
-            }
-            new TargetDao().delete(t);
+//        Project p = new ProjectDao().findOne(Project.class, "f7d8ce73-de98-4698-a09f-5d29079d40df");
+//        for(Target t: new TargetDao().findByProject(p)){
+//            for(Target tt: new TargetDao().findByTarget(t)){
+//                new TargetDao().delete(tt);
+//            }
+//            new TargetDao().delete(t);
+//        }
+//        new ProjectDao().delete(p);
+
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTime(new Date());
+//        int week1 = cal.get(Calendar.WEEK_OF_MONTH);
+//        System.out.println("x Week = " + week1);
+//        
+//        Calendar cal1 = Calendar.getInstance();
+//        cal1.set(2021, Calendar.JULY, 30);
+//        int week = cal1.get(Calendar.WEEK_OF_MONTH);
+//        System.out.println("y Week = " + week);
+    
+//        for(Accomplishment a: new AccomplishmentDao().findAll(Accomplishment.class)){
+//            System.out.println("Fiscal Year = "+a.getTarget().getTarget().getIndicator().getProject().getStartDate());
+//            System.out.println("Period = "+a.getTarget().getTarget().getQuarter() +"   "+a.getTarget().getMonth()+"   "+a.getPeriod());
+//            
+//        }
+        
+        
+        for(Other_Accomplishment a: new Other_AccomplishmentDao().findAll(Other_Accomplishment.class)){
+            System.out.println("Fiscal Year = "+a.getProject().getStartDate());
+            System.out.println("Period = "+a.getQuarter() +"   "+a.getMonth()+"   "+a.getPeriod());
+            
         }
-        new ProjectDao().delete(p);
     }
 }

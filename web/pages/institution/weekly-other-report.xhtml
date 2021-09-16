@@ -185,7 +185,7 @@
                 <!-- Mobile Menu end -->
                 <div class="breadcome-area">
                     <div class="container-fluid">
-                        
+
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="breadcome-list single-page-breadcome">
@@ -214,7 +214,7 @@
                 <div class="container-fluid">
                     <div id="PrimaryModalalert" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
                         <div class="modal-dialog">
-                            <h:form>
+                            <h:form id="reportForm">
                                 <p:growl />
                                 <div class="modal-content">
                                     <div class="modal-close-area modal-close-df">
@@ -223,14 +223,26 @@
                                     <div class="modal-header">Add Weekly Report</div>
                                     <div class="modal-body">
                                         <div class="row">
-
                                             <div class="row" style="padding-top: 5px;">
+                                                <div class="form-group">
+                                                    <div class="col-sm-3">
+                                                        <label class="col-form-label">Choose Date: </label>  
+                                                    </div>
+                                                    <div class="col-sm-9"> 
+                                                        <p:datePicker value="#{divisionModel.otherReportDate}" pattern="dd/MM/yyyy" showIcon="true" required="true" requiredMessage="Report Date is Required">
+                                                            <p:ajax event="dateSelect" listener="#{divisionModel.fetchOtherReportPeriod}" update="reportForm" />
+                                                        </p:datePicker>                                                    
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="padding-top: 15px;">
                                                 <div class="form-group">
                                                     <div class="col-sm-3">
                                                         <label class="col-form-label">Quarter: </label>  
                                                     </div>
                                                     <div class="col-sm-9"> 
-                                                        <h:selectOneMenu class="form-control" value="#{divisionModel.quarter}">
+                                                        <h:selectOneMenu disabled="true" class="form-control" value="#{divisionModel.quarter}">
+                                                            <f:selectItem itemLabel="---" itemValue="" noSelectionOption="true" />
                                                             <f:selectItem itemLabel="Quarter 1" itemValue="QUARTER_ONE" />
                                                             <f:selectItem itemLabel="Quarter 2" itemValue="QUARTER_TWO" />
                                                             <f:selectItem itemLabel="Quarter 3" itemValue="QUARTER_THREE" />
@@ -239,14 +251,15 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="row" style="padding-top: 5px;">
                                                 <div class="form-group">
                                                     <div class="col-sm-3">
                                                         <label class="col-form-label">Month: </label>  
                                                     </div>
                                                     <div class="col-sm-9"> 
-                                                        <h:selectOneMenu class="form-control" value="#{divisionModel.month}">
+                                                        <h:selectOneMenu disabled="true" class="form-control" value="#{divisionModel.month}">
+                                                            <f:selectItem itemLabel="---" itemValue="" noSelectionOption="true" />
                                                             <f:selectItem itemLabel="Month 1" itemValue="MONTH_ONE" />
                                                             <f:selectItem itemLabel="Month 2" itemValue="MONTH_TWO" />
                                                             <f:selectItem itemLabel="Month 3" itemValue="MONTH_THREE" />
@@ -254,18 +267,20 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="row" style="padding-top: 5px;">
                                                 <div class="form-group">
                                                     <div class="col-sm-3">
                                                         <label class="col-form-label">Week: </label>  
                                                     </div>
                                                     <div class="col-sm-9"> 
-                                                        <h:selectOneMenu class="form-control" value="#{divisionModel.week}">
+                                                        <h:selectOneMenu disabled="true" class="form-control" value="#{divisionModel.week}">
+                                                            <f:selectItem itemLabel="---" itemValue="" noSelectionOption="true" />
                                                             <f:selectItem itemLabel="Week 1" itemValue="Week1" />
                                                             <f:selectItem itemLabel="Week 2" itemValue="Week2" />
                                                             <f:selectItem itemLabel="Week 3" itemValue="Week3" />
                                                             <f:selectItem itemLabel="Week 4" itemValue="Week4" />
+                                                            <f:selectItem itemLabel="Week 5" itemValue="Week5" />
                                                         </h:selectOneMenu>
                                                     </div>
                                                 </div>
@@ -321,14 +336,26 @@
                                     <div class="modal-header">Edit Weekly Report</div>
                                     <div class="modal-body">
                                         <div class="row">
-
+                                            <div class="row" style="padding-top: 5px;">
+                                                <div class="form-group">
+                                                    <div class="col-sm-3">
+                                                        <label class="col-form-label">Choose Date: </label>  
+                                                    </div>
+                                                    <div class="col-sm-9"> 
+                                                        <p:datePicker value="#{divisionModel.otherReportDate}" pattern="dd/MM/yyyy" showIcon="true" required="true" requiredMessage="Report Date is Required">
+                                                            <p:ajax event="dateSelect" listener="#{divisionModel.fetchOtherReportPeriod}" update="otherReportFormEdit" />
+                                                        </p:datePicker>                                                    
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="row" style="padding-top: 5px;">
                                                 <div class="form-group">
                                                     <div class="col-sm-3">
                                                         <label class="col-form-label">Quarter: </label>  
                                                     </div>
                                                     <div class="col-sm-9"> 
-                                                        <h:selectOneMenu class="form-control" value="#{divisionModel.quarter}">
+                                                        <h:selectOneMenu disabled="true" class="form-control" value="#{divisionModel.quarter}">
+                                                            <f:selectItem itemLabel="---" itemValue="" noSelectionOption="true" />
                                                             <f:selectItem itemLabel="Quarter 1" itemValue="QUARTER_ONE" />
                                                             <f:selectItem itemLabel="Quarter 2" itemValue="QUARTER_TWO" />
                                                             <f:selectItem itemLabel="Quarter 3" itemValue="QUARTER_THREE" />
@@ -337,14 +364,15 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="row" style="padding-top: 5px;">
                                                 <div class="form-group">
                                                     <div class="col-sm-3">
                                                         <label class="col-form-label">Month: </label>  
                                                     </div>
                                                     <div class="col-sm-9"> 
-                                                        <h:selectOneMenu class="form-control" value="#{divisionModel.month}">
+                                                        <h:selectOneMenu disabled="true" class="form-control" value="#{divisionModel.month}">
+                                                            <f:selectItem itemLabel="---" itemValue="" noSelectionOption="true" />
                                                             <f:selectItem itemLabel="Month 1" itemValue="MONTH_ONE" />
                                                             <f:selectItem itemLabel="Month 2" itemValue="MONTH_TWO" />
                                                             <f:selectItem itemLabel="Month 3" itemValue="MONTH_THREE" />
@@ -352,18 +380,20 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="row" style="padding-top: 5px;">
                                                 <div class="form-group">
                                                     <div class="col-sm-3">
                                                         <label class="col-form-label">Week: </label>  
                                                     </div>
                                                     <div class="col-sm-9"> 
-                                                        <h:selectOneMenu class="form-control" value="#{divisionModel.week}">
+                                                        <h:selectOneMenu disabled="true" class="form-control" value="#{divisionModel.week}">
+                                                            <f:selectItem itemLabel="---" itemValue="" noSelectionOption="true" />
                                                             <f:selectItem itemLabel="Week 1" itemValue="Week1" />
                                                             <f:selectItem itemLabel="Week 2" itemValue="Week2" />
                                                             <f:selectItem itemLabel="Week 3" itemValue="Week3" />
                                                             <f:selectItem itemLabel="Week 4" itemValue="Week4" />
+                                                            <f:selectItem itemLabel="Week 5" itemValue="Week5" />
                                                         </h:selectOneMenu>
                                                     </div>
                                                 </div>
@@ -447,6 +477,7 @@
                                                                     <f:selectItem itemLabel="Week 2" itemValue="Week2" />
                                                                     <f:selectItem itemLabel="Week 3" itemValue="Week3" />
                                                                     <f:selectItem itemLabel="Week 4" itemValue="Week4" />
+                                                                    <f:selectItem itemLabel="Week 5" itemValue="Week5" />
                                                                     <f:ajax render="tbl" listener="#{divisionModel.loadOtherReport()}" />
                                                                 </h:selectOneMenu>
                                                             </div>
@@ -480,6 +511,11 @@
                                                                         <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
                                                                     </p:column>
                                                                 </c:when>
+                                                                <c:when test="#{divisionModel.period eq 'Week5'}">
+                                                                    <p:column headerText="Update(W5)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.accomplishment}" />
+                                                                    </p:column>
+                                                                </c:when>
                                                             </c:choose>
                                                             <c:choose>
                                                                 <c:when test="#{divisionModel.period eq 'Week1'}">
@@ -499,6 +535,11 @@
                                                                 </c:when>
                                                                 <c:when test="#{divisionModel.period eq 'Week4'}">
                                                                     <p:column headerText="Comments(W4)" groupRow="true">
+                                                                        <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
+                                                                    </p:column>
+                                                                </c:when>
+                                                                <c:when test="#{divisionModel.period eq 'Week5'}">
+                                                                    <p:column headerText="Comments(W5)" groupRow="true">
                                                                         <h:outputText styleClass="preformatted" value="#{acc.challenge}" />
                                                                     </p:column>
                                                                 </c:when>
@@ -541,7 +582,7 @@
 
         <!-- jquery
                     ============================================ -->
-        <script src="js/vendor/jquery-1.12.4.min.js"></script>
+        <!--<script src="js/vendor/jquery-1.12.4.min.js"></script>-->
         <!-- bootstrap JS
                     ============================================ -->
         <script src="js/bootstrap.min.js"></script>

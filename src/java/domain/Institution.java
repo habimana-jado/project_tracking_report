@@ -26,13 +26,13 @@ public class Institution implements Serializable{
     private String location;
     
     
-    @OneToMany(mappedBy = "institution", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-    @Fetch(FetchMode.SUBSELECT)
-    private List<Division> division;
+//    @OneToMany(mappedBy = "institution", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+//    @Fetch(FetchMode.SUBSELECT)
+//    private List<Division> division;
     
-    @OneToMany(mappedBy = "institution", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-    @Fetch(FetchMode.SUBSELECT)
-    private List<Account> user;
+//    @OneToMany(mappedBy = "institution", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+//    @Fetch(FetchMode.SUBSELECT)
+//    private List<Account> user;
 
     public String getInstitutionId() {
         return institutionId;
@@ -73,22 +73,5 @@ public class Institution implements Serializable{
     public void setLocation(String location) {
         this.location = location;
     }
-
-    public List<Division> getDivision() {
-        return division;
-    }
-
-    public void setDivision(List<Division> division) {
-        this.division = division;
-    }
-
-    public List<Account> getUser() {
-        return user;
-    }
-
-    public void setUser(List<Account> user) {
-        this.user = user;
-    }
-    
     
 }

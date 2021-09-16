@@ -22,8 +22,14 @@ import domain.EQuarter;
 import domain.Indicator;
 import domain.Institution;
 import domain.Other_Accomplishment;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -45,10 +51,11 @@ public class InstitutionModel {
     private List<Division> activeDivisions = new ArrayList<>();
     private Project project = new Project();
     private List<Project> projects = new ArrayList<>();
-    private List<Project> allProjects = new ProjectDao().findAll(Project.class);
+    private List<Project> allProjects = new ArrayList<>();
     private Account user = new Account();
     private String password = new String();
     private String departmentFilterValue = new String();
+    private String institutionFilterValue = new String();
     private boolean activityFilterType = true;
     private String activityType = "All";
     private List<Account> users = new ArrayList<>();
@@ -81,20 +88,96 @@ public class InstitutionModel {
     private List<Target> allMonthlyTargets = new TargetDao().findMonthlyTargets();
     private List<Target> institutionMonthlyTargets = new TargetDao().findMonthlyTargetsByInstitution(loggedInUser.getInstitution());
     private String activityId = new String();
+    private String institutionId = new String();
+    private Date reportDate = new Date();
+    private String fiscalYear = new String();
+    private Date fiscalYearDate = new Date();
+    private List<Division> institutionDivisions = new ArrayList<>();
 
     @PostConstruct
     public void init() {
         findCurrentPeriodReport();
-        divisionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriod(EQuarter.QUARTER_ONE, EMonth.MONTH_ONE, EPeriod.WEEK_ONE, loggedInUser.getInstitution());
-        divisionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriod(EQuarter.QUARTER_ONE, EMonth.MONTH_ONE, EPeriod.WEEK_ONE, loggedInUser.getInstitution());
         divisions = new DivisionDao().findByInstitution(loggedInUser.getInstitution());
         activeDivisions = new DivisionDao().findByInstitutionAndStatus(loggedInUser.getInstitution(), EStatus.ACTIVE);
         users = new UserDao().findByAccessLevel(EAccessLevel.DIVISION_MANAGER);
         globalUsers = new UserDao().findByAccessLevel(EAccessLevel.GLOBAL);
         divisionUsers = new UserDao().findByInstitution(loggedInUser.getInstitution());
-        projects = new ProjectDao().findByInstitution(loggedInUser.getInstitution());
+        try {
+            fetchProjectsByInstitutionAndFiscalYear();
+            fetchProjectsByFiscalYear();
+            loadReportByFiscalYear();
+            loadOtherReportByFiscalYear();
+            loadInstitutionReportByFiscalYear();
+            loadInstitutionOtherReportByFiscalYear();
+        } catch (ParseException ex) {
+            Logger.getLogger(InstitutionModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
         institutionMonthlyTargets = new TargetDao().findMonthlyTargetsByInstitution(loggedInUser.getInstitution());
-        loadReport();
+    }
+
+    public void fetchDivisionsByInstitution() {
+        
+        institutionDivisions.clear();
+        
+        for (Division d : new DivisionDao().findAll(Division.class)) {
+            if (d.getInstitution().getInstitutionId().equalsIgnoreCase(institutionId)) {
+                {
+                    institutionDivisions.add(d);
+                }
+            }
+        }
+    }
+
+    public void fetchProjectsByInstitutionAndFiscalYear() throws ParseException {
+        String year = new SimpleDateFormat("yyyy").format(fiscalYearDate);
+        String nextYear = (Integer.parseInt(new SimpleDateFormat("yyyy").format(fiscalYearDate)) + 1) + "";
+        String lastYear = (Integer.parseInt(new SimpleDateFormat("yyyy").format(fiscalYearDate)) - 1) + "";
+        String monthx = new SimpleDateFormat("MM").format(fiscalYearDate);
+
+        Date fiscalYearFrom;
+        Date fiscalYearTo;
+
+        if (monthx.equalsIgnoreCase("01") || monthx.equalsIgnoreCase("02") || monthx.equalsIgnoreCase("03") || monthx.equalsIgnoreCase("04") || monthx.equalsIgnoreCase("05") || monthx.equalsIgnoreCase("06")) {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + lastYear);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + year);
+            fiscalYear = lastYear + "/" + year;
+        } else if (monthx.equalsIgnoreCase("07") || monthx.equalsIgnoreCase("08") || monthx.equalsIgnoreCase("09") || monthx.equalsIgnoreCase("10") || monthx.equalsIgnoreCase("11") || monthx.equalsIgnoreCase("12")) {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + year);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + nextYear);
+            fiscalYear = year + "/" + nextYear;
+        } else {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + lastYear);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + year);
+            fiscalYear = lastYear + "/" + year;
+        }
+        projects = new ProjectDao().findByInstitutionAndFiscalYear(loggedInUser.getInstitution(), fiscalYearFrom, fiscalYearTo);
+
+    }
+
+    public void fetchProjectsByFiscalYear() throws ParseException {
+        String year = new SimpleDateFormat("yyyy").format(fiscalYearDate);
+        String nextYear = (Integer.parseInt(new SimpleDateFormat("yyyy").format(fiscalYearDate)) + 1) + "";
+        String lastYear = (Integer.parseInt(new SimpleDateFormat("yyyy").format(fiscalYearDate)) - 1) + "";
+        String monthx = new SimpleDateFormat("MM").format(fiscalYearDate);
+
+        Date fiscalYearFrom;
+        Date fiscalYearTo;
+
+        if (monthx.equalsIgnoreCase("01") || monthx.equalsIgnoreCase("02") || monthx.equalsIgnoreCase("03") || monthx.equalsIgnoreCase("04") || monthx.equalsIgnoreCase("05") || monthx.equalsIgnoreCase("06")) {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + lastYear);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + year);
+            fiscalYear = lastYear + "/" + year;
+        } else if (monthx.equalsIgnoreCase("07") || monthx.equalsIgnoreCase("08") || monthx.equalsIgnoreCase("09") || monthx.equalsIgnoreCase("10") || monthx.equalsIgnoreCase("11") || monthx.equalsIgnoreCase("12")) {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + year);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + nextYear);
+            fiscalYear = year + "/" + nextYear;
+        } else {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + lastYear);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + year);
+            fiscalYear = lastYear + "/" + year;
+        }
+        allProjects = new ProjectDao().findByFiscalYear(fiscalYearFrom, fiscalYearTo);
+
     }
 
     public void registerInstitution() throws Exception {
@@ -170,6 +253,9 @@ public class InstitutionModel {
             case "Week4":
                 ePeriod = EPeriod.WEEK_FOUR;
                 break;
+            case "Week5":
+                ePeriod = EPeriod.WEEK_FIVE;
+                break;
             default:
                 ePeriod = EPeriod.WEEK_ONE;
                 break;
@@ -230,6 +316,361 @@ public class InstitutionModel {
 
     }
 
+    public void loadReportByFiscalYear() throws ParseException {
+
+        String year = new SimpleDateFormat("yyyy").format(reportDate);
+        String monthx = new SimpleDateFormat("MM").format(reportDate);
+
+        if (period.isEmpty() || period == null || period.equals("")) {
+            period = "Week1";
+
+        } else if (quarter.isEmpty() || quarter == null || quarter.equals("")) {
+            quarter = "Quarter1";
+
+        } else if (month.isEmpty() || month == null || month.equals("")) {
+            month = "Month1";
+
+        }
+        switch (period) {
+            case "Week1":
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+            case "Week2":
+                ePeriod = EPeriod.WEEK_TWO;
+                break;
+            case "Week3":
+                ePeriod = EPeriod.WEEK_THREE;
+                break;
+            case "Week4":
+                ePeriod = EPeriod.WEEK_FOUR;
+                break;
+            case "Week5":
+                ePeriod = EPeriod.WEEK_FIVE;
+                break;
+            default:
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+
+        }
+
+        switch (quarter) {
+            case "Quarter1":
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+            case "Quarter2":
+                eQuarter = EQuarter.QUARTER_TWO;
+                break;
+
+            case "Quarter3":
+                eQuarter = EQuarter.QUARTER_THREE;
+                break;
+
+            case "Quarter4":
+                eQuarter = EQuarter.QUARTER_FOUR;
+                break;
+
+            default:
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+        }
+
+        switch (month) {
+            case "Month1":
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+            case "Month2":
+                eMonth = EMonth.MONTH_TWO;
+                break;
+
+            case "Month3":
+                eMonth = EMonth.MONTH_THREE;
+                break;
+
+            default:
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+        }
+
+        String nextYear = (Integer.parseInt(new SimpleDateFormat("yyyy").format(reportDate)) + 1) + "";
+        String lastYear = (Integer.parseInt(new SimpleDateFormat("yyyy").format(reportDate)) - 1) + "";
+
+        Date fiscalYearFrom;
+        Date fiscalYearTo;
+
+        if (monthx.equalsIgnoreCase("01") || monthx.equalsIgnoreCase("02") || monthx.equalsIgnoreCase("03") || monthx.equalsIgnoreCase("04") || monthx.equalsIgnoreCase("05") || monthx.equalsIgnoreCase("06")) {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + lastYear);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + year);
+            fiscalYear = lastYear + "/" + year;
+        } else if (monthx.equalsIgnoreCase("07") || monthx.equalsIgnoreCase("08") || monthx.equalsIgnoreCase("09") || monthx.equalsIgnoreCase("10") || monthx.equalsIgnoreCase("11") || monthx.equalsIgnoreCase("12")) {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + year);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + nextYear);
+            fiscalYear = year + "/" + nextYear;
+        } else {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + lastYear);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + year);
+            fiscalYear = lastYear + "/" + year;
+        }
+
+        if (departmentFilterValue.isEmpty() || departmentFilterValue == null) {
+            divisionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndFiscalYear(eQuarter, eMonth, ePeriod, loggedInUser.getInstitution(), fiscalYearFrom, fiscalYearTo);
+        } else {
+            Division division = new DivisionDao().findOne(Division.class, departmentFilterValue);
+            if (division == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Division Not Found"));
+            } else {
+                divisionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndDivisionAndFiscalYear(eQuarter, eMonth, ePeriod, division, fiscalYearFrom, fiscalYearTo);
+            }
+        }
+
+    }
+
+    public void loadReportCompiledByDateAndFiscalYear() throws ParseException {
+
+        String year = new SimpleDateFormat("yyyy").format(reportDate);
+        String monthx = new SimpleDateFormat("MM").format(reportDate);
+
+        if (monthx.equalsIgnoreCase("01")) {
+            eQuarter = EQuarter.QUARTER_THREE;
+            quarter = "Quarter3";
+            eMonth = EMonth.MONTH_ONE;
+        } else if (monthx.equalsIgnoreCase("02")) {
+            eQuarter = EQuarter.QUARTER_THREE;
+            quarter = "Quarter3";
+            eMonth = EMonth.MONTH_TWO;
+        } else if (monthx.equalsIgnoreCase("03")) {
+            eQuarter = EQuarter.QUARTER_THREE;
+            quarter = "Quarter3";
+            eMonth = EMonth.MONTH_THREE;
+        } else if (monthx.equalsIgnoreCase("04")) {
+            eQuarter = EQuarter.QUARTER_FOUR;
+            quarter = "Quarter4";
+            eMonth = EMonth.MONTH_ONE;
+        } else if (monthx.equalsIgnoreCase("05")) {
+            eQuarter = EQuarter.QUARTER_FOUR;
+            quarter = "Quarter4";
+            eMonth = EMonth.MONTH_TWO;
+        } else if (monthx.equalsIgnoreCase("06")) {
+            eQuarter = EQuarter.QUARTER_FOUR;
+            quarter = "Quarter4";
+            eMonth = EMonth.MONTH_THREE;
+        } else if (monthx.equalsIgnoreCase("07")) {
+            eQuarter = EQuarter.QUARTER_ONE;
+            quarter = "Quarter1";
+            eMonth = EMonth.MONTH_ONE;
+        } else if (monthx.equalsIgnoreCase("08")) {
+            eQuarter = EQuarter.QUARTER_ONE;
+            quarter = "Quarter1";
+            eMonth = EMonth.MONTH_TWO;
+        } else if (monthx.equalsIgnoreCase("09")) {
+            eQuarter = EQuarter.QUARTER_ONE;
+            quarter = "Quarter1";
+            eMonth = EMonth.MONTH_THREE;
+        } else if (monthx.equalsIgnoreCase("10")) {
+            eQuarter = EQuarter.QUARTER_TWO;
+            quarter = "Quarter2";
+            eMonth = EMonth.MONTH_ONE;
+        } else if (monthx.equalsIgnoreCase("11")) {
+            eQuarter = EQuarter.QUARTER_TWO;
+            quarter = "Quarter2";
+            eMonth = EMonth.MONTH_TWO;
+        } else if (monthx.equalsIgnoreCase("12")) {
+            eQuarter = EQuarter.QUARTER_TWO;
+            quarter = "Quarter2";
+            eMonth = EMonth.MONTH_THREE;
+        } else {
+            eQuarter = EQuarter.QUARTER_ONE;
+            quarter = "Quarter1";
+            eMonth = EMonth.MONTH_ONE;
+        }
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(reportDate);
+        int week1 = cal.get(Calendar.WEEK_OF_MONTH);
+        System.out.println("Week = " + week1);
+
+        month = eMonth + "";
+        period = "Week" + week1;
+
+        if (period.isEmpty() || period == null || period.equals("")) {
+            period = "Week1";
+
+        } else if (quarter.isEmpty() || quarter == null || quarter.equals("")) {
+            quarter = "Quarter1";
+
+        }
+        switch (period) {
+            case "Week1":
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+            case "Week2":
+                ePeriod = EPeriod.WEEK_TWO;
+                break;
+            case "Week3":
+                ePeriod = EPeriod.WEEK_THREE;
+                break;
+            case "Week4":
+                ePeriod = EPeriod.WEEK_FOUR;
+                break;
+            case "Week5":
+                ePeriod = EPeriod.WEEK_FIVE;
+                break;
+
+            default:
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+
+        }
+
+        String nextYear = (Integer.parseInt(new SimpleDateFormat("yyyy").format(reportDate)) + 1) + "";
+        String lastYear = (Integer.parseInt(new SimpleDateFormat("yyyy").format(reportDate)) - 1) + "";
+
+        Date fiscalYearFrom;
+        Date fiscalYearTo;
+
+        if (monthx.equalsIgnoreCase("01") || monthx.equalsIgnoreCase("02") || monthx.equalsIgnoreCase("03") || monthx.equalsIgnoreCase("04") || monthx.equalsIgnoreCase("05") || monthx.equalsIgnoreCase("06")) {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + lastYear);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + year);
+            fiscalYear = lastYear + "/" + year;
+        } else if (monthx.equalsIgnoreCase("07") || monthx.equalsIgnoreCase("08") || monthx.equalsIgnoreCase("09") || monthx.equalsIgnoreCase("10") || monthx.equalsIgnoreCase("11") || monthx.equalsIgnoreCase("12")) {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + year);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + nextYear);
+            fiscalYear = year + "/" + nextYear;
+        } else {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + lastYear);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + year);
+            fiscalYear = lastYear + "/" + year;
+        }
+
+        if (departmentFilterValue.isEmpty() || departmentFilterValue == null) {
+            divisionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndFiscalYear(eQuarter, eMonth, ePeriod, loggedInUser.getInstitution(), fiscalYearFrom, fiscalYearTo);
+            divisionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriodAndFiscalYear(eQuarter, eMonth, ePeriod, loggedInUser.getInstitution(), fiscalYearFrom, fiscalYearTo);
+        } else {
+            Division division = new DivisionDao().findOne(Division.class, departmentFilterValue);
+            if (division == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Division Not Found"));
+            } else {
+                divisionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndDivisionAndFiscalYear(eQuarter, eMonth, ePeriod, division, fiscalYearFrom, fiscalYearTo);
+                divisionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriodAndDivisionAndFiscalYear(eQuarter, eMonth, ePeriod, division, fiscalYearFrom, fiscalYearTo);
+            }
+        }
+
+    }
+
+    public void loadReportCompiledByDate() {
+
+        String year = new SimpleDateFormat("yyyy").format(reportDate);
+        String monthx = new SimpleDateFormat("MM").format(reportDate);
+
+        if (monthx.equalsIgnoreCase("01")) {
+            eQuarter = EQuarter.QUARTER_THREE;
+            quarter = "Quarter3";
+            eMonth = EMonth.MONTH_ONE;
+        } else if (monthx.equalsIgnoreCase("02")) {
+            eQuarter = EQuarter.QUARTER_THREE;
+            quarter = "Quarter3";
+            eMonth = EMonth.MONTH_TWO;
+        } else if (monthx.equalsIgnoreCase("03")) {
+            eQuarter = EQuarter.QUARTER_THREE;
+            quarter = "Quarter3";
+            eMonth = EMonth.MONTH_THREE;
+        } else if (monthx.equalsIgnoreCase("04")) {
+            eQuarter = EQuarter.QUARTER_FOUR;
+            quarter = "Quarter4";
+            eMonth = EMonth.MONTH_ONE;
+        } else if (monthx.equalsIgnoreCase("05")) {
+            eQuarter = EQuarter.QUARTER_FOUR;
+            quarter = "Quarter4";
+            eMonth = EMonth.MONTH_TWO;
+        } else if (monthx.equalsIgnoreCase("06")) {
+            eQuarter = EQuarter.QUARTER_FOUR;
+            quarter = "Quarter4";
+            eMonth = EMonth.MONTH_THREE;
+        } else if (monthx.equalsIgnoreCase("07")) {
+            eQuarter = EQuarter.QUARTER_ONE;
+            quarter = "Quarter1";
+            eMonth = EMonth.MONTH_ONE;
+        } else if (monthx.equalsIgnoreCase("08")) {
+            eQuarter = EQuarter.QUARTER_ONE;
+            quarter = "Quarter1";
+            eMonth = EMonth.MONTH_TWO;
+        } else if (monthx.equalsIgnoreCase("09")) {
+            eQuarter = EQuarter.QUARTER_ONE;
+            quarter = "Quarter1";
+            eMonth = EMonth.MONTH_THREE;
+        } else if (monthx.equalsIgnoreCase("10")) {
+            eQuarter = EQuarter.QUARTER_TWO;
+            quarter = "Quarter2";
+            eMonth = EMonth.MONTH_ONE;
+        } else if (monthx.equalsIgnoreCase("11")) {
+            eQuarter = EQuarter.QUARTER_TWO;
+            quarter = "Quarter2";
+            eMonth = EMonth.MONTH_TWO;
+        } else if (monthx.equalsIgnoreCase("12")) {
+            eQuarter = EQuarter.QUARTER_TWO;
+            quarter = "Quarter2";
+            eMonth = EMonth.MONTH_THREE;
+        } else {
+            eQuarter = EQuarter.QUARTER_ONE;
+            quarter = "Quarter1";
+            eMonth = EMonth.MONTH_ONE;
+        }
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(reportDate);
+        int week1 = cal.get(Calendar.WEEK_OF_MONTH);
+        System.out.println("Week = " + week1);
+
+        month = eMonth + "";
+        period = "Week" + week1;
+
+        if (period.isEmpty() || period == null || period.equals("")) {
+            period = "Week1";
+
+        } else if (quarter.isEmpty() || quarter == null || quarter.equals("")) {
+            quarter = "Quarter1";
+
+        }
+        switch (period) {
+            case "Week1":
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+            case "Week2":
+                ePeriod = EPeriod.WEEK_TWO;
+                break;
+            case "Week3":
+                ePeriod = EPeriod.WEEK_THREE;
+                break;
+            case "Week4":
+                ePeriod = EPeriod.WEEK_FOUR;
+                break;
+            case "Week5":
+                ePeriod = EPeriod.WEEK_FIVE;
+                break;
+
+            default:
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+
+        }
+        if (departmentFilterValue.isEmpty() || departmentFilterValue == null) {
+            divisionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter, eMonth, ePeriod, loggedInUser.getInstitution());
+            divisionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter, eMonth, ePeriod, loggedInUser.getInstitution());
+        } else {
+            Division division = new DivisionDao().findOne(Division.class, departmentFilterValue);
+            if (division == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Division Not Found"));
+            } else {
+                divisionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndDivision(eQuarter, eMonth, ePeriod, division);
+                divisionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriodAndDivision(eQuarter, eMonth, ePeriod, division);
+            }
+        }
+
+    }
+
     public void loadOtherReport() {
         if (period.isEmpty() || period == null || period.equals("")) {
             period = "Week1";
@@ -253,6 +694,9 @@ public class InstitutionModel {
                 break;
             case "Week4":
                 ePeriod = EPeriod.WEEK_FOUR;
+                break;
+            case "Week5":
+                ePeriod = EPeriod.WEEK_FIVE;
                 break;
             default:
                 ePeriod = EPeriod.WEEK_ONE;
@@ -314,12 +758,124 @@ public class InstitutionModel {
         }
 
     }
-    
-    public void findCurrentPeriodReport(){
-        EQuarter currentQuarter= EQuarter.QUARTER_ONE;
+
+    public void loadOtherReportByFiscalYear() throws ParseException {
+
+        String year = new SimpleDateFormat("yyyy").format(reportDate);
+        String monthx = new SimpleDateFormat("MM").format(reportDate);
+
+        if (period.isEmpty() || period == null || period.equals("")) {
+            period = "Week1";
+
+        } else if (quarter.isEmpty() || quarter == null || quarter.equals("")) {
+            quarter = "Quarter1";
+
+        } else if (month.isEmpty() || month == null || month.equals("")) {
+            month = "Month1";
+
+        }
+        switch (period) {
+            case "Week1":
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+            case "Week2":
+                ePeriod = EPeriod.WEEK_TWO;
+                break;
+            case "Week3":
+                ePeriod = EPeriod.WEEK_THREE;
+                break;
+            case "Week4":
+                ePeriod = EPeriod.WEEK_FOUR;
+                break;
+            case "Week5":
+                ePeriod = EPeriod.WEEK_FIVE;
+                break;
+            default:
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+
+        }
+
+        switch (quarter) {
+            case "Quarter1":
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+            case "Quarter2":
+                eQuarter = EQuarter.QUARTER_TWO;
+                break;
+
+            case "Quarter3":
+                eQuarter = EQuarter.QUARTER_THREE;
+                break;
+
+            case "Quarter4":
+                eQuarter = EQuarter.QUARTER_FOUR;
+                break;
+
+            default:
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+        }
+
+        switch (month) {
+            case "Month1":
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+            case "Month2":
+                eMonth = EMonth.MONTH_TWO;
+                break;
+
+            case "Month3":
+                eMonth = EMonth.MONTH_THREE;
+                break;
+
+            default:
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+        }
+
+        String nextYear = (Integer.parseInt(new SimpleDateFormat("yyyy").format(reportDate)) + 1) + "";
+        String lastYear = (Integer.parseInt(new SimpleDateFormat("yyyy").format(reportDate)) - 1) + "";
+
+        Date fiscalYearFrom;
+        Date fiscalYearTo;
+
+        if (monthx.equalsIgnoreCase("01") || monthx.equalsIgnoreCase("02") || monthx.equalsIgnoreCase("03") || monthx.equalsIgnoreCase("04") || monthx.equalsIgnoreCase("05") || monthx.equalsIgnoreCase("06")) {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + lastYear);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + year);
+            fiscalYear = lastYear + "/" + year;
+        } else if (monthx.equalsIgnoreCase("07") || monthx.equalsIgnoreCase("08") || monthx.equalsIgnoreCase("09") || monthx.equalsIgnoreCase("10") || monthx.equalsIgnoreCase("11") || monthx.equalsIgnoreCase("12")) {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + year);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + nextYear);
+            fiscalYear = year + "/" + nextYear;
+        } else {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + lastYear);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + year);
+            fiscalYear = lastYear + "/" + year;
+        }
+
+        if (departmentFilterValue.isEmpty() || departmentFilterValue == null) {
+            divisionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriodAndFiscalYear(eQuarter, eMonth, ePeriod, loggedInUser.getInstitution(), fiscalYearFrom, fiscalYearTo);
+        } else {
+            Division division = new DivisionDao().findOne(Division.class, departmentFilterValue);
+            if (division == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Division Not Found"));
+            } else {
+                divisionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriodAndDivisionAndFiscalYear(eQuarter, eMonth, ePeriod, division, fiscalYearFrom, fiscalYearTo);
+            }
+        }
+
+    }
+
+    public void findCurrentPeriodReport() {
+        EQuarter currentQuarter = EQuarter.QUARTER_ONE;
         EMonth currentMonth = EMonth.MONTH_ONE;
         EPeriod currentPeriod = EPeriod.WEEK_ONE;
-        for(Accomplishment a : new AccomplishmentDao().findAll(Accomplishment.class)){
+        for (Accomplishment a : new AccomplishmentDao().findAll(Accomplishment.class)) {
             switch (a.getTarget().getTarget().getQuarter()) {
                 case QUARTER_FOUR:
                     currentQuarter = EQuarter.QUARTER_FOUR;
@@ -342,7 +898,7 @@ public class InstitutionModel {
                     quarter = "Quarter4";
                     break;
             }
-            
+
             switch (a.getTarget().getMonth()) {
                 case MONTH_FOUR:
                     currentMonth = EMonth.MONTH_FOUR;
@@ -365,8 +921,8 @@ public class InstitutionModel {
                     month = "Month4";
                     break;
             }
-            
-            switch(a.getPeriod()){
+
+            switch (a.getPeriod()) {
                 case WEEK_FOUR:
                     currentPeriod = EPeriod.WEEK_FOUR;
                     period = "Period4";
@@ -416,6 +972,9 @@ public class InstitutionModel {
                 break;
             case "Week4":
                 ePeriod = EPeriod.WEEK_FOUR;
+                break;
+            case "Week5":
+                ePeriod = EPeriod.WEEK_FIVE;
                 break;
             default:
                 ePeriod = EPeriod.WEEK_ONE;
@@ -478,6 +1037,387 @@ public class InstitutionModel {
         }
     }
 
+    public void loadInstitutionReportByFiscalYear() throws ParseException {
+
+        String year = new SimpleDateFormat("yyyy").format(reportDate);
+        String monthx = new SimpleDateFormat("MM").format(reportDate);
+
+        if (period.isEmpty() || period == null || period.equals("")) {
+            period = "Week1";
+
+        } else if (quarter.isEmpty() || quarter == null || quarter.equals("")) {
+            quarter = "Quarter1";
+
+        } else if (month.isEmpty() || month == null || month.equals("")) {
+            month = "Month1";
+
+        }
+        switch (period) {
+            case "Week1":
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+            case "Week2":
+                ePeriod = EPeriod.WEEK_TWO;
+                break;
+            case "Week3":
+                ePeriod = EPeriod.WEEK_THREE;
+                break;
+            case "Week4":
+                ePeriod = EPeriod.WEEK_FOUR;
+                break;
+            case "Week5":
+                ePeriod = EPeriod.WEEK_FIVE;
+                break;
+            default:
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+
+        }
+
+        switch (quarter) {
+            case "Quarter1":
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+            case "Quarter2":
+                eQuarter = EQuarter.QUARTER_TWO;
+                break;
+
+            case "Quarter3":
+                eQuarter = EQuarter.QUARTER_THREE;
+                break;
+
+            case "Quarter4":
+                eQuarter = EQuarter.QUARTER_FOUR;
+                break;
+
+            default:
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+        }
+
+        switch (month) {
+            case "Month1":
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+            case "Month2":
+                eMonth = EMonth.MONTH_TWO;
+                break;
+
+            case "Month3":
+                eMonth = EMonth.MONTH_THREE;
+                break;
+
+            default:
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+        }
+
+        String nextYear = (Integer.parseInt(new SimpleDateFormat("yyyy").format(reportDate)) + 1) + "";
+        String lastYear = (Integer.parseInt(new SimpleDateFormat("yyyy").format(reportDate)) - 1) + "";
+
+        Date fiscalYearFrom;
+        Date fiscalYearTo;
+
+        if (monthx.equalsIgnoreCase("01") || monthx.equalsIgnoreCase("02") || monthx.equalsIgnoreCase("03") || monthx.equalsIgnoreCase("04") || monthx.equalsIgnoreCase("05") || monthx.equalsIgnoreCase("06")) {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + lastYear);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + year);
+            fiscalYear = lastYear + "/" + year;
+        } else if (monthx.equalsIgnoreCase("07") || monthx.equalsIgnoreCase("08") || monthx.equalsIgnoreCase("09") || monthx.equalsIgnoreCase("10") || monthx.equalsIgnoreCase("11") || monthx.equalsIgnoreCase("12")) {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + year);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + nextYear);
+            fiscalYear = year + "/" + nextYear;
+        } else {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + lastYear);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + year);
+            fiscalYear = lastYear + "/" + year;
+        }
+
+        if (departmentFilterValue.isEmpty() || departmentFilterValue == null) {
+            Institution i = new InstitutionDao().findOne(Institution.class, institutionId);
+            if(i == null){
+                institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndFiscalYear(eQuarter, eMonth, ePeriod, fiscalYearFrom, fiscalYearTo);
+            }else{
+                institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndFiscalYearAndInstitution(eQuarter, eMonth, ePeriod, fiscalYearFrom, fiscalYearTo, i);
+            }
+        } else {
+            Division division = new DivisionDao().findOne(Division.class, departmentFilterValue);
+            if (division == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Division Not Found"));
+            } else {
+                institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndDivisionAndFiscalYear(eQuarter, eMonth, ePeriod, division, fiscalYearFrom, fiscalYearTo);
+            }
+        }
+    }
+
+    public void loadInstitutionReportCompiledByDate() {
+
+        String year = new SimpleDateFormat("yyyy").format(reportDate);
+        String monthx = new SimpleDateFormat("MM").format(reportDate);
+
+        if (monthx.equalsIgnoreCase("01")) {
+            eQuarter = EQuarter.QUARTER_THREE;
+            quarter = "Quarter3";
+            month = "Month1";
+            eMonth = EMonth.MONTH_ONE;
+        } else if (monthx.equalsIgnoreCase("02")) {
+            eQuarter = EQuarter.QUARTER_THREE;
+            month = "Month2";
+            quarter = "Quarter3";
+            eMonth = EMonth.MONTH_TWO;
+        } else if (monthx.equalsIgnoreCase("03")) {
+            eQuarter = EQuarter.QUARTER_THREE;
+            month = "Month3";
+            quarter = "Quarter3";
+            eMonth = EMonth.MONTH_THREE;
+        } else if (monthx.equalsIgnoreCase("04")) {
+            eQuarter = EQuarter.QUARTER_FOUR;
+            month = "Month1";
+            quarter = "Quarter4";
+            eMonth = EMonth.MONTH_ONE;
+        } else if (monthx.equalsIgnoreCase("05")) {
+            eQuarter = EQuarter.QUARTER_FOUR;
+            month = "Month2";
+            quarter = "Quarter4";
+            eMonth = EMonth.MONTH_TWO;
+        } else if (monthx.equalsIgnoreCase("06")) {
+            eQuarter = EQuarter.QUARTER_FOUR;
+            month = "Month3";
+            quarter = "Quarter4";
+            eMonth = EMonth.MONTH_THREE;
+        } else if (monthx.equalsIgnoreCase("07")) {
+            eQuarter = EQuarter.QUARTER_ONE;
+            month = "Month1";
+            quarter = "Quarter1";
+            eMonth = EMonth.MONTH_ONE;
+        } else if (monthx.equalsIgnoreCase("08")) {
+            eQuarter = EQuarter.QUARTER_ONE;
+            month = "Month2";
+            quarter = "Quarter1";
+            eMonth = EMonth.MONTH_TWO;
+        } else if (monthx.equalsIgnoreCase("09")) {
+            eQuarter = EQuarter.QUARTER_ONE;
+            month = "Month3";
+            quarter = "Quarter1";
+            eMonth = EMonth.MONTH_THREE;
+        } else if (monthx.equalsIgnoreCase("10")) {
+            eQuarter = EQuarter.QUARTER_TWO;
+            month = "Month1";
+            quarter = "Quarter2";
+            eMonth = EMonth.MONTH_ONE;
+        } else if (monthx.equalsIgnoreCase("11")) {
+            eQuarter = EQuarter.QUARTER_TWO;
+            month = "Month2";
+            quarter = "Quarter2";
+            eMonth = EMonth.MONTH_TWO;
+        } else if (monthx.equalsIgnoreCase("12")) {
+            eQuarter = EQuarter.QUARTER_TWO;
+            month = "Month3";
+            quarter = "Quarter2";
+            eMonth = EMonth.MONTH_THREE;
+        } else {
+            eQuarter = EQuarter.QUARTER_ONE;
+            quarter = "Quarter1";
+            eMonth = EMonth.MONTH_ONE;
+        }
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(reportDate);
+        int week1 = cal.get(Calendar.WEEK_OF_MONTH);
+        period = "Week" + week1;
+
+        if (period.isEmpty() || period == null || period.equals("")) {
+            period = "Week1";
+
+        } else if (quarter.isEmpty() || quarter == null || quarter.equals("")) {
+            quarter = "Quarter1";
+
+        }
+        switch (period) {
+            case "Week1":
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+            case "Week2":
+                ePeriod = EPeriod.WEEK_TWO;
+                break;
+            case "Week3":
+                ePeriod = EPeriod.WEEK_THREE;
+                break;
+            case "Week4":
+                ePeriod = EPeriod.WEEK_FOUR;
+                break;
+            case "Week5":
+                ePeriod = EPeriod.WEEK_FIVE;
+                break;
+
+            default:
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+
+        }
+
+        institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter, eMonth, ePeriod);
+        institutionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter, eMonth, ePeriod);
+
+        if (departmentFilterValue.isEmpty() || departmentFilterValue == null) {
+            institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter, eMonth, ePeriod);
+            institutionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriod(eQuarter, eMonth, ePeriod);
+        } else {
+            Division division = new DivisionDao().findOne(Division.class, departmentFilterValue);
+            if (division == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Division Not Found"));
+            } else {
+                institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndDivision(eQuarter, eMonth, ePeriod, division);
+                institutionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriodAndDivision(eQuarter, eMonth, ePeriod, division);
+            }
+        }
+
+    }
+
+    public void loadInstitutionReportCompiledByDateAndFiscalYear() throws ParseException {
+
+        String year = new SimpleDateFormat("yyyy").format(reportDate);
+        String monthx = new SimpleDateFormat("MM").format(reportDate);
+
+        if (monthx.equalsIgnoreCase("01")) {
+            eQuarter = EQuarter.QUARTER_THREE;
+            quarter = "Quarter3";
+            month = "Month1";
+            eMonth = EMonth.MONTH_ONE;
+        } else if (monthx.equalsIgnoreCase("02")) {
+            eQuarter = EQuarter.QUARTER_THREE;
+            month = "Month2";
+            quarter = "Quarter3";
+            eMonth = EMonth.MONTH_TWO;
+        } else if (monthx.equalsIgnoreCase("03")) {
+            eQuarter = EQuarter.QUARTER_THREE;
+            month = "Month3";
+            quarter = "Quarter3";
+            eMonth = EMonth.MONTH_THREE;
+        } else if (monthx.equalsIgnoreCase("04")) {
+            eQuarter = EQuarter.QUARTER_FOUR;
+            month = "Month1";
+            quarter = "Quarter4";
+            eMonth = EMonth.MONTH_ONE;
+        } else if (monthx.equalsIgnoreCase("05")) {
+            eQuarter = EQuarter.QUARTER_FOUR;
+            month = "Month2";
+            quarter = "Quarter4";
+            eMonth = EMonth.MONTH_TWO;
+        } else if (monthx.equalsIgnoreCase("06")) {
+            eQuarter = EQuarter.QUARTER_FOUR;
+            month = "Month3";
+            quarter = "Quarter4";
+            eMonth = EMonth.MONTH_THREE;
+        } else if (monthx.equalsIgnoreCase("07")) {
+            eQuarter = EQuarter.QUARTER_ONE;
+            month = "Month1";
+            quarter = "Quarter1";
+            eMonth = EMonth.MONTH_ONE;
+        } else if (monthx.equalsIgnoreCase("08")) {
+            eQuarter = EQuarter.QUARTER_ONE;
+            month = "Month2";
+            quarter = "Quarter1";
+            eMonth = EMonth.MONTH_TWO;
+        } else if (monthx.equalsIgnoreCase("09")) {
+            eQuarter = EQuarter.QUARTER_ONE;
+            month = "Month3";
+            quarter = "Quarter1";
+            eMonth = EMonth.MONTH_THREE;
+        } else if (monthx.equalsIgnoreCase("10")) {
+            eQuarter = EQuarter.QUARTER_TWO;
+            month = "Month1";
+            quarter = "Quarter2";
+            eMonth = EMonth.MONTH_ONE;
+        } else if (monthx.equalsIgnoreCase("11")) {
+            eQuarter = EQuarter.QUARTER_TWO;
+            month = "Month2";
+            quarter = "Quarter2";
+            eMonth = EMonth.MONTH_TWO;
+        } else if (monthx.equalsIgnoreCase("12")) {
+            eQuarter = EQuarter.QUARTER_TWO;
+            month = "Month3";
+            quarter = "Quarter2";
+            eMonth = EMonth.MONTH_THREE;
+        } else {
+            eQuarter = EQuarter.QUARTER_ONE;
+            quarter = "Quarter1";
+            eMonth = EMonth.MONTH_ONE;
+        }
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(reportDate);
+        int week1 = cal.get(Calendar.WEEK_OF_MONTH);
+        period = "Week" + week1;
+
+        if (period.isEmpty() || period == null || period.equals("")) {
+            period = "Week1";
+
+        } else if (quarter.isEmpty() || quarter == null || quarter.equals("")) {
+            quarter = "Quarter1";
+
+        }
+        switch (period) {
+            case "Week1":
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+            case "Week2":
+                ePeriod = EPeriod.WEEK_TWO;
+                break;
+            case "Week3":
+                ePeriod = EPeriod.WEEK_THREE;
+                break;
+            case "Week4":
+                ePeriod = EPeriod.WEEK_FOUR;
+                break;
+            case "Week5":
+                ePeriod = EPeriod.WEEK_FIVE;
+                break;
+
+            default:
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+
+        }
+
+        String nextYear = (Integer.parseInt(new SimpleDateFormat("yyyy").format(reportDate)) + 1) + "";
+        String lastYear = (Integer.parseInt(new SimpleDateFormat("yyyy").format(reportDate)) - 1) + "";
+
+        Date fiscalYearFrom;
+        Date fiscalYearTo;
+
+        if (monthx.equalsIgnoreCase("01") || monthx.equalsIgnoreCase("02") || monthx.equalsIgnoreCase("03") || monthx.equalsIgnoreCase("04") || monthx.equalsIgnoreCase("05") || monthx.equalsIgnoreCase("06")) {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + lastYear);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + year);
+            fiscalYear = lastYear + "/" + year;
+        } else if (monthx.equalsIgnoreCase("07") || monthx.equalsIgnoreCase("08") || monthx.equalsIgnoreCase("09") || monthx.equalsIgnoreCase("10") || monthx.equalsIgnoreCase("11") || monthx.equalsIgnoreCase("12")) {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + year);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + nextYear);
+            fiscalYear = year + "/" + nextYear;
+        } else {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + lastYear);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + year);
+            fiscalYear = lastYear + "/" + year;
+        }
+
+        if (departmentFilterValue.isEmpty() || departmentFilterValue == null) {
+            institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndFiscalYear(eQuarter, eMonth, ePeriod, fiscalYearFrom, fiscalYearTo);
+            institutionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriodAndFiscalYearAndNoInstitution(eQuarter, eMonth, ePeriod, fiscalYearFrom, fiscalYearTo);
+        } else {
+            Division division = new DivisionDao().findOne(Division.class, departmentFilterValue);
+            if (division == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Division Not Found"));
+            } else {
+                institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndDivisionAndFiscalYear(eQuarter, eMonth, ePeriod, division, fiscalYearFrom, fiscalYearTo);
+                institutionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriodAndDivisionAndFiscalYear(eQuarter, eMonth, ePeriod, division, fiscalYearFrom, fiscalYearTo);
+            }
+        }
+
+    }
+
     public void loadInstitutionOtherReport() {
         if (period.isEmpty() || period == null || period.equals("")) {
             period = "Week1";
@@ -501,6 +1441,9 @@ public class InstitutionModel {
                 break;
             case "Week4":
                 ePeriod = EPeriod.WEEK_FOUR;
+                break;
+            case "Week5":
+                ePeriod = EPeriod.WEEK_FIVE;
                 break;
             default:
                 ePeriod = EPeriod.WEEK_ONE;
@@ -563,6 +1506,139 @@ public class InstitutionModel {
         }
     }
 
+    public void loadInstitutionOtherReportByFiscalYear() throws ParseException {
+
+        String year = new SimpleDateFormat("yyyy").format(reportDate);
+        String monthx = new SimpleDateFormat("MM").format(reportDate);
+
+        if (period.isEmpty() || period == null || period.equals("")) {
+            period = "Week1";
+
+        } else if (quarter.isEmpty() || quarter == null || quarter.equals("")) {
+            quarter = "Quarter1";
+
+        } else if (month.isEmpty() || month == null || month.equals("")) {
+            month = "Month1";
+
+        }
+        switch (period) {
+            case "Week1":
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+            case "Week2":
+                ePeriod = EPeriod.WEEK_TWO;
+                break;
+            case "Week3":
+                ePeriod = EPeriod.WEEK_THREE;
+                break;
+            case "Week4":
+                ePeriod = EPeriod.WEEK_FOUR;
+                break;
+            case "Week5":
+                ePeriod = EPeriod.WEEK_FIVE;
+                break;
+            default:
+                ePeriod = EPeriod.WEEK_ONE;
+                break;
+
+        }
+
+        switch (quarter) {
+            case "Quarter1":
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+            case "Quarter2":
+                eQuarter = EQuarter.QUARTER_TWO;
+                break;
+
+            case "Quarter3":
+                eQuarter = EQuarter.QUARTER_THREE;
+                break;
+
+            case "Quarter4":
+                eQuarter = EQuarter.QUARTER_FOUR;
+                break;
+
+            default:
+                eQuarter = EQuarter.QUARTER_ONE;
+                break;
+
+        }
+
+        switch (month) {
+            case "Month1":
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+            case "Month2":
+                eMonth = EMonth.MONTH_TWO;
+                break;
+
+            case "Month3":
+                eMonth = EMonth.MONTH_THREE;
+                break;
+
+            default:
+                eMonth = EMonth.MONTH_ONE;
+                break;
+
+        }
+
+        String nextYear = (Integer.parseInt(new SimpleDateFormat("yyyy").format(reportDate)) + 1) + "";
+        String lastYear = (Integer.parseInt(new SimpleDateFormat("yyyy").format(reportDate)) - 1) + "";
+
+        Date fiscalYearFrom;
+        Date fiscalYearTo;
+
+        if (monthx.equalsIgnoreCase("01") || monthx.equalsIgnoreCase("02") || monthx.equalsIgnoreCase("03") || monthx.equalsIgnoreCase("04") || monthx.equalsIgnoreCase("05") || monthx.equalsIgnoreCase("06")) {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + lastYear);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + year);
+            fiscalYear = lastYear + "/" + year;
+        } else if (monthx.equalsIgnoreCase("07") || monthx.equalsIgnoreCase("08") || monthx.equalsIgnoreCase("09") || monthx.equalsIgnoreCase("10") || monthx.equalsIgnoreCase("11") || monthx.equalsIgnoreCase("12")) {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + year);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + nextYear);
+            fiscalYear = year + "/" + nextYear;
+        } else {
+            fiscalYearFrom = new SimpleDateFormat("dd/MM/yyyy").parse("01/07/" + lastYear);
+            fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + year);
+            fiscalYear = lastYear + "/" + year;
+        }
+        
+        
+        if (departmentFilterValue.isEmpty() || departmentFilterValue == null) {
+            Institution i = new InstitutionDao().findOne(Institution.class, institutionId);
+            if(i == null){
+                institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndFiscalYear(eQuarter, eMonth, ePeriod, fiscalYearFrom, fiscalYearTo);
+            }else{
+                institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndFiscalYearAndInstitution(eQuarter, eMonth, ePeriod, fiscalYearFrom, fiscalYearTo, i);
+            }
+        } else {
+            Division division = new DivisionDao().findOne(Division.class, departmentFilterValue);
+            if (division == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Division Not Found"));
+            } else {
+                institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndDivisionAndFiscalYear(eQuarter, eMonth, ePeriod, division, fiscalYearFrom, fiscalYearTo);
+            }
+        }
+
+        if (departmentFilterValue.isEmpty() || departmentFilterValue == null) {
+            Institution i = new InstitutionDao().findOne(Institution.class, institutionId);
+            if(i == null){
+                institutionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriodAndFiscalYearAndNoInstitution(eQuarter, eMonth, ePeriod, fiscalYearFrom, fiscalYearTo);
+            }else{
+                institutionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriodAndInstitutionAndFiscalYear(eQuarter, eMonth, ePeriod, i, fiscalYearFrom, fiscalYearTo);
+            }
+        }else{
+            Division division = new DivisionDao().findOne(Division.class, departmentFilterValue);
+            if (division == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Division Not Found"));
+            } else {
+                institutionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriodAndDivisionAndFiscalYear(eQuarter, eMonth, ePeriod, division, fiscalYearFrom, fiscalYearTo);
+            }
+        }
+    }
+
     public void filterOperationPlan() {
         if (activityId.equalsIgnoreCase("All")) {
             institutionMonthlyTargets = new TargetDao().findMonthlyTargetsByInstitution(loggedInUser.getInstitution());
@@ -578,6 +1654,15 @@ public class InstitutionModel {
         } else {
             Project p = new ProjectDao().findOne(Project.class, activityId);
             allMonthlyTargets = new TargetDao().findMonthlyTargetsByActivity(p);
+        }
+    }
+
+    public void adminFilterOperationPlanByInstitution() {
+        if (institutionId.equalsIgnoreCase("All")) {
+            allMonthlyTargets = new TargetDao().findMonthlyTargets();
+        } else {
+            Institution i = new InstitutionDao().findOne(Institution.class, institutionId);
+            allMonthlyTargets = new TargetDao().findMonthlyTargetsByInstitutionAndActionPlan(i);
         }
     }
 
@@ -656,7 +1741,7 @@ public class InstitutionModel {
                 user.setPassword(new PassCode().encrypt(password));
                 new UserDao().register(user);
                 user = new Account();
-            globalUsers = new UserDao().findByAccessLevel(EAccessLevel.GLOBAL);
+                globalUsers = new UserDao().findByAccessLevel(EAccessLevel.GLOBAL);
                 FacesContext fc = FacesContext.getCurrentInstance();
                 fc.addMessage(null, new FacesMessage("User Registered"));
             }
@@ -693,7 +1778,7 @@ public class InstitutionModel {
     public void blockGlobalUser(Account a) {
         a.setStatus(EStatus.INACTIVE);
         new UserDao().update(a);
-            globalUsers = new UserDao().findByAccessLevel(EAccessLevel.GLOBAL);
+        globalUsers = new UserDao().findByAccessLevel(EAccessLevel.GLOBAL);
         FacesContext fc = FacesContext.getCurrentInstance();
         fc.addMessage(null, new FacesMessage("Account Blocked"));
     }
@@ -701,7 +1786,7 @@ public class InstitutionModel {
     public void activateGlobalUser(Account a) {
         a.setStatus(EStatus.ACTIVE);
         new UserDao().update(a);
-            globalUsers = new UserDao().findByAccessLevel(EAccessLevel.GLOBAL);
+        globalUsers = new UserDao().findByAccessLevel(EAccessLevel.GLOBAL);
         FacesContext fc = FacesContext.getCurrentInstance();
         fc.addMessage(null, new FacesMessage("Account Activated"));
     }
@@ -773,15 +1858,15 @@ public class InstitutionModel {
         target = u;
     }
 
-    public void registerProject() {
+    public void registerProject() throws ParseException {
         Division d = new DivisionDao().findOne(Division.class, divisionId);
         project.setDivision(d);
         project.setIsInActionPlan(Boolean.TRUE);
         new ProjectDao().register(project);
         registeredProject = project;
         project = new Project();
-        projects = new ProjectDao().findByInstitution(loggedInUser.getInstitution());
-
+//        projects = new ProjectDao().findByInstitution(loggedInUser.getInstitution());
+        fetchProjectsByInstitutionAndFiscalYear();
         FacesContext fc = FacesContext.getCurrentInstance();
         fc.addMessage(null, new FacesMessage("Activity Registered"));
     }
@@ -1342,6 +2427,54 @@ public class InstitutionModel {
 
     public void setGlobalUsers(List<Account> globalUsers) {
         this.globalUsers = globalUsers;
+    }
+
+    public Date getReportDate() {
+        return reportDate;
+    }
+
+    public void setReportDate(Date reportDate) {
+        this.reportDate = reportDate;
+    }
+
+    public String getFiscalYear() {
+        return fiscalYear;
+    }
+
+    public void setFiscalYear(String fiscalYear) {
+        this.fiscalYear = fiscalYear;
+    }
+
+    public Date getFiscalYearDate() {
+        return fiscalYearDate;
+    }
+
+    public void setFiscalYearDate(Date fiscalYearDate) {
+        this.fiscalYearDate = fiscalYearDate;
+    }
+
+    public String getInstitutionId() {
+        return institutionId;
+    }
+
+    public void setInstitutionId(String institutionId) {
+        this.institutionId = institutionId;
+    }
+
+    public String getInstitutionFilterValue() {
+        return institutionFilterValue;
+    }
+
+    public void setInstitutionFilterValue(String institutionFilterValue) {
+        this.institutionFilterValue = institutionFilterValue;
+    }
+
+    public List<Division> getInstitutionDivisions() {
+        return institutionDivisions;
+    }
+
+    public void setInstitutionDivisions(List<Division> institutionDivisions) {
+        this.institutionDivisions = institutionDivisions;
     }
 
 }

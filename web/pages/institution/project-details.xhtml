@@ -203,22 +203,39 @@
             </div>
 
             <div class="product-status mg-b-15">
-                <div class="container-fluid">  
+                <div class="container-fluid"> 
+                    <h:form>
+                        <div class="row" style="padding-top: 5px; padding-bottom: 5px;">
+                            <div class="form-group">
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Choose Date: </label>  
+                                </div>
+                                <div class="col-sm-6"> 
+                                    <p:datePicker value="#{divisionModel.fiscalYearDate}" pattern="dd/MM/yyyy" showIcon="true">
+                                        <p:ajax event="dateSelect" listener="#{divisionModel.fetchProjectsByFiscalYear}" update="projectForm, fiscalYearBar" />
+                                    </p:datePicker>                                                    
+                                </div>
+                                <div class="col-sm-3">
+                                    <h:outputLabel id="fiscalYearBar" style="color: #0368FE;">Fiscal Year:#{divisionModel.fiscalYear}</h:outputLabel>
+                                </div>
+                            </div>
+                        </div>
+                    </h:form>
                     <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="product-status-wrap">
-                                <h4>Output List</h4>                                
-                                <div class="asset-inner">
-                                    <table>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Output Title</th>
-                                            <th>Output Description</th>
-                                            <th>Start Date</th>
-                                            <th>End Date</th>
-                                            <th>Action</th>
-                                        </tr>
-                                        <h:form>
+                        <h:form id="projectForm">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="product-status-wrap">
+                                    <h4>Output List</h4>   
+                                    <div class="asset-inner">
+                                        <table>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Output Title</th>
+                                                <th>Output Description</th>
+                                                <th>Start Date</th>
+                                                <th>End Date</th>
+                                                <th>Action</th>
+                                            </tr>
                                             <c:forEach items="#{divisionModel.projects}" var="elements" varStatus="status">
                                                 <tr>
                                                     <td>${status.index + 1}</td>
@@ -226,19 +243,19 @@
                                                     <td>#{elements.projectDescription}</td>
                                                     <td>#{elements.startDate}</td>
                                                     <td>#{elements.endDate}</td>
-                                                    
+
                                                     <td>
                                                         <h:commandLink class="pd-setting" value="Continue"  action="#{divisionModel.navigateProject(elements)}"></h:commandLink>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
-                                        </h:form>
-                                    </table>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </h:form>
                     </div>
-                    
+
                 </div>
             </div>
             <div style="padding-bottom: 15px" />
@@ -257,7 +274,7 @@
 
         <!-- jquery
                     ============================================ -->
-        <script src="js/vendor/jquery-1.12.4.min.js"></script>
+        <!--<script src="js/vendor/jquery-1.12.4.min.js"></script>-->
         <!-- bootstrap JS
                     ============================================ -->
         <script src="js/bootstrap.min.js"></script>
