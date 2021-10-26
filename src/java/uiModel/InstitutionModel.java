@@ -428,6 +428,7 @@ public class InstitutionModel {
             }
         }
 
+        loadOtherReportByFiscalYear();
     }
 
     public void loadReportCompiledByDateAndFiscalYear() throws ParseException {

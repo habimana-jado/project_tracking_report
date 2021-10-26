@@ -489,22 +489,6 @@
                                             </div>
                                         </div>
 
-                                        <div class="row" style="padding-top: 15px;">
-                                            <div class="col-lg-4">
-                                                <h:outputLabel value="Department" class="text text-muted text-right" style="padding-left: 300px;" />
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <h:selectOneMenu class="form-control" value="#{institutionModel.departmentFilterValue}">
-                                                    <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
-                                                    <f:selectItems value="#{institutionModel.divisions}" var="it" itemValue="#{it.divisionId}" itemLabel="#{it.divisionName}"/>
-                                                    <f:ajax render="tbl" listener="#{institutionModel.loadOtherReportByFiscalYear()}" />
-                                                </h:selectOneMenu>
-                                            </div>
-                                            <div class="col-lg-4"></div>
-                                        </div>
-
-
-
                                         <p:dataTable style="padding-top: 10px;" id="tbl" widgetVar="reportTable" var="acc" value="#{institutionModel.divisionOtherAccomplishments}" sortBy="#{acc.project.division.divisionName}">
                                             <p:column headerText="Dpts/Dcts/Units" groupRow="true">
                                                 <h:outputText  styleClass="preformatted" value="#{acc.project.division.divisionName}" />
