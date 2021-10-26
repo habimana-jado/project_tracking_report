@@ -1,0 +1,488 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+        <title>Weekly Reporting System</title>
+        <meta name="description" content=""/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <!-- favicon
+                    ============================================ -->
+        <link rel="shortcut icon" type="image/x-icon" href="img/migeprof.ico"/>
+        <!-- Google Fonts
+                    ============================================ -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet"/>
+        <!-- Bootstrap CSS
+                    ============================================ -->
+        <link rel="stylesheet" href="css/bootstrap.min.css"/>
+        <!-- Bootstrap CSS
+                    ============================================ -->
+        <link rel="stylesheet" href="css/font-awesome.min.css"/>
+        <!-- owl.carousel CSS
+                    ============================================ -->
+        <link rel="stylesheet" href="css/owl.carousel.css"/>
+        <link rel="stylesheet" href="css/owl.theme.css"/>
+        <link rel="stylesheet" href="css/owl.transitions.css"/>
+        <!-- animate CSS
+                    ============================================ -->
+        <link rel="stylesheet" href="css/animate.css"/>
+        <!-- normalize CSS
+                    ============================================ -->
+        <link rel="stylesheet" href="css/normalize.css"/>
+        <!-- meanmenu icon CSS
+                    ============================================ -->
+        <link rel="stylesheet" href="css/meanmenu.min.css"/>
+        <!-- main CSS
+                    ============================================ -->
+        <link rel="stylesheet" href="css/main.css"/>
+        <!-- educate icon CSS
+                    ============================================ -->
+        <link rel="stylesheet" href="css/educate-custon-icon.css"/>
+        <!-- morrisjs CSS
+                    ============================================ -->
+        <link rel="stylesheet" href="css/morrisjs/morris.css"/>
+        <!-- mCustomScrollbar CSS
+                    ============================================ -->
+        <link rel="stylesheet" href="css/scrollbar/jquery.mCustomScrollbar.min.css"/>
+        <!-- metisMenu CSS
+                    ============================================ -->
+        <link rel="stylesheet" href="css/metisMenu/metisMenu.min.css"/>
+        <link rel="stylesheet" href="css/metisMenu/metisMenu-vertical.css"/>
+        <!-- calendar CSS
+                    ============================================ -->
+        <link rel="stylesheet" href="css/calendar/fullcalendar.min.css"/>
+        <link rel="stylesheet" href="css/calendar/fullcalendar.print.min.css"/>
+        <!-- style CSS
+                    ============================================ -->
+        <link rel="stylesheet" href="style.css"/>
+        <!-- responsive CSS
+                    ============================================ -->
+        <link rel="stylesheet" href="css/responsive.css"/>
+        <!-- modals CSS
+                    ============================================ -->
+        <link rel="stylesheet" href="css/modals.css"></link>
+        <!-- modernizr JS
+                    ============================================ -->
+        <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+    </h:head>
+    <h:body>
+        <!--[if lt IE 8]>
+                 <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+         <![endif]-->
+        <!-- Start Left menu area -->
+        <div class="left-sidebar-pro">
+            <nav id="sidebar" class="">
+                <div class="sidebar-header">
+                    <a href="#"><img style="padding-top: 5px;" width="120px;" height="80px;" class="main-logo" src="../../Login_v1/images/migeprof logo.png" alt="" /></a>
+                    <strong><a href="#"><img style="padding-top: 5px;" width="60px;" height="40px;" src="../../Login_v1/images/migeprof logo.png" alt="" /></a></strong>
+                </div>
+                <div class="left-custom-menu-adp-wrap comment-scrollbar">
+                    <nav class="sidebar-nav left-sidebar-menu-pro">
+                        <ul class="metismenu" id="menu1">
+                            <li>
+                                <a href="divisions.xhtml" aria-expanded="false"><span class="educate-icon educate-course icon-wrap"></span> <span class="mini-click-non">Dpts/Dcts/Units</span></a>
+                            </li>
+                            <li>
+                                <a href="users.xhtml" aria-expanded="false"><span class="educate-icon educate-professor icon-wrap"></span> <span class="mini-click-non">Dpts/Dcts/Units Users</span></a>
+                            </li>
+                            <li>
+                                <a class="has-arrow" href="projects.xhtml" aria-expanded="false"><span class="educate-icon educate-department icon-wrap"></span> <span class="mini-click-non">Operational Plan</span></a>
+                                <ul class="submenu-angle" aria-expanded="false">
+                                    <li><a title="Add/Edit Output" href="projects.xhtml"><span class="mini-sub-pro">Add/Edit Output</span></a></li>
+                                    <li><a title="Output List" href="all-activities.xhtml"><span class="mini-sub-pro">Output List</span></a></li>
+
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="report.xhtml" aria-expanded="false"><span class="educate-icon educate-form icon-wrap"></span> <span class="mini-click-non">Report</span></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </nav>
+        </div>
+        <!-- End Left menu area -->
+        <!-- Start Welcome area -->
+        <div class="all-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="logo-pro">
+                            <a href="#"><img style="padding-top: 5px;" width="60px;" height="40px;" class="main-logo" src="../Login_v1/images/migeprof logo.png" alt="" /></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-advance-area">
+                <div class="header-top-area">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="header-top-wraper">
+                                    <div class="row">
+                                        <div class="col-lg-1 col-md-0 col-sm-1 col-xs-12">
+                                            <div class="menu-switcher-pro">
+                                                <button type="button" id="sidebarCollapse" class="btn bar-button-pro header-drl-controller-btn btn-info navbar-btn">
+                                                    <i class="educate-icon educate-nav"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-7 col-sm-6 col-xs-12">
+                                            <div class="header-top-menu tabl-d-n">
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                                            <div class="header-right-info" style="padding-right: 130px;">
+                                                <ul class="nav navbar-nav mai-top-nav header-right-menu">
+
+                                                    <li class="nav-item">
+                                                        <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle">
+                                                            <!--<img src="img/product/pro4.jpg" alt="" />-->
+                                                            <span class="admin-name">#{institutionModel.loggedInUser.firstName}</span>
+                                                            <i class="fa fa-angle-down edu-icon edu-down-arrow"></i>
+                                                        </a>
+                                                        <ul role="menu" class="dropdown-header-top author-log dropdown-menu animated zoomIn">
+
+                                                            <li><a><h:form><h:commandButton class="btn btn-primary btn-block" value="Profile" action="#{institutionModel.navigateProfile()}"/> </h:form></a>
+                                                            </li>
+                                                            <li><a><h:form><h:commandButton class="btn btn-danger btn-block" value="Log Out" action="#{accountModel.logout()}" /> </h:form></a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Mobile Menu start -->
+                <div class="mobile-menu-area">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="mobile-menu">
+                                    <nav id="dropdown">
+                                        <ul class="mobile-menu-nav">
+                                            <li>
+                                                <a href="users.xhtml">Project Managers</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="divisions.xhtml">Departments</a>
+
+                                            </li>
+                                            <li>
+                                                <a href="projects.xhtml">Projects</a>
+
+                                            </li>
+                                            <li>
+                                                <a href="report.xhtml">Report</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Mobile Menu end -->
+                <div class="breadcome-area">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="breadcome-list single-page-breadcome">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                            <div class="breadcome-heading">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                            <ul class="breadcome-menu">
+                                                <li><a href="#">Home</a> <span class="bread-slash">/</span>
+                                                </li>
+                                                <li><span class="bread-blod">Indicator/Target Configuration</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-status mg-b-15">
+                <div class="container-fluid">
+                    <div id="PrimaryModalalert" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <h:form id="targetForm">
+                                <p:growl />
+                                <div class="modal-content">
+                                    <div class="modal-close-area modal-close-df">
+                                        <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
+                                    </div>
+                                    <div class="modal-header">Indicator: <h3 class="text-capitalize text-success">#{institutionModel.chosenIndicator.indicatorName}</h3></div>
+                                    <div class="modal-body">
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Quarter: </label>  
+                                                </div>
+                                                <div class="col-sm-9"> 
+                                                    <h:selectOneMenu class="form-control" value="#{institutionModel.quarter}" >
+                                                        <f:selectItem itemLabel="Quarter 1" itemValue="QUARTER_ONE" /> 
+                                                        <f:selectItem itemLabel="Quarter 2" itemValue="QUARTER_TWO" /> 
+                                                        <f:selectItem itemLabel="Quarter 3" itemValue="QUARTER_THREE" /> 
+                                                        <f:selectItem itemLabel="Quarter 4" itemValue="QUARTER_FOUR" /> 
+                                                    </h:selectOneMenu>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Target: </label>  
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <h:inputText class="form-control" value="#{institutionModel.target.targetTitle}" required="true" requiredMessage="Title is Required"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Description: </label> 
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <h:inputTextarea rows="6" class="form-control" value="#{institutionModel.target.targetDescription}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="payment-adress" style="padding-top: 5px;">
+                                                <h:commandButton action="#{institutionModel.registerTarget()}" value="Register" class="btn btn-primary waves-effect waves-light"></h:commandButton>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </h:form>
+                        </div>
+                    </div>
+                    
+                    <div id="PrimaryModalalert1" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <h:form id="targetEditForm">
+                                <p:growl />
+                                <div class="modal-content">
+                                    <div class="modal-close-area modal-close-df">
+                                        <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
+                                    </div>
+                                    <div class="modal-header">Indicator: <h3 class="text-capitalize text-success">#{institutionModel.chosenIndicator.indicatorName}</h3></div>
+                                    <div class="modal-body">
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Quarter: </label>  
+                                                </div>
+                                                <div class="col-sm-9"> 
+                                                    <h:selectOneMenu disabled="true" class="form-control" value="#{institutionModel.quarter}" >
+                                                        <f:selectItem itemLabel="Quarter 1" itemValue="QUARTER_ONE" /> 
+                                                        <f:selectItem itemLabel="Quarter 2" itemValue="QUARTER_TWO" /> 
+                                                        <f:selectItem itemLabel="Quarter 3" itemValue="QUARTER_THREE" /> 
+                                                        <f:selectItem itemLabel="Quarter 4" itemValue="QUARTER_FOUR" /> 
+                                                    </h:selectOneMenu>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Target: </label>  
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <h:inputText class="form-control" value="#{institutionModel.target.targetTitle}" required="true" requiredMessage="Title is Required"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top: 5px;">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label class="col-form-label">Description: </label> 
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <h:inputTextarea rows="6" class="form-control" value="#{institutionModel.target.targetDescription}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="payment-adress" style="padding-top: 5px;">
+                                                <h:commandButton action="#{institutionModel.updateTarget()}" value="Update" class="btn btn-primary waves-effect waves-light"></h:commandButton>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </h:form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="product-payment-inner-st">
+                                <ul id="myTabedu1" class="tab-review-design">
+                                    <li class="active"><a href="#description">Target Information</a></li>
+                                    <!--<li><a href="#reviews"> Targets Information</a></li>-->
+                                    <!--<li><a href="#INFORMATION">Targets Information</a></li>-->
+                                </ul>
+                                <div id="myTabContent" class="tab-content custom-product-edit">
+                                    <div class="product-tab-list tab-pane fade active in" id="description">
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <strong>Output Title:<a href="projects.xhtml" style="color: #0368FE; white-space: pre-wrap">#{institutionModel.registeredProject.projectTitle}</a></strong> <br />
+                                                <strong>Indicator:<a href="target.xhtml" style="color: #0368FE; white-space: pre-wrap">#{institutionModel.chosenIndicator.indicatorName}</a></strong>  
+                                                <div class="add-product" style="padding-top: 18px;">
+                                                    <a href="#" data-toggle="modal" data-target="#PrimaryModalalert">Add Target</a>
+                                                </div>                 
+                                                <div class="row" style="padding-top: 14px; padding-bottom: 25px;">
+                                                    <h:form>
+                                                        <p:growl />
+                                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                            <div class="product-status-wrap">
+                                                                <div class="asset-inner">
+                                                                    <table class="table table-bordered">
+                                                                        <tr>
+                                                                            <th>No.</th>
+                                                                            <th>Target</th>
+                                                                            <th>Description</th>
+                                                                            <th>Quarter</th>
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                        <c:forEach items="#{institutionModel.targets}" var="inst" varStatus="status">
+                                                                            <tr>
+                                                                                <td>${status.index + 1}</td>
+                                                                                <td style="white-space: pre-wrap">#{inst.targetTitle}</td>
+                                                                                <td style="white-space: pre-wrap">#{inst.targetDescription}</td>
+                                                                                <td>
+                                                                                    <c:choose>
+                                                                                        <c:when test="${inst.quarter eq 'QUARTER_ONE'}">
+                                                                                            Q1
+                                                                                        </c:when>
+                                                                                        <c:when test="${inst.quarter eq 'QUARTER_TWO'}">
+                                                                                            Q2
+                                                                                        </c:when>
+                                                                                        <c:when test="${inst.quarter eq 'QUARTER_THREE'}">
+                                                                                            Q3
+                                                                                        </c:when>
+                                                                                        <c:when test="${inst.quarter eq 'QUARTER_FOUR'}">
+                                                                                            Q4
+                                                                                        </c:when>
+                                                                                        <c:otherwise>
+                                                                                            None
+                                                                                        </c:otherwise>
+                                                                                    </c:choose>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <h:commandLink class="pd-setting" a:data-toggle="modal" value="Edit" a:data-target="#PrimaryModalalert1">
+                                                                                        <p:ajax listener="#{institutionModel.chooseQuarterlyTarget(inst)}" update="targetEditForm" />
+                                                                                    </h:commandLink>
+                                                                                       
+                                                                                    <h:commandLink value="Montly-Target" action="#{institutionModel.navigateMonthlyTarget(inst)}" title="More" class="pd-setting-ed"><i class="fa fa-angle-double-right" aria-hidden="true"></i></h:commandLink>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </c:forEach>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </h:form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="padding-bottom: 15px" />
+            <div class="footer-copyright-area" style="position: fixed; padding: 10px 10px 0px 10px; bottom: 0; width: 100%; height: 40px;">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="footer-copy-right">
+                                <p>Copyright © 2020 Powered by AFRITECK</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- jquery
+                    ============================================ -->
+        <script src="js/vendor/jquery-1.12.4.min.js"></script>
+        <!-- bootstrap JS
+                    ============================================ -->
+        <script src="js/bootstrap.min.js"></script>
+        <!-- wow JS
+                    ============================================ -->
+        <script src="js/wow.min.js"></script>
+        <!-- price-slider JS
+                    ============================================ -->
+        <script src="js/jquery-price-slider.js"></script>
+        <!-- meanmenu JS
+                    ============================================ -->
+        <script src="js/jquery.meanmenu.js"></script>
+        <!-- owl.carousel JS
+                    ============================================ -->
+        <script src="js/owl.carousel.min.js"></script>
+        <!-- sticky JS
+                    ============================================ -->
+        <script src="js/jquery.sticky.js"></script>
+        <!-- scrollUp JS
+                    ============================================ -->
+        <script src="js/jquery.scrollUp.min.js"></script>
+        <!-- mCustomScrollbar JS
+                    ============================================ -->
+        <script src="js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+        <script src="js/scrollbar/mCustomScrollbar-active.js"></script>
+        <!-- metisMenu JS
+                    ============================================ -->
+        <script src="js/metisMenu/metisMenu.min.js"></script>
+        <script src="js/metisMenu/metisMenu-active.js"></script>
+        <!-- morrisjs JS
+                    ============================================ -->
+        <script src="js/sparkline/jquery.sparkline.min.js"></script>
+        <script src="js/sparkline/jquery.charts-sparkline.js"></script>
+        <!-- calendar JS
+                    ============================================ -->
+        <script src="js/calendar/moment.min.js"></script>
+        <script src="js/calendar/fullcalendar.min.js"></script>
+        <script src="js/calendar/fullcalendar-active.js"></script>
+        <!-- plugins JS
+                    ============================================ -->
+        <script src="js/plugins.js"></script>
+        <!-- main JS
+                    ============================================ -->
+        <script src="js/main.js"></script>
+        <!-- tawk chat JS
+                    ============================================ -->
+        <!--<script src="js/tawk-chat.js"></script>-->
+    </h:body>
+</html>
+

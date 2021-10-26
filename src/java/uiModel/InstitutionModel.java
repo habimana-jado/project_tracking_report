@@ -115,10 +115,10 @@ public class InstitutionModel {
         institutionMonthlyTargets = new TargetDao().findMonthlyTargetsByInstitution(loggedInUser.getInstitution());
     }
 
-    public void fetchDivisionsByInstitution() {
-        
+    public void fetchDivisionsByInstitution() throws ParseException {
+
         institutionDivisions.clear();
-        
+
         for (Division d : new DivisionDao().findAll(Division.class)) {
             if (d.getInstitution().getInstitutionId().equalsIgnoreCase(institutionId)) {
                 {
@@ -126,6 +126,8 @@ public class InstitutionModel {
                 }
             }
         }
+        loadInstitutionReportByFiscalYear();
+        loadInstitutionOtherReportByFiscalYear();
     }
 
     public void fetchProjectsByInstitutionAndFiscalYear() throws ParseException {
@@ -1136,11 +1138,15 @@ public class InstitutionModel {
             fiscalYear = lastYear + "/" + year;
         }
 
+        if (institutionId.isEmpty() || institutionId == null) {
+            institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndFiscalYear(eQuarter, eMonth, ePeriod, fiscalYearFrom, fiscalYearTo);
+        }
+        
         if (departmentFilterValue.isEmpty() || departmentFilterValue == null) {
             Institution i = new InstitutionDao().findOne(Institution.class, institutionId);
-            if(i == null){
+            if (i == null) {
                 institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndFiscalYear(eQuarter, eMonth, ePeriod, fiscalYearFrom, fiscalYearTo);
-            }else{
+            } else {
                 institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndFiscalYearAndInstitution(eQuarter, eMonth, ePeriod, fiscalYearFrom, fiscalYearTo, i);
             }
         } else {
@@ -1151,6 +1157,8 @@ public class InstitutionModel {
                 institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndDivisionAndFiscalYear(eQuarter, eMonth, ePeriod, division, fiscalYearFrom, fiscalYearTo);
             }
         }
+        
+        loadInstitutionOtherReportByFiscalYear();
     }
 
     public void loadInstitutionReportCompiledByDate() {
@@ -1604,13 +1612,12 @@ public class InstitutionModel {
             fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + year);
             fiscalYear = lastYear + "/" + year;
         }
-        
-        
+
         if (departmentFilterValue.isEmpty() || departmentFilterValue == null) {
             Institution i = new InstitutionDao().findOne(Institution.class, institutionId);
-            if(i == null){
+            if (i == null) {
                 institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndFiscalYear(eQuarter, eMonth, ePeriod, fiscalYearFrom, fiscalYearTo);
-            }else{
+            } else {
                 institutionAccomplishments = new AccomplishmentDao().findByQuarterAndMonthAndPeriodAndFiscalYearAndInstitution(eQuarter, eMonth, ePeriod, fiscalYearFrom, fiscalYearTo, i);
             }
         } else {
@@ -1624,12 +1631,12 @@ public class InstitutionModel {
 
         if (departmentFilterValue.isEmpty() || departmentFilterValue == null) {
             Institution i = new InstitutionDao().findOne(Institution.class, institutionId);
-            if(i == null){
+            if (i == null) {
                 institutionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriodAndFiscalYearAndNoInstitution(eQuarter, eMonth, ePeriod, fiscalYearFrom, fiscalYearTo);
-            }else{
+            } else {
                 institutionOtherAccomplishments = new Other_AccomplishmentDao().findByQuarterAndMonthAndPeriodAndInstitutionAndFiscalYear(eQuarter, eMonth, ePeriod, i, fiscalYearFrom, fiscalYearTo);
             }
-        }else{
+        } else {
             Division division = new DivisionDao().findOne(Division.class, departmentFilterValue);
             if (division == null) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Division Not Found"));
