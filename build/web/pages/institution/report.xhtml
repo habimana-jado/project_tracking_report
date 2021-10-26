@@ -284,6 +284,21 @@
                                         </div>
                                     </div>
                                 </h:form>
+                                <h:form>
+                                    <div class="row" style="padding-top: 15px;">
+                                        <div class="col-lg-4">
+                                            <h:outputLabel value="Department" class="text text-muted text-right" style="padding-left: 300px;" />
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <h:selectOneMenu class="form-control" value="#{institutionModel.departmentFilterValue}">
+                                                <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
+                                                <f:selectItems value="#{institutionModel.divisions}" var="it" itemValue="#{it.divisionId}" itemLabel="#{it.divisionName}"/>
+                                                <f:ajax render="reportTable otherReportTable" listener="#{institutionModel.loadReportByFiscalYear()}" />
+                                            </h:selectOneMenu>
+                                        </div>
+                                        <div class="col-lg-4"></div>
+                                    </div>
+                                </h:form>
                                 <div class="asset-inner">                                    
                                     <h:form id="reportTable" rendered="#{institutionModel.activityType == 'ActionPlan' || institutionModel.activityType == 'All'}" style="padding-top: 45px;">
                                         <h4>Action Plan </h4>
@@ -316,21 +331,6 @@
                                                 </h:selectOneMenu>
                                             </div>
                                         </div>
-
-                                        <div class="row" style="padding-top: 15px;">
-                                            <div class="col-lg-4">
-                                                <h:outputLabel value="Department" class="text text-muted text-right" style="padding-left: 300px;" />
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <h:selectOneMenu class="form-control" value="#{institutionModel.departmentFilterValue}">
-                                                    <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
-                                                    <f:selectItems value="#{institutionModel.divisions}" var="it" itemValue="#{it.divisionId}" itemLabel="#{it.divisionName}"/>
-                                                    <f:ajax render="tbl" listener="#{institutionModel.loadReportByFiscalYear()}" />
-                                                </h:selectOneMenu>
-                                            </div>
-                                            <div class="col-lg-4"></div>
-                                        </div>
-
 
 
                                         <p:dataTable style="padding-top: 10px;" id="tbl" widgetVar="reportTable" var="acc" 

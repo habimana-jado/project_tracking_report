@@ -293,9 +293,33 @@
                                         </div>
                                     </div>
                                 </h:form>
-                                <div class="asset-inner">
+                                <h:form style="padding-top: 30px;">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label for="Institution" class="form-label">Institution</label>
+                                                <h:selectOneMenu class="form-control" value="#{institutionModel.institutionId}">
+                                                    <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
+                                                    <f:selectItems value="#{institutionModel.institutions}" var="it" itemValue="#{it.institutionId}" itemLabel="#{it.institutionName}"/>
+                                                    <f:ajax render="dept reportTable otherReportTable" listener="#{institutionModel.fetchDivisionsByInstitution()}" />
+                                                </h:selectOneMenu>
+                                            </div>                                            
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label for="Department" class="form-label">Department</label>
+                                                <h:selectOneMenu id="dept" class="form-control" value="#{institutionModel.departmentFilterValue}">
+                                                    <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
+                                                    <f:selectItems value="#{institutionModel.institutionDivisions}" var="it" itemValue="#{it.divisionId}" itemLabel="#{it.divisionName}"/>
+                                                    <f:ajax render="reportTable otherReportTable" listener="#{institutionModel.loadInstitutionReportByFiscalYear()}" />
+                                                </h:selectOneMenu>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </h:form>
+                                <div class="asset-inner" style="padding-top: 50px;">
                                     <h:form id="reportTable" rendered="#{institutionModel.activityType == 'ActionPlan' || institutionModel.activityType == 'All'}" >
-                                        <h4>Action Plan</h4>
+                                        <center><h4>Action Plan</h4></center>
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <h:selectOneMenu class="form-control" value="#{institutionModel.quarter}">
@@ -326,33 +350,6 @@
                                             </div>
                                         </div>
 
-                                        <div class="row" style="padding-top: 15px;">
-                                            <div class="col-lg-4">
-                                                <h:outputLabel value="Institution" class="text text-muted text-right" style="padding-left: 300px;" />
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <h:selectOneMenu class="form-control" value="#{institutionModel.institutionId}">
-                                                    <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
-                                                    <f:selectItems value="#{institutionModel.institutions}" var="it" itemValue="#{it.institutionId}" itemLabel="#{it.institutionName}"/>
-                                                    <f:ajax render="dept tbl otherReportTable" listener="#{institutionModel.fetchDivisionsByInstitution()}" />
-                                                </h:selectOneMenu>
-                                            </div>
-                                            <div class="col-lg-4"></div>
-                                        </div>
-                                        
-                                        <div class="row" style="padding-top: 15px;">
-                                            <div class="col-lg-4">
-                                                <h:outputLabel value="Department" class="text text-muted text-right" style="padding-left: 300px;" />
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <h:selectOneMenu id="dept" class="form-control" value="#{institutionModel.departmentFilterValue}">
-                                                    <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
-                                                    <f:selectItems value="#{institutionModel.institutionDivisions}" var="it" itemValue="#{it.divisionId}" itemLabel="#{it.divisionName}"/>
-                                                    <f:ajax render="tbl otherReportTable" listener="#{institutionModel.loadInstitutionReportByFiscalYear()}" />
-                                                </h:selectOneMenu>
-                                            </div>
-                                            <div class="col-lg-4"></div>
-                                        </div>
 
                                         <p:dataTable style="padding-top: 10px;" id="tbl" widgetVar="reportTable" var="acc" value="#{institutionModel.institutionAccomplishments}" sortBy="#{acc.target.indicator.project.division.institution.institutionName}">
                                             <p:column headerText="Institution" groupRow="true">
@@ -476,12 +473,12 @@
                     </div>
 
                     <!--Not In Action Plan Report Display-->
-                    <div class="row">
+                    <div class="row" style="padding-top: 40px;">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="product-status-wrap">
                                 <div class="asset-inner">
                                     <h:form id="otherReportTable" rendered="#{institutionModel.activityType == 'Other' || institutionModel.activityType == 'All'}" >
-                                        <h4>Other Activities Report</h4>
+                                        <center><h4>Other Activities Report</h4></center>
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <h:selectOneMenu class="form-control" value="#{institutionModel.quarter}">
@@ -511,33 +508,6 @@
                                             </div>
                                         </div>
 
-                                        <div class="row" style="padding-top: 15px;">
-                                            <div class="col-lg-4">
-                                                <h:outputLabel value="Institution" class="text text-muted text-right" style="padding-left: 300px;" />
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <h:selectOneMenu class="form-control" value="#{institutionModel.institutionId}">
-                                                    <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
-                                                    <f:selectItems value="#{institutionModel.institutions}" var="it" itemValue="#{it.institutionId}" itemLabel="#{it.institutionName}"/>
-                                                    <f:ajax render="dept" listener="#{institutionModel.fetchDivisionsByInstitution()}" />
-                                                </h:selectOneMenu>
-                                            </div>
-                                            <div class="col-lg-4"></div>
-                                        </div>
-                                        
-                                        <div class="row" style="padding-top: 15px;">
-                                            <div class="col-lg-4">
-                                                <h:outputLabel value="Department" class="text text-muted text-right" style="padding-left: 300px;" />
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <h:selectOneMenu id="dept" class="form-control" value="#{institutionModel.departmentFilterValue}">
-                                                    <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
-                                                    <f:selectItems value="#{institutionModel.institutionDivisions}" var="it" itemValue="#{it.divisionId}" itemLabel="#{it.divisionName}"/>
-                                                    <f:ajax render="tbl1" listener="#{institutionModel.loadInstitutionOtherReportByFiscalYear()}" />
-                                                </h:selectOneMenu>
-                                            </div>
-                                            <div class="col-lg-4"></div>
-                                        </div>
 
                                         <p:dataTable style="padding-top: 10px;" id="tbl1" widgetVar="reportTable" var="acc" value="#{institutionModel.institutionOtherAccomplishments}" sortBy="#{acc.project.division.institution.institutionName}">
                                             <p:column headerText="Institution" groupRow="true">
