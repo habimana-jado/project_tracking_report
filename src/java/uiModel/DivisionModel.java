@@ -177,6 +177,7 @@ public class DivisionModel {
         quarterTarget = new TargetDao().findByIndicatorAndQuarter(chosenIndicator, eQuarter);
 
     }
+
     public void fetchOtherReportPeriod() {
         String monthx = new SimpleDateFormat("MM").format(otherReportDate);
 
@@ -745,7 +746,15 @@ public class DivisionModel {
     }
 
     public void loadReportCompiledByDateAndFiscalYear() throws ParseException {
-
+        System.out.println("Now: "+searcReportDate);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(searcReportDate);
+        cal.add(Calendar.WEEK_OF_YEAR, -1);
+        
+        searcReportDate = cal.getTime();
+        System.out.println("Last: "+searcReportDate);
+        
         String year = new SimpleDateFormat("yyyy").format(searcReportDate);
         String monthx = new SimpleDateFormat("MM").format(searcReportDate);
 
@@ -803,8 +812,8 @@ public class DivisionModel {
             eMonth = EMonth.MONTH_ONE;
         }
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(searcReportDate);
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTime(searcReportDate);
         int week1 = cal.get(Calendar.WEEK_OF_MONTH);
 
         month = eMonth + "";
@@ -859,7 +868,7 @@ public class DivisionModel {
             fiscalYearTo = new SimpleDateFormat("dd/MM/yyyy").parse("30/06/" + year);
             fiscalYear = lastYear + "/" + year;
         }
-        
+
         compiledAccomplishments = new AccomplishmentDao().findByDivisionAndQuarterAndPeriodAndMonthAndFiscalYear(eQuarter, ePeriod, loggedInUser.getDivision(), eMonth, fiscalYearFrom, fiscalYearTo);
         compiledOtherAccomplishments = new Other_AccomplishmentDao().findByDivisionAndQuarterAndPeriodAndMonthAndFiscalYear(eQuarter, ePeriod, loggedInUser.getDivision(), eMonth, fiscalYearFrom, fiscalYearTo);
 
@@ -1361,7 +1370,7 @@ public class DivisionModel {
                 break;
 
         }
-        
+
         otherAccomplishment.setQuarter(eQuarter);
         otherAccomplishment.setMonth(eMonth);
         otherAccomplishment.setProject(chosenProject);
