@@ -175,6 +175,21 @@ public class AccomplishmentDao extends GenericDao<Accomplishment>{
         s.close();
         return list;
     }
+    
+    public List<Accomplishment> findByDivisionAndProjectAndQuarterAndPeriodAndMonthAndFiscalYear(EQuarter q, EPeriod p, Project pr, EMonth mo, Date from, Date to){
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Query qu = s.createQuery("SELECT a FROM Accomplishment a WHERE a.period = :p AND a.target.quarter = :q AND a.target.target.indicator.project = :pr AND a.target.month = :mo AND a.target.target.indicator.project.startDate BETWEEN :from AND :to");
+        qu.setParameter("p", p);
+        qu.setParameter("q", q);
+        qu.setParameter("pr", pr);
+        qu.setParameter("mo", mo);
+        qu.setParameter("from", from);
+        qu.setParameter("to", to);
+        List<Accomplishment> list = qu.list();
+        s.close();
+        return list;
+    }
+    
     public List<Accomplishment> findByDivisionAndQuarterAndPeriodAndMonth(EQuarter q, EPeriod p, Division pr, EMonth mo){
         Session s = HibernateUtil.getSessionFactory().openSession();
         Query qu = s.createQuery("SELECT a FROM Accomplishment a WHERE a.period = :p AND a.target.quarter = :q AND a.target.target.indicator.project.division = :pr AND a.target.month = :mo");

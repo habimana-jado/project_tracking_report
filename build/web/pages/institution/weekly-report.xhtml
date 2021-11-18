@@ -544,8 +544,6 @@
                                                         </div>
 
                                                         <p:dataTable style="padding-top: 10px;" id="tbl" widgetVar="reportTable" var="acc" value="#{divisionModel.accomplishments}" sortBy="#{acc.target.indicator.project.projectTitle}">
-
-
                                                             <p:column headerText="Output" groupRow="true">
                                                                 <h:outputText styleClass="preformatted" value="#{acc.target.target.indicator.project.projectTitle}" />
                                                             </p:column>
