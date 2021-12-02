@@ -38,6 +38,8 @@ import javax.faces.context.FacesContext;
 @ManagedBean
 @SessionScoped
 public class DivisionModel {
+    
+    static Logger log = Logger.getLogger(DivisionModel.class.getName()); 
 
     private Account loggedInUser = (Account) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("session");
     private Project project = new Project();
@@ -340,10 +342,11 @@ public class DivisionModel {
         
         searcReportDate = cal.getTime();
         
-        System.out.println("Date = "+searcReportDate);
+        log.info("SearchReportDate : "+ searcReportDate);
         
         String year = new SimpleDateFormat("yyyy").format(searcReportDate);
         String monthx = new SimpleDateFormat("MM").format(searcReportDate);
+       
 
         if (monthx.equalsIgnoreCase("01")) {
             eQuarter = EQuarter.QUARTER_THREE;
@@ -399,10 +402,9 @@ public class DivisionModel {
             eMonth = EMonth.MONTH_ONE;
         }
 
-//        int week1 = cal.get(Calendar.WEEK_OF_MONTH);
-
         month = eMonth + "";
-//        period = "Week" + week1;
+        log.info("Quarter : "+quarter);
+        log.info("Month : "+month);
 
         if (period.isEmpty() || period == null || period.equals("")) {
             period = "Week1";
@@ -413,19 +415,19 @@ public class DivisionModel {
         }
         
         switch (period) {
-            case "Week1":
+            case "1":
                 ePeriod = EPeriod.WEEK_ONE;
                 break;
-            case "Week2":
+            case "2":
                 ePeriod = EPeriod.WEEK_TWO;
                 break;
-            case "Week3":
+            case "3":
                 ePeriod = EPeriod.WEEK_THREE;
                 break;
-            case "Week4":
+            case "4":
                 ePeriod = EPeriod.WEEK_FOUR;
                 break;
-            case "Week5":
+            case "5":
                 ePeriod = EPeriod.WEEK_FIVE;
                 break;
 
@@ -435,9 +437,7 @@ public class DivisionModel {
 
         }
 
-        System.out.println("Quarter = "+eQuarter);
-        System.out.println("Month = "+eMonth);
-        System.out.println("Week = "+ePeriod);
+        log.info("Week : "+period);
         
         String nextYear = (Integer.parseInt(new SimpleDateFormat("yyyy").format(searcReportDate)) + 1) + "";
         String lastYear = (Integer.parseInt(new SimpleDateFormat("yyyy").format(searcReportDate)) - 1) + "";
@@ -459,15 +459,17 @@ public class DivisionModel {
             fiscalYear = lastYear + "/" + year;
         }
 
+        log.info("Quarterx : "+eQuarter);
+        log.info("Monthx : "+eMonth);
+        log.info("Weekx : "+ePeriod);
+        
+        
         chosenIndicator = i;
-//        compiledAccomplishments = new AccomplishmentDao().findByDivisionAndQuarterAndPeriodAndMonth(EQuarter.QUARTER_ONE, EPeriod.WEEK_ONE, loggedInUser.getDivision(), MONTH_ONE);
         accomplishments = new AccomplishmentDao().findByDivisionAndProjectAndQuarterAndPeriodAndMonthAndFiscalYear(eQuarter, ePeriod, chosenProject, eMonth, fiscalYearFrom, fiscalYearTo);
-        quarter = eQuarter+"";
+//        quarter = eQuarter+"";
         month = eMonth+"";
-//        week = ePeriod+"";
-        period = ePeriod+"";
+        period = "Week"+period;
         reportDate = null;
-//        targets = new TargetDao().findByIndicator(i);
         quarterTarget = new Target();
         oneTarget = new Target();
         return "weekly-report.xhtml?faces-redirect=true";
