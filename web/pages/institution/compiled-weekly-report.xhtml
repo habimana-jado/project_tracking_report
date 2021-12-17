@@ -251,7 +251,7 @@
                                                     </div>
                                                     <div class="col-sm-9 col-lg-9 col-md-9"> 
                                                         <p:datePicker value="#{divisionModel.searcReportDate}" pattern="dd/MM/yyyy" showIcon="true" >
-                                                            <p:ajax event="dateSelect" listener="#{divisionModel.loadReportCompiledByDateAndFiscalYear}" update="reportTable, otherReportTable, fiscalYearBar" />
+                                                            <p:ajax event="dateSelect" listener="#{divisionModel.loadReportCompiledByDateAndFiscalYearSearch}" update="reportTable, otherReportTable, fiscalYearBar" />
                                                         </p:datePicker>                                                    
                                                     </div>
                                                 </div>
